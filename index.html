@@ -3,59 +3,59 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Lore World - Ultimate Autonomous Civilization Matrix</title>
+<title>Lore World - Infinite Dynasty Matrix</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Fira+Code:wght@500;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#060913;color:#94a3b8;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;min-height:100vh;display:flex;flex-direction:column;padding:6px;user-select:none}
-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:8px 12px;background:#0f172a;border:1px solid #1e293b;border-left:4px solid #38bdf8;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.4);margin-bottom:6px}
-.brand-title{font-family:'Orbitron',monospace;font-size:.78rem;font-weight:800;color:#38bdf8;letter-spacing:1px;display:flex;align-items:center;gap:6px}
+body{background:#070913;color:#94a3b8;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;min-height:100vh;display:flex;flex-direction:column;padding:6px;user-select:none}
+header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:8px 12px;background:#0f172a;border:1px solid #1e293b;border-left:4px solid #ff79c6;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.4);margin-bottom:6px}
+.brand-title{font-family:'Orbitron',monospace;font-size:.78rem;font-weight:800;color:#ff79c6;letter-spacing:1px;display:flex;align-items:center;gap:6px}
 .badge-bar{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
-.hud-badge{font-family:'Orbitron',monospace;font-size:.5rem;font-weight:700;background:#1e293b;color:#38bdf8;padding:3px 5px;border:1px solid #334155;border-radius:5px}
-.epoch-badge{color:#f59e0b;border-color:#d97706;background:#78350f22}
-.space-badge{color:#818cf8;border-color:#6366f1;background:#312e8122}
+.hud-badge{font-family:'Orbitron',monospace;font-size:.5rem;font-weight:700;background:#1e293b;color:#8be9fd;padding:3px 5px;border:1px solid #334155;border-radius:5px}
+.epoch-badge{color:#ffb86c;border-color:#d97706;background:#78350f22}
+.space-badge{color:#bd93f9;border-color:#6366f1;background:#312e8122}
 .ctrl-btn{background:#1e293b;color:#f8fafc;border:1px solid #334155;border-radius:5px;padding:3px 6px;font-family:'Orbitron',monospace;font-size:.52rem;font-weight:700;cursor:pointer;transition:all .15s ease}
 .ctrl-btn:hover{background:#334155}
-.ctrl-btn:active{background:#0284c7;color:#fff}
-.toggle-active{background:#059669!important;border-color:#34d399!important;color:#fff!important}
-.paused{background:#d97706!important;border-color:#f59e0b!important;color:#fff!important}
+.ctrl-btn:active{background:#ff79c6;color:#000}
+.toggle-active{background:#50fa7b !important;border-color:#2e8b57 !important;color:#000 !important;}
+.paused{background:#ffb86c !important;border-color:#d97706 !important;color:#000 !important;}
 .main-grid{display:flex;flex-direction:column;gap:6px}
 @media (min-width:1024px){.main-grid{display:grid;grid-template-columns:1fr 410px}}
-.viewport-box{background:#020617;border:1px solid #1e293b;border-radius:8px;position:relative;overflow:hidden;width:100%;height:460px;box-shadow:inset 0 0 30px #000}
+.viewport-box{background:radial-gradient(circle at center, #131722 0%, #070913 100%);border:1px solid #1e293b;border-radius:8px;position:relative;overflow:hidden;width:100%;height:460px;box-shadow:inset 0 0 30px #000}
 @media (min-width:1024px){.viewport-box{height:82vh}}
 #webglContainer{width:100%;height:100%;position:absolute;top:0;left:0;display:block;touch-action:none;cursor:grab}
 #webglContainer canvas{width:100%!important;height:100%!important;display:block}
 .overlay{position:absolute;pointer-events:none;font-family:'Fira Code',monospace;font-size:10px;color:#cbd5e1}
-#ticker{left:8px;bottom:8px;right:8px;background:#020617cc;border:1px solid #1e293b;border-left:3px solid #38bdf8;border-radius:5px;padding:5px 8px}
-#hint{left:8px;top:8px;color:#64748b;background:#020617aa;padding:3px 6px;border-radius:4px}
+#ticker{left:8px;bottom:8px;right:8px;background:#0f172acc;border:1px solid #1e293b;border-left:3px solid #ff79c6;border-radius:5px;padding:5px 8px}
+#hint{left:8px;top:8px;color:#64748b;background:#0f172aaa;padding:3px 6px;border-radius:4px}
 .hud-sidebar{display:flex;flex-direction:column;gap:6px;max-height:88vh;overflow-y:auto;padding-right:2px}
 .tab-bar{display:flex;flex-wrap:wrap;gap:2px;background:#0b1329;padding:3px;border:1px solid #1e293b;border-radius:6px}
 .tab-btn{flex:1 1 30%;padding:5px 2px;background:transparent;border:none;color:#64748b;font-family:'Orbitron',monospace;font-size:.5rem;font-weight:700;cursor:pointer;border-radius:4px;text-align:center}
 .tab-btn:hover{color:#94a3b8}
-.tab-btn.active{background:#1e293b;color:#38bdf8;border:1px solid #334155}
+.tab-btn.active{background:#1e293b;color:#ff79c6;border:1px solid #334155}
 .soc-card{background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:8px 10px;box-shadow:0 2px 10px rgba(0,0,0,.3)}
 .soc-card h2{font-family:'Orbitron',monospace;font-size:.62rem;font-weight:800;color:#f8fafc;margin-bottom:6px;letter-spacing:.5px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1e293b;padding-bottom:4px}
 .exec-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:4px}
-.exec-btn{background:#1e293b;border:1px solid #334155;color:#38bdf8;font-family:'Orbitron',monospace;font-size:.56rem;font-weight:700;padding:6px;border-radius:5px;cursor:pointer;text-align:center;transition:all .15s ease}
-.exec-btn:hover{background:#334155;border-color:#38bdf8}
-.exec-danger{border-color:#f43f5e55;color:#f43f5e;background:#88133722}
-.exec-danger:hover{background:#e11d48;color:#fff;border-color:#f43f5e}
+.exec-btn{background:#1e293b;border:1px solid #334155;color:#8be9fd;font-family:'Orbitron',monospace;font-size:.56rem;font-weight:700;padding:6px;border-radius:5px;cursor:pointer;text-align:center;transition:all .15s ease}
+.exec-btn:hover{background:#334155;border-color:#ff79c6}
+.exec-danger{border-color:#ff555555;color:#ff5555;background:#88133722}
+.exec-danger:hover{background:#ff5555;color:#000;border-color:#ff5555}
 .stat-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;font-size:12px;font-weight:600;gap:8px}
-.stat-num{color:#38bdf8;font-weight:700;font-family:'Orbitron',monospace;font-size:11px;text-align:right}
+.stat-num{color:#50fa7b;font-weight:700;font-family:'Orbitron',monospace;font-size:11px;text-align:right}
 .bar{height:5px;background:#1e293b;border-radius:3px;overflow:hidden;margin:2px 0 6px}
-.bar>i{display:block;height:100%;background:#38bdf8;width:0;transition:width .3s}
+.bar>i{display:block;height:100%;background:#ff79c6;width:0;transition:width .3s}
 .log-container{max-height:380px;overflow-y:auto;display:flex;flex-direction:column;gap:5px;padding:4px}
-.log-entry{background:#020617;border:1px solid #1e293b;border-left:3px solid #38bdf8;border-radius:5px;padding:6px 8px;font-size:11px}
+.log-entry{background:#070913;border:1px solid #1e293b;border-left:3px solid #ff79c6;border-radius:5px;padding:6px 8px;font-size:11px}
 .log-time{font-family:'Orbitron',monospace;font-size:9px;font-weight:700;color:#64748b;margin-bottom:2px}
 .log-text{color:#cbd5e1;font-weight:600;word-break:break-word}
-.up{color:#34d399}.down{color:#f43f5e}
+.up{color:#50fa7b}.down{color:#ff5555}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
 <header>
-  <div class="brand-title"><span>🌐</span> LORE WORLD 3D</div>
+  <div class="brand-title"><span>🌸</span> LORE WORLD DYNASTY 3D</div>
   <div class="badge-bar">
     <button class="ctrl-btn toggle-active" id="toggle3D" onclick="toggleFeature('3D')">3D</button>
     <button class="ctrl-btn toggle-active" id="toggleSPACE" onclick="toggleFeature('SPACE')">SPACE</button>
@@ -73,8 +73,8 @@ header{display:flex;justify-content:space-between;align-items:center;flex-wrap:w
 <div class="main-grid">
   <div class="viewport-box">
     <div id="webglContainer"></div>
-    <div class="overlay" id="hint">Drag: rotate · Wheel/Pinch: zoom · Click: inspect · Space: pause</div>
-    <div class="overlay" id="ticker">World initialised.</div>
+    <div class="overlay" id="hint">Drag: rotate · Wheel/Pinch: zoom · Click: inspect citizen/building · Space: pause</div>
+    <div class="overlay" id="ticker">Infinite dynasty matrix initialized.</div>
   </div>
 
   <div class="hud-sidebar">
@@ -94,7 +94,7 @@ header{display:flex;justify-content:space-between;align-items:center;flex-wrap:w
 
     <!-- TAB 1: DESK -->
     <div id="tabDeskContainer" style="display:flex;flex-direction:column;gap:6px;">
-      <div class="soc-card" style="border-left:3px solid #f59e0b;">
+      <div class="soc-card" style="border-left:3px solid #ffb86c;">
         <h2>EXECUTIVE POLICY DESK <span>⚡ GOD MODE</span></h2>
         <div class="exec-grid">
           <button class="exec-btn" onclick="sim.injectHelicopterStimulus()">+50C STIMULUS</button>
@@ -104,7 +104,7 @@ header{display:flex;justify-content:space-between;align-items:center;flex-wrap:w
         </div>
       </div>
 
-      <div class="soc-card" style="border-left:3px solid #38bdf8;">
+      <div class="soc-card" style="border-left:3px solid #50fa7b;">
         <h2>LIVE DASHBOARD <span>📊 STATS</span></h2>
         <div class="stat-row"><span>Population:</span><span class="stat-num" id="statPop">0</span></div>
         <div class="stat-row"><span>State Treasury:</span><span class="stat-num" id="statTreasury">0 C</span></div>
@@ -116,17 +116,18 @@ header{display:flex;justify-content:space-between;align-items:center;flex-wrap:w
         <div class="bar"><i id="techBar"></i></div>
       </div>
 
-      <div class="soc-card" style="border-left:3px solid #10b981;">
-        <h2>3D INSPECTOR <span>🔍 CLICK OBJECTS</span></h2>
+      <div class="soc-card" style="border-left:3px solid #8be9fd;">
+        <h2>3D INSPECTOR <span>🔍 INTERACTIVE</span></h2>
         <div class="stat-row"><span>Target:</span><span class="stat-num" id="inspectTarget">Global Civilization</span></div>
         <div class="stat-row"><span>Active Policy:</span><span class="stat-num" id="inspectPolicy">Capitalism</span></div>
-        <div class="log-text" id="inspectDetail" style="font-size:11px;margin-top:4px;">Click any house, factory, citizen or wonder in the 3D view.</div>
+        <div class="log-text" id="inspectDetail" style="font-size:11px;margin-top:4px;">Click any house, anime citizen, or enterprise in the 3D view to inspect and trade.</div>
+        <div id="inspectorActions" style="margin-top:6px;display:flex;gap:4px;"></div>
       </div>
     </div>
 
     <!-- TAB 2: GENEALOGY -->
     <div id="tabGenealogyContainer" style="display:none;">
-      <div class="soc-card" style="border-left:3px solid #38bdf8;">
+      <div class="soc-card" style="border-left:3px solid #ff79c6;">
         <h2>DYNASTY GENEALOGY TREE <span>🧬 FAMILY</span></h2>
         <div class="log-container" id="genealogyList"></div>
       </div>
@@ -134,7 +135,7 @@ header{display:flex;justify-content:space-between;align-items:center;flex-wrap:w
 
     <!-- TAB 3: MARKET -->
     <div id="tabMarketContainer" style="display:none;">
-      <div class="soc-card" style="border-left:3px solid #34d399;">
+      <div class="soc-card" style="border-left:3px solid #50fa7b;">
         <h2>PUBLIC STOCK EXCHANGE <span>📈 IPO TICKER</span></h2>
         <div class="stat-row"><span>Market Cap Index:</span><span class="stat-num" id="marketCapVal">1,200.0 C</span></div>
         <div class="log-container" id="marketLogList"></div>
@@ -143,10 +144,10 @@ header{display:flex;justify-content:space-between;align-items:center;flex-wrap:w
 
     <!-- TAB 4: SPACE -->
     <div id="tabSpaceContainer" style="display:none;">
-      <div class="soc-card" style="border-left:3px solid #6366f1;">
+      <div class="soc-card" style="border-left:3px solid #8be9fd;">
         <h2>ORBITAL SPACE PROGRAM <span>🚀 COLONIZATION</span></h2>
         <div style="margin-bottom:6px;">
-          <button class="exec-btn" onclick="sim.launchRocketMission()">LAUNCH ROCKET (75 PTS)</button>
+          <button class="exec-btn" style="width:100%;" onclick="sim.launchRocketMission()">LAUNCH ROCKET (75 PTS)</button>
         </div>
         <div class="stat-row"><span>Colonists:</span><span class="stat-num" id="spaceColonistCount">0 citizens</span></div>
         <div class="log-container" id="spaceLogList"></div>
@@ -155,10 +156,10 @@ header{display:flex;justify-content:space-between;align-items:center;flex-wrap:w
 
     <!-- TAB 5: TECH -->
     <div id="tabTechTreeContainer" style="display:none;">
-      <div class="soc-card" style="border-left:3px solid #38bdf8;">
+      <div class="soc-card" style="border-left:3px solid #bd93f9;">
         <h2>PATENT OFFICE <span>🔬 R&amp;D</span></h2>
         <div style="margin-bottom:6px;">
-          <button class="exec-btn" onclick="sim.unlockTechTier()">UNLOCK TECH (50 PTS)</button>
+          <button class="exec-btn" style="width:100%;" onclick="sim.unlockTechTier()">UNLOCK TECH (50 PTS)</button>
         </div>
         <div class="log-container" id="techTreeList"></div>
       </div>
@@ -166,10 +167,10 @@ header{display:flex;justify-content:space-between;align-items:center;flex-wrap:w
 
     <!-- TAB 6: WEB ORACLE -->
     <div id="tabOracleContainer" style="display:none;">
-      <div class="soc-card" style="border-left:3px solid #c084fc;">
+      <div class="soc-card" style="border-left:3px solid #ffb86c;">
         <h2>WIKIPEDIA WEB ORACLE <span>🌐 LIVE FEED</span></h2>
         <div style="margin-bottom:6px;">
-          <button class="exec-btn" onclick="sim.queryOnlineKnowledgeOracle(true)">FETCH WIKIPEDIA</button>
+          <button class="exec-btn" style="width:100%;" onclick="sim.queryOnlineKnowledgeOracle(true)">FETCH WIKIPEDIA</button>
         </div>
         <div class="log-container" id="oracleFeedList"></div>
       </div>
@@ -177,7 +178,7 @@ header{display:flex;justify-content:space-between;align-items:center;flex-wrap:w
 
     <!-- TAB 7: CLIMATE -->
     <div id="tabClimateContainer" style="display:none;">
-      <div class="soc-card" style="border-left:3px solid #34d399;">
+      <div class="soc-card" style="border-left:3px solid #50fa7b;">
         <h2>PLANETARY CLIMATE <span>🌍 CARBON</span></h2>
         <div class="stat-row"><span>Atmospheric Carbon:</span><span class="stat-num" id="carbonVal">350 PPM</span></div>
         <div class="stat-row"><span>Temperature Drift:</span><span class="stat-num" id="tempVal">+0.0 °C</span></div>
@@ -187,7 +188,7 @@ header{display:flex;justify-content:space-between;align-items:center;flex-wrap:w
 
     <!-- TAB 8: DISASTER -->
     <div id="tabDisasterContainer" style="display:none;">
-      <div class="soc-card" style="border-left:3px solid #f43f5e;">
+      <div class="soc-card" style="border-left:3px solid #ff5555;">
         <h2>EMERGENCY MANAGEMENT <span>⚡ DISASTERS</span></h2>
         <div class="stat-row"><span>Active Emergencies:</span><span class="stat-num" id="activeDisasterCount">0 active</span></div>
         <div class="log-container" id="disasterLogList"></div>
@@ -196,7 +197,7 @@ header{display:flex;justify-content:space-between;align-items:center;flex-wrap:w
 
     <!-- TAB 9: JUSTICE -->
     <div id="tabJusticeContainer" style="display:none;">
-      <div class="soc-card" style="border-left:3px solid #f43f5e;">
+      <div class="soc-card" style="border-left:3px solid #bd93f9;">
         <h2>DEPARTMENT OF JUSTICE <span>⚖️ LAW</span></h2>
         <div class="stat-row"><span>Arrests Made:</span><span class="stat-num" id="arrestCount">0 citizens</span></div>
         <div class="log-container" id="justiceLogList"></div>
@@ -205,7 +206,7 @@ header{display:flex;justify-content:space-between;align-items:center;flex-wrap:w
 
     <!-- TAB 10: DIAGNOSTICS -->
     <div id="tabDiagContainer" style="display:none;">
-      <div class="soc-card" style="border-left:3px solid #10b981;">
+      <div class="soc-card" style="border-left:3px solid #50fa7b;">
         <h2>SELF-HEALING GUARDIAN <span>🛠️ DIAG</span></h2>
         <div class="stat-row"><span>Auto-Fixes:</span><span class="stat-num" id="autoFixCount">0 fixes</span></div>
         <div class="log-container" id="diagLogList"></div>
@@ -214,7 +215,7 @@ header{display:flex;justify-content:space-between;align-items:center;flex-wrap:w
 
     <!-- TAB 11: LOGS -->
     <div id="tabLogsContainer" style="display:none;">
-      <div class="soc-card" style="border-left:3px solid #06b6d4;">
+      <div class="soc-card" style="border-left:3px solid #8be9fd;">
         <h2>WORLD CHRONICLE <span>📜 LOGS</span></h2>
         <div class="log-container" id="chronicleList"></div>
       </div>
@@ -223,7 +224,7 @@ header{display:flex;justify-content:space-between;align-items:center;flex-wrap:w
 </div>
 
 <script>
-const SAVE_KEY = "loreWorldSave_v2";
+const SAVE_KEY = "loreWorldSave_dynasty_v4";
 let totalFixes = 0;
 const guardianLogs = [];
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -241,7 +242,7 @@ window.onerror = function (msg, url, line) {
   recordGuardianFix(`Error: ${msg} (Line ${line}). Auto-recovering.`);
   try {
     if (window.sim && (!window.sim.agents || window.sim.agents.length === 0)) window.sim.seedWorld();
-  } catch (e) { /* keep running; loop has its own guard */ }
+  } catch (e) { /* keep running */ }
   return true;
 };
 
@@ -255,8 +256,8 @@ const ACTIONS = [
 const EPOCHS = ["EPOCH I · AGRARIAN", "EPOCH II · INDUSTRIAL", "EPOCH III · DIGITAL", "EPOCH IV · INTERSTELLAR"];
 const TECH_NAMES = ["Irrigation", "Steam Engine", "Electrification", "Computing", "Fusion Power", "Orbital Lift", "Terraforming", "Singularity"];
 const RATES = { AUTO: 0.035, LOW: 0.01, HIGH: 0.08 };
-const FIRST = ["Aria", "Kai", "Lena", "Orion", "Zara", "Milo", "Sage", "Ivo", "Runa", "Theo", "Luma", "Dax"];
-const LAST = ["Solaris", "Vanguard", "Terra", "Aether", "Nimbus", "Helix", "Quill", "Ember"];
+const FIRST = ["Aria", "Kai", "Lena", "Orion", "Zara", "Milo", "Sage", "Ivo", "Runa", "Theo", "Luma", "Dax", "Lyra", "Kael", "Nova", "Sora"];
+const LAST = ["Solaris", "Vanguard", "Terra", "Aether", "Nimbus", "Helix", "Quill", "Ember", "Stellar", "Astral", "Zephyr"];
 const pick = a => a[Math.floor(Math.random() * a.length)];
 
 let SIM_SPEED = 1;
@@ -264,6 +265,7 @@ let PAUSED = false;
 let FEATURES = { '3D': true, SPACE: true, MARKET: true, TECH: true, ORACLE: true, GENEALOGY: true, CLIMATE: true, DISASTERS: true, JUSTICE: true };
 let currentTab = "DESK";
 let selected = null;
+let followTarget = null;
 
 function toggleFeature(feat) {
   FEATURES[feat] = !FEATURES[feat];
@@ -329,7 +331,7 @@ function exportWorldJSON() {
   const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(sim.getSerializedWorld(), null, 2));
   const a = document.createElement('a');
   a.setAttribute("href", dataStr);
-  a.setAttribute("download", `lore_world_cyc_${sim.cycle}.json`);
+  a.setAttribute("download", `lore_world_dynasty_cyc_${sim.cycle}.json`);
   document.body.appendChild(a); a.click(); a.remove();
 }
 
@@ -338,9 +340,6 @@ document.addEventListener("keydown", e => {
   else if (e.key === "f" || e.key === "F") toggleSpeed();
 });
 
-// --------------------------------------------------------
-// ENGINE CLASSES
-// --------------------------------------------------------
 class SpatialGrid {
   constructor(width, height, cellSize = 4) {
     this.cellSize = cellSize; this.cols = Math.ceil(width / cellSize); this.rows = Math.ceil(height / cellSize);
@@ -370,7 +369,6 @@ class NeuralPolicyBrain {
     const q = this.W2.map((r, i) => r.reduce((acc, w, j) => acc + w * h[j], this.b2[i]));
     return { h, q };
   }
-  // Offspring inherit parent weights with small mutations
   mutatedCopy(rate = 0.05) {
     const m = v => v + (Math.random() - 0.5) * rate;
     return new NeuralPolicyBrain(this.inD, this.hidD, this.outD, {
@@ -423,10 +421,10 @@ class CivilizationMatrix {
 
   seedWorld() {
     this.agents = [
-      { id: 1, name: "Atlas Solaris", gender: "MALE", age: 28, role: "FATHER", householdId: "h1", x: 12, y: 14, wallet: 25, energy: 100, education: 85, careerTrack: "AGRITECH", brain: new NeuralPolicyBrain(), alive: true },
-      { id: 2, name: "Nova Vanguard", gender: "FEMALE", age: 26, role: "MOTHER", householdId: "h1", x: 14, y: 14, wallet: 30, energy: 100, education: 80, careerTrack: "FINANCIER", brain: new NeuralPolicyBrain(), alive: true },
-      { id: 3, name: "Caleb Terra", gender: "MALE", age: 32, role: "FATHER", householdId: "h2", x: 34, y: 26, wallet: 20, energy: 100, education: 75, careerTrack: "ENGINEER", brain: new NeuralPolicyBrain(), alive: true },
-      { id: 4, name: "Naomi Aether", gender: "FEMALE", age: 30, role: "MOTHER", householdId: "h2", x: 36, y: 26, wallet: 35, energy: 100, education: 90, careerTrack: "AGRITECH", brain: new NeuralPolicyBrain(), alive: true }
+      { id: 1, name: "Atlas Solaris", gender: "MALE", age: 28, role: "FATHER", householdId: "h1", x: 12, y: 14, targetX: 18, targetY: 16, wallet: 25, energy: 100, education: 85, careerTrack: "AGRITECH", hairColor: 0xff79c6, brain: new NeuralPolicyBrain(), alive: true },
+      { id: 2, name: "Nova Vanguard", gender: "FEMALE", age: 26, role: "MOTHER", householdId: "h1", x: 14, y: 14, targetX: 10, targetY: 12, wallet: 30, energy: 100, education: 80, careerTrack: "FINANCIER", hairColor: 0x8be9fd, brain: new NeuralPolicyBrain(), alive: true },
+      { id: 3, name: "Caleb Terra", gender: "MALE", age: 32, role: "FATHER", householdId: "h2", x: 34, y: 26, targetX: 28, targetY: 22, wallet: 20, energy: 100, education: 75, careerTrack: "ENGINEER", hairColor: 0x50fa7b, brain: new NeuralPolicyBrain(), alive: true },
+      { id: 4, name: "Naomi Aether", gender: "FEMALE", age: 30, role: "MOTHER", householdId: "h2", x: 36, y: 26, targetX: 40, targetY: 28, wallet: 35, energy: 100, education: 90, careerTrack: "AGRITECH", hairColor: 0xffb86c, brain: new NeuralPolicyBrain(), alive: true }
     ];
     this.households = [
       { id: "h1", name: "House Solaris", homeX: 12, homeY: 14, level: 1, cashVault: 60.0, foodReserve: 40.0, fatherId: 1, motherId: 2, childrenIds: [] },
@@ -439,7 +437,7 @@ class CivilizationMatrix {
     ];
     this.nextId = 5;
     this.activeDisasters = [];
-    this.log("Ultimate Civilization Matrix initialized with ALL systems active.");
+    this.log("Infinite Dynasty Matrix initialized with autonomous families and reproduction.");
   }
 
   injectHelicopterStimulus() {
@@ -462,7 +460,7 @@ class CivilizationMatrix {
       const i = this.wonders.length;
       this.wonders.push({ id: `w${i + 1}`, name: `Grand Monument #${i + 1}`, x: 24 + Math.cos(i * 1.3) * 6, y: 16 + Math.sin(i * 1.3) * 5 });
       this.researchPoints += 10;
-      this.log(`Grand Monument #${i + 1} erected! (+10 R&D, culture boost)`);
+      this.log(`Grand Monument #${i + 1} erected! (+10 R&D)`);
     } else {
       this.log("Not enough treasury for a Grand Wonder (needs 60C).");
     }
@@ -481,8 +479,7 @@ class CivilizationMatrix {
       this.offWorldColonists += 2;
       this.spaceLog.unshift({ cycle: this.cycle, text: `Deployed satellite #${this.activeSatellites} into orbit. +2 colonists.` });
       this.log(`Rocket launched: satellite #${this.activeSatellites} in orbit.`);
-      const badge = document.getElementById("spaceBadge");
-      if (badge) badge.innerText = `COLONISTS: ${this.offWorldColonists}`;
+      document.getElementById("spaceBadge").innerText = `COLONISTS: ${this.offWorldColonists}`;
       this.renderSpaceUI();
     } else {
       this.spaceLog.unshift({ cycle: this.cycle, text: "Launch aborted: need 75 R&D points." });
@@ -524,8 +521,9 @@ class CivilizationMatrix {
     const gender = Math.random() < 0.5 ? "MALE" : "FEMALE";
     const a = {
       id: this.nextId++, name: `${pick(FIRST)} ${hh.name.replace("House ", "")}`, gender, age, role: age < 18 ? "CHILD" : "ADULT",
-      householdId: hh.id, x: hh.homeX, y: hh.homeY, wallet: 2, energy: 100, education: 20,
-      careerTrack: pick(["AGRITECH", "FINANCIER", "ENGINEER"]), alive: true,
+      householdId: hh.id, x: hh.homeX, y: hh.homeY, targetX: hh.homeX + (Math.random()-0.5)*10, targetY: hh.homeY + (Math.random()-0.5)*10,
+      wallet: 5, energy: 100, education: 25, careerTrack: pick(["AGRITECH", "FINANCIER", "ENGINEER"]),
+      hairColor: [0xff79c6, 0x8be9fd, 0x50fa7b, 0xffb86c, 0xbd93f9][Math.floor(Math.random()*5)], alive: true,
       brain: parent ? parent.brain.mutatedCopy() : new NeuralPolicyBrain()
     };
     this.agents.push(a);
@@ -533,14 +531,13 @@ class CivilizationMatrix {
   }
 
   immigrate() {
-    const n = this.households.length + 1;
     const sur = pick(LAST);
-    const hh = { id: `h${Date.now() % 100000}${n}`, name: `House ${sur}`, homeX: 4 + Math.random() * 40, homeY: 4 + Math.random() * 24, level: 1, cashVault: 30, foodReserve: 40, fatherId: null, motherId: null, childrenIds: [] };
+    const hh = { id: `h${Date.now() % 100000}${this.households.length + 1}`, name: `House ${sur}`, homeX: 4 + Math.random() * 40, homeY: 4 + Math.random() * 24, level: 1, cashVault: 40, foodReserve: 50, fatherId: null, motherId: null, childrenIds: [] };
     const f = this.newAgent(hh, 24, null); f.gender = "MALE"; f.role = "FATHER"; f.name = `${pick(FIRST)} ${sur}`; f.education = 60;
     const m = this.newAgent(hh, 23, null); m.gender = "FEMALE"; m.role = "MOTHER"; m.name = `${pick(FIRST)} ${sur}`; m.education = 60;
     hh.fatherId = f.id; hh.motherId = m.id;
     this.households.push(hh);
-    this.log(`Migrant family ${hh.name} settled the frontier.`);
+    this.log(`Immigrant family ${hh.name} established a homestead.`);
   }
 
   step() {
@@ -552,7 +549,6 @@ class CivilizationMatrix {
     this.researchPoints += 0.2;
     this.stateTreasury += 0.05;
 
-    // Political Elections every 250 cycles
     if (this.cycle > 0 && this.cycle % 250 === 0) {
       const policies = ["Laissez-Faire Capitalism", "Social Welfare State", "Green Techno-Dictatorship"];
       this.activePolicy = policies[Math.floor(Math.random() * policies.length)];
@@ -561,7 +557,6 @@ class CivilizationMatrix {
       this.log(`Election Results: Citizens voted for ${this.activePolicy}!`);
     }
 
-    // Climate Carbon Accumulation
     this.atmosphericCarbon += 0.02 - (this.techTier >= 4 ? 0.015 : 0.002) - (this.activePolicy.startsWith("Green") ? 0.01 : 0);
     this.temperatureDrift = (this.atmosphericCarbon - 350.0) * 0.005;
     if (this.cycle % 100 === 0) {
@@ -569,7 +564,6 @@ class CivilizationMatrix {
       if (this.climateLog.length > 30) this.climateLog.pop();
     }
 
-    // Natural Disasters: strike, then get repaired
     if (Math.random() < 0.02 && this.activeDisasters.length === 0 && this.enterprises.length > 0) {
       const targetEnt = this.enterprises[Math.floor(Math.random() * this.enterprises.length)];
       targetEnt.machineIntegrity = 15.0;
@@ -588,9 +582,7 @@ class CivilizationMatrix {
       }
       return true;
     });
-    if (this.disasterLog.length > 40) this.disasterLog.length = 40;
 
-    // Justice & Crime checks
     if (Math.random() < 0.08 && this.agents.length) {
       this.arrestsCount++;
       const rName = this.agents[Math.floor(Math.random() * this.agents.length)].name;
@@ -601,16 +593,27 @@ class CivilizationMatrix {
     this.spatialGrid.clear();
     this.agents.forEach(a => this.spatialGrid.insert(a));
 
-    // Agents
     this.agents.forEach(a => {
       a.age += 0.05;
-      if (a.role === "CHILD" && a.age >= 18) { a.role = "ADULT"; this.log(`${a.name} came of age.`); }
+      if (a.role === "CHILD" && a.age >= 18) {
+        a.role = "ADULT";
+        this.log(`${a.name} came of age (18) and entered the workforce.`);
+        // Grown children can split off to form their own new household if they have enough savings
+        if (a.wallet > 20 && Math.random() < 0.4) {
+          const sur = a.name.split(" ")[1] || pick(LAST);
+          const newHh = { id: `h${Date.now()}_${a.id}`, name: `House ${sur} (${a.name.split(" ")[0]})`, homeX: a.x, homeY: a.y, level: 1, cashVault: a.wallet * 0.5, foodReserve: 40, fatherId: a.gender === 'MALE' ? a.id : null, motherId: a.gender === 'FEMALE' ? a.id : null, childrenIds: [] };
+          a.wallet *= 0.5;
+          a.householdId = newHh.id;
+          this.households.push(newHh);
+          this.log(`${a.name} established independent homestead ${newHh.name}.`);
+        }
+      }
       const isChild = a.role === "CHILD";
       const hh = this.households.find(h => h.id === a.householdId);
       const s = [a.energy / 100, a.wallet / 30, a.education / 100, 0.5, 0.2, 0.3, 0.4, 1.0, 0.035, 0.05, 0.8, 1.0];
       const { q } = a.brain.forward(s);
       let idx = q.indexOf(Math.max(...q));
-      if (Math.random() < 0.35) idx = Math.floor(Math.random() * ACTIONS.length); // exploration
+      if (Math.random() < 0.35) idx = Math.floor(Math.random() * ACTIONS.length);
       let act = ACTIONS[idx];
       if (a.energy < 25) act = "REST_NURTURE";
       if (isChild && !["SEEK_EDUCATION", "REST_NURTURE", "FORAGE_PANTRY"].includes(act)) act = "SEEK_EDUCATION";
@@ -632,7 +635,7 @@ class CivilizationMatrix {
         case "SEEK_EDUCATION": a.education = Math.min(100, a.education + 0.3); a.wallet -= 0.05; break;
         case "TRADE_MARKET": { const ex = this.enterprises.find(e => e.type === "COMMERCE"); if (ex) { tx = ex.x; ty = ex.y; } a.wallet += (Math.random() - 0.45) * 1.0; break; }
         case "FOUND_STARTUP":
-          if (!isChild && a.wallet > 40 && this.enterprises.length < 8 && Math.random() < 0.05) {
+          if (!isChild && a.wallet > 40 && this.enterprises.length < 10 && Math.random() < 0.05) {
             a.wallet -= 30;
             const ent = { id: `ent_${this.cycle}_${a.id}`, name: `${a.name.split(" ")[1]} Co.`, type: a.careerTrack, x: 4 + Math.random() * 40, y: 4 + Math.random() * 24, treasury: 30, sharePrice: 1.0, prevPrice: 1.0, sharesOutstanding: 100, machineIntegrity: 100 };
             this.enterprises.push(ent);
@@ -648,33 +651,87 @@ class CivilizationMatrix {
       }
       if (this.activePolicy === "Social Welfare State" && a.wallet < 5 && this.stateTreasury > 50) { a.wallet += 0.3; this.stateTreasury -= 0.3; }
 
-      if (tx !== null) { a.x += (tx - a.x) * 0.12 + (Math.random() - 0.5) * 0.6; a.y += (ty - a.y) * 0.12 + (Math.random() - 0.5) * 0.6; }
-      else { a.x += (Math.random() - 0.5) * 1.5; a.y += (Math.random() - 0.5) * 1.5; }
+      if (tx !== null) { a.targetX = tx; a.targetY = ty; }
+      else if (Math.abs(a.x - a.targetX) < 1.0 && Math.abs(a.y - a.targetY) < 1.0) {
+        a.targetX = 4 + Math.random() * (WORLD_W - 8);
+        a.targetY = 4 + Math.random() * (WORLD_H - 8);
+      }
+      a.x += (a.targetX - a.x) * 0.1;
+      a.y += (a.targetY - a.y) * 0.1;
       a.x = Math.max(2, Math.min(WORLD_W - 2, a.x));
       a.y = Math.max(2, Math.min(WORLD_H - 2, a.y));
     });
 
-    // Households: births
+    // Autonomous Family Pairing & Reproduction
     this.households.forEach(hh => {
-      const f = this.agents.find(a => a.id === hh.fatherId);
-      const m = this.agents.find(a => a.id === hh.motherId);
-      if (f && m && m.age < 45 && hh.childrenIds.length < 4 && hh.foodReserve > 25 && Math.random() < 0.006) {
+      let f = this.agents.find(a => a.id === hh.fatherId);
+      let m = this.agents.find(a => a.id === hh.motherId);
+
+      // If household is missing a parent, find an unmarried adult nearby to marry!
+      if (!f || !m) {
+        const singles = this.agents.filter(a => a.role === "ADULT" && !this.households.some(h => h.fatherId === a.id || h.motherId === a.id));
+        if (singles.length > 0) {
+          const match = singles[Math.floor(Math.random() * singles.length)];
+          if (!f && match.gender === "MALE") { hh.fatherId = match.id; match.householdId = hh.id; f = match; this.log(`${match.name} married into ${hh.name}.`); }
+          else if (!m && match.gender === "FEMALE") { hh.motherId = match.id; match.householdId = hh.id; m = match; this.log(`${match.name} married into ${hh.name}.`); }
+        }
+      }
+
+      // Reproduction check
+      if (f && m && m.age >= 18 && m.age < 50 && hh.childrenIds.length < 5 && hh.foodReserve > 20 && Math.random() < 0.012) {
         const kid = this.newAgent(hh, 0, Math.random() < 0.5 ? f : m);
         hh.childrenIds.push(kid.id);
-        this.log(`${kid.name} was born into ${hh.name}.`);
+        this.log(`${kid.name} was born into ${hh.name}!`);
       }
-      if (this.cycle % 20 === 0) { const share = 0.1; [f, m].forEach(p => { if (p && p.wallet > 10) { p.wallet -= share * 2; hh.cashVault += share * 2; } }); }
     });
 
-    // Deaths
+    // Unmarried adults matchmaking (forming brand new households)
+    if (this.cycle % 40 === 0) {
+      const singles = this.agents.filter(a => a.role === "ADULT" && !this.households.some(h => h.fatherId === a.id || h.motherId === a.id));
+      const males = singles.filter(a => a.gender === "MALE");
+      const females = singles.filter(a => a.gender === "FEMALE");
+      if (males.length > 0 && females.length > 0 && this.households.length < 15) {
+        const b = males[0], g = females[0];
+        const sur = b.name.split(" ")[1] || pick(LAST);
+        const newHh = { id: `h_couple_${Date.now()}`, name: `House ${sur}`, homeX: (b.x + g.x)/2, homeY: (b.y + g.y)/2, level: 1, cashVault: 40, foodReserve: 50, fatherId: b.id, motherId: g.id, childrenIds: [] };
+        b.householdId = newHh.id; g.householdId = newHh.id;
+        this.households.push(newHh);
+        this.log(`Romance blossomed: ${b.name} and ${g.name} formed House ${sur}!`);
+      }
+    }
+
+    // Death & Wealth Inheritance
     this.agents = this.agents.filter(a => {
-      const dies = (a.age > 70 && Math.random() < 0.002 * (a.age - 70)) || (a.energy <= 0 && Math.random() < 0.02);
-      if (dies) { a.alive = false; this.log(`${a.name} passed away at age ${a.age.toFixed(0)}.`); if (selected && selected.type === "agent" && selected.id === a.id) selected = null; }
+      const dies = (a.age > 75 && Math.random() < 0.0025 * (a.age - 75)) || (a.energy <= 0 && Math.random() < 0.02);
+      if (dies) {
+        a.alive = false;
+        this.log(`${a.name} passed away at age ${a.age.toFixed(0)}.`);
+        // Probate inheritance: transfer wallet to household vault or living heirs
+        const hh = this.households.find(h => h.id === a.householdId);
+        if (hh) {
+          hh.cashVault += a.wallet;
+          // If household vault is rich, distribute to children heirs
+          if (hh.cashVault > 50 && hh.childrenIds.length > 0) {
+            const heirId = hh.childrenIds[Math.floor(Math.random() * hh.childrenIds.length)];
+            const heir = this.agents.find(x => x.id === heirId);
+            if (heir) { heir.wallet += 25; hh.cashVault -= 25; this.log(`Inheritance passed to ${heir.name} from ${a.name}.`); }
+          }
+        }
+        if (selected && selected.type === "agent" && selected.id === a.id) { selected = null; followTarget = null; }
+      }
       return !dies;
     });
-    if (this.cycle % 150 === 0 && this.agents.length < 12) this.immigrate();
 
-    // Enterprises
+    // Clean up empty households & guarantee expansion
+    this.households = this.households.filter(h => {
+      const hasMembers = this.agents.some(a => a.householdId === h.id);
+      return hasMembers || h.cashVault > 20;
+    });
+
+    if (this.agents.length < 16 || (this.cycle % 100 === 0 && this.agents.length < 35)) {
+      this.immigrate();
+    }
+
     let out = 0;
     this.enterprises.forEach(e => {
       const K = Math.max(1, e.treasury / 10.0);
@@ -687,7 +744,6 @@ class CivilizationMatrix {
     });
     this.output = this.output * 0.9 + out * 0.1;
 
-    // Epoch
     const ep = this.techTier >= 6 ? 3 : this.techTier >= 4 ? 2 : this.techTier >= 2 ? 1 : 0;
     const eb = document.getElementById("epochHeaderBadge");
     if (eb && eb.innerText !== EPOCHS[ep]) { eb.innerText = EPOCHS[ep]; this.log(`A new age dawns: ${EPOCHS[ep]}`); }
@@ -696,7 +752,6 @@ class CivilizationMatrix {
     if (this.cycle % 50 === 0) this.saveGame(false);
   }
 
-  // ---------- UI RENDERERS ----------
   renderDiagUI() {
     const list = document.getElementById("diagLogList");
     if (!list) return;
@@ -729,7 +784,7 @@ class CivilizationMatrix {
       const m = this.agents.find(a => a.id === hh.motherId);
       const kids = hh.childrenIds.map(id => this.agents.find(a => a.id === id)).filter(Boolean).map(k => `${esc(k.name)} (${k.age.toFixed(0)})`).join(", ") || "none living";
       const div = document.createElement("div"); div.className = "log-entry";
-      div.innerHTML = `<div class="log-time">${esc(hh.name)} (Vault: ${hh.cashVault.toFixed(0)}C · Home Lv ${hh.level} · Food ${hh.foodReserve.toFixed(0)})</div><div class="log-text">Father: ${f ? esc(f.name) : 'None'} | Mother: ${m ? esc(m.name) : 'None'} | Heirs: ${hh.childrenIds.length}<br>Living heirs: ${kids}</div>`;
+      div.innerHTML = `<div class="log-time">${esc(hh.name)} (Vault: ${hh.cashVault.toFixed(0)}C · Home Lv ${hh.level} · Food ${hh.foodReserve.toFixed(0)})</div><div class="log-text">Father: ${f ? esc(f.name) : 'Searching...'} | Mother: ${m ? esc(m.name) : 'Searching...'} | Heirs: ${hh.childrenIds.length}<br>Living heirs: ${kids}</div>`;
       list.appendChild(div);
     });
   }
@@ -766,7 +821,7 @@ class CivilizationMatrix {
     const list = document.getElementById("techTreeList");
     if (!list) return;
     let html = `<div class="log-entry"><div class="log-text">Current Tech Tier: ${this.techTier} | R&amp;D Points: ${this.researchPoints.toFixed(1)} PTS</div></div>`;
-    for (let i = 0; i < this.techTier; i++) html += `<div class="log-entry"><div class="log-time">TIER ${i + 1}</div><div class="log-text">✅ ${TECH_NAMES[Math.min(i, TECH_NAMES.length - 1)]}${i === 3 ? " (carbon capture online)" : ""}</div></div>`;
+    for (let i = 0; i < this.techTier; i++) html += `<div class="log-entry"><div class="log-time">TIER ${i + 1}</div><div class="log-text">✅ ${TECH_NAMES[Math.min(i, TECH_NAMES.length - 1)]}</div></div>`;
     list.innerHTML = html;
   }
 
@@ -856,7 +911,7 @@ class CivilizationMatrix {
     try {
       localStorage.setItem(SAVE_KEY, JSON.stringify(this.getSerializedWorld()));
       if (manual) this.log("Game saved to browser storage.");
-    } catch (e) { if (manual) this.log("Save failed (storage unavailable)."); }
+    } catch (e) { if (manual) this.log("Save failed."); }
   }
 
   loadGame() {
@@ -875,21 +930,34 @@ window.sim = sim;
 sim.loadGame();
 
 // --------------------------------------------------------
-// THREE.JS 3D RENDERER
+// ANIME CEL-SHADED THREE.JS 3D RENDERER
 // --------------------------------------------------------
 const container = document.getElementById("webglContainer");
 const width = container.clientWidth || 560;
 const height = container.clientHeight || 460;
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x020617);
-scene.fog = new THREE.FogExp2(0x020617, 0.02);
+scene.background = new THREE.Color(0x070913);
+scene.fog = new THREE.FogExp2(0x070913, 0.02);
 
-const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
 const cam = { theta: 0, elev: 0.75, dist: 46.7 };
 function placeCamera() {
-  camera.position.set(cam.dist * Math.cos(cam.elev) * Math.sin(cam.theta), cam.dist * Math.sin(cam.elev), cam.dist * Math.cos(cam.elev) * Math.cos(cam.theta));
-  camera.lookAt(0, 0, 0);
+  if (followTarget) {
+    let tx = 0, tz = 0;
+    if (followTarget.type === "agent") {
+      const a = sim.agents.find(x => x.id === followTarget.id);
+      if (a) { tx = w2x(a.x); tz = w2z(a.y); } else { followTarget = null; }
+    } else if (followTarget.type === "ent") {
+      const e = sim.enterprises.find(x => x.id === followTarget.id);
+      if (e) { tx = w2x(e.x); tz = w2z(e.y); } else { followTarget = null; }
+    }
+    camera.position.set(tx + 12 * Math.sin(cam.theta), 14, tz + 12 * Math.cos(cam.theta));
+    camera.lookAt(tx, 0, tz);
+  } else {
+    camera.position.set(cam.dist * Math.cos(cam.elev) * Math.sin(cam.theta), cam.dist * Math.sin(cam.elev), cam.dist * Math.cos(cam.elev) * Math.cos(cam.theta));
+    camera.lookAt(0, 0, 0);
+  }
 }
 placeCamera();
 
@@ -898,28 +966,62 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 renderer.setSize(width, height);
 container.appendChild(renderer.domElement);
 
-scene.add(new THREE.AmbientLight(0xffffff, 0.8));
-const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
-dirLight.position.set(20, 35, 20);
+scene.add(new THREE.AmbientLight(0xffffff, 1.0));
+const dirLight = new THREE.DirectionalLight(0xff79c6, 1.4);
+dirLight.position.set(20, 40, 20);
 scene.add(dirLight);
 
-const gridHelper = new THREE.GridHelper(WORLD_W, WORLD_W, 0x10b981, 0x1e293b);
+const gridHelper = new THREE.GridHelper(WORLD_W, WORLD_W, 0xff79c6, 0x1e293b);
 gridHelper.position.set(0, 0, 0);
 scene.add(gridHelper);
 
 const w2x = x => x - WORLD_W / 2 + 0.5;
 const w2z = y => y - WORLD_H / 2 + 0.5;
 
-const houseMeshes = [], entMeshes = [], agentMeshes = [], wonderMeshes = [], satMeshes = [];
+const houseMeshes = [], entMeshes = [], agentAvatars = [], wonderMeshes = [], satMeshes = [];
 function syncList(list, meshes, make) {
   while (meshes.length < list.length) { const m = make(list[meshes.length]); meshes.push(m); scene.add(m); }
   while (meshes.length > list.length) { const m = meshes.pop(); scene.remove(m); }
 }
-const makeHouse = () => new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.9, 0.7), new THREE.MeshStandardMaterial({ color: 0x0284c7 }));
-const makeEnt = () => new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.6, 1.2, 8), new THREE.MeshStandardMaterial({ color: 0xd97706 }));
-const makeAgent = () => new THREE.Mesh(new THREE.SphereGeometry(0.3, 16, 16), new THREE.MeshStandardMaterial({ color: 0x10b981, emissive: 0x059669 }));
-const makeWonder = () => new THREE.Mesh(new THREE.ConeGeometry(0.8, 2.2, 4), new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0x854d0e }));
-const makeSat = () => new THREE.Mesh(new THREE.SphereGeometry(0.22, 8, 8), new THREE.MeshStandardMaterial({ color: 0x818cf8, emissive: 0x6366f1 }));
+
+const makeHouse = () => new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.0, 0.8), new THREE.MeshToonMaterial({ color: 0x8be9fd }));
+const makeEnt = () => {
+  const g = new THREE.Group();
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.9, 1.6, 6), new THREE.MeshToonMaterial({ color: 0x50fa7b }));
+  base.position.y = 0.8;
+  g.add(base);
+  return g;
+};
+const makeAgentAvatar = (agentData) => {
+  const group = new THREE.Group();
+  const bodyMat = new THREE.MeshToonMaterial({ color: 0xff79c6 });
+  const body = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.8, 0.3), bodyMat);
+  body.position.y = 0.8;
+  group.add(body);
+
+  const headMat = new THREE.MeshToonMaterial({ color: 0xffe8d6 });
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.32, 10, 10), headMat);
+  head.position.y = 1.4;
+  group.add(head);
+
+  const hairMat = new THREE.MeshToonMaterial({ color: agentData.hairColor || 0xff79c6 });
+  const hair = new THREE.Mesh(new THREE.SphereGeometry(0.35, 10, 10), hairMat);
+  hair.position.set(0, 1.5, -0.05);
+  group.add(hair);
+
+  const legMat = new THREE.MeshToonMaterial({ color: 0x44475a });
+  const leftLeg = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.5, 0.18), legMat);
+  leftLeg.position.set(-0.12, 0.25, 0);
+  group.add(leftLeg);
+
+  const rightLeg = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.5, 0.18), legMat);
+  rightLeg.position.set(0.12, 0.25, 0);
+  group.add(rightLeg);
+
+  return { group, leftLeg, rightLeg, data: agentData };
+};
+const makeWonder = () => new THREE.Mesh(new THREE.ConeGeometry(0.9, 2.4, 4), new THREE.MeshToonMaterial({ color: 0xffb86c }));
+const makeSat = () => new THREE.Mesh(new THREE.SphereGeometry(0.22, 8, 8), new THREE.MeshToonMaterial({ color: 0xbd93f9 }));
 
 window.addEventListener("resize", () => {
   const w = container.clientWidth || 560;
@@ -929,14 +1031,16 @@ window.addEventListener("resize", () => {
   renderer.setSize(w, h);
 });
 
+let walkCycle = 0;
 function update3DScene() {
   if (!FEATURES["3D"]) { scene.visible = false; return; }
   scene.visible = true;
   const t = Date.now() / 1000;
+  walkCycle += 0.12 * SIM_SPEED;
 
   syncList(sim.households, houseMeshes, makeHouse);
   syncList(sim.enterprises, entMeshes, makeEnt);
-  syncList(sim.agents, agentMeshes, makeAgent);
+  syncList(sim.agents, agentAvatars, (a) => makeAgentAvatar(a));
   syncList(sim.wonders, wonderMeshes, makeWonder);
   syncList(FEATURES.SPACE ? Array.from({ length: sim.activeSatellites }) : [], satMeshes, makeSat);
 
@@ -947,31 +1051,45 @@ function update3DScene() {
     m.position.y = 0.45 * m.scale.y;
     m.userData = { type: "house", id: hh.id };
   });
+
   sim.enterprises.forEach((ent, i) => {
-    const m = entMeshes[i];
-    m.position.set(w2x(ent.x), 0.6, w2z(ent.y));
+    const group = entMeshes[i];
+    group.position.set(w2x(ent.x), 0, w2z(ent.y));
     const burning = ent.machineIntegrity < 50;
-    m.material.color.setHex(burning ? 0xef4444 : 0xd97706);
-    m.scale.setScalar(burning ? 1 + Math.sin(t * 10) * 0.08 : 1);
-    m.userData = { type: "ent", id: ent.id };
+    const baseMesh = group.children[0];
+    if (baseMesh) baseMesh.material.color.setHex(burning ? 0xff5555 : 0x50fa7b);
+    group.userData = { type: "ent", id: ent.id };
   });
+
   sim.agents.forEach((agent, i) => {
-    const m = agentMeshes[i];
-    m.position.set(w2x(agent.x), agent.role === "CHILD" ? 0.28 : 0.4, w2z(agent.y));
-    m.scale.setScalar(agent.role === "CHILD" ? 0.7 : 1);
-    m.material.color.setHex(agent.role === "CHILD" ? 0xfacc15 : (agent.gender === "MALE" ? 0x10b981 : 0xf472b6));
-    m.userData = { type: "agent", id: agent.id };
+    let item = agentAvatars[i];
+    if (!item) {
+      item = makeAgentAvatar(agent);
+      agentAvatars[i] = item;
+      scene.add(item.group);
+    }
+    item.data = agent;
+    item.group.position.set(w2x(agent.x), 0, w2z(agent.y));
+    const isChild = agent.role === "CHILD";
+    item.group.scale.setScalar(isChild ? 0.7 : 1.0);
+    item.leftLeg.rotation.x = Math.sin(walkCycle + i) * 0.7;
+    item.rightLeg.rotation.x = -Math.sin(walkCycle + i) * 0.7;
+    item.group.userData = { type: "agent", id: agent.id };
   });
+
   sim.wonders.forEach((w, i) => {
     const m = wonderMeshes[i];
-    m.position.set(w2x(w.x), 1.1, w2z(w.y));
+    m.position.set(w2x(w.x), 1.2, w2z(w.y));
     m.rotation.y = t * 0.5;
     m.userData = { type: "wonder", id: w.id };
   });
+
   satMeshes.forEach((m, i) => {
     const r = 10 + (i % 3) * 2.5, a = t * (0.4 + i * 0.05) + i;
     m.position.set(Math.cos(a) * r, 8 + (i % 3), Math.sin(a) * r * 0.7);
   });
+
+  placeCamera();
 }
 
 // ----- Orbit / zoom / click-to-inspect -----
@@ -993,6 +1111,7 @@ dom.addEventListener("pointermove", e => {
   cam.theta -= dx * 0.008;
   cam.elev = Math.max(0.15, Math.min(1.45, cam.elev + dy * 0.006));
   pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  followTarget = null;
   placeCamera();
 });
 dom.addEventListener("pointerup", e => {
@@ -1007,29 +1126,56 @@ function pickObject(e) {
   const r = dom.getBoundingClientRect();
   const m = new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
   raycaster.setFromCamera(m, camera);
-  const hits = raycaster.intersectObjects([...agentMeshes, ...houseMeshes, ...entMeshes, ...wonderMeshes]);
-  selected = hits.length ? { type: hits[0].object.userData.type, id: hits[0].object.userData.id } : null;
+  const agentGroups = agentAvatars.map(a => a.group);
+  const hits = raycaster.intersectObjects([...agentGroups, ...houseMeshes, ...entMeshes, ...wonderMeshes], true);
+  if (hits.length) {
+    let obj = hits[0].object;
+    while (obj && !obj.userData?.type && obj.parent) obj = obj.parent;
+    selected = obj?.userData?.type ? { type: obj.userData.type, id: obj.userData.id } : null;
+  } else {
+    selected = null;
+    followTarget = null;
+  }
   renderInspector();
   if (selected) switchSidebarTab("DESK");
 }
 
 function renderInspector() {
-  const t = document.getElementById("inspectTarget"), d = document.getElementById("inspectDetail");
-  if (!t || !d) return;
-  if (!selected) { t.innerText = "Global Civilization"; d.innerText = "Click any house, factory, citizen or wonder in the 3D view."; return; }
-  let txt = "Object no longer exists.", name = "—";
+  const t = document.getElementById("inspectTarget"), d = document.getElementById("inspectDetail"), act = document.getElementById("inspectorActions");
+  if (!t || !d || !act) return;
+  act.innerHTML = "";
+  if (!selected) {
+    t.innerText = "Global Civilization";
+    d.innerText = "Click any house, anime citizen, or enterprise in the 3D view.";
+    return;
+  }
+  let txt = "Object not found.", name = "—";
   if (selected.type === "agent") {
     const a = sim.agents.find(x => x.id === selected.id);
-    if (a) { name = a.name; txt = `${a.role} · ${a.gender} · age ${a.age.toFixed(0)} · ${a.careerTrack}\nWallet ${a.wallet.toFixed(1)}C · Energy ${a.energy.toFixed(0)} · Edu ${a.education.toFixed(0)}\nDoing: ${a.action || "idle"}`; }
+    if (a) {
+      name = a.name;
+      txt = `${a.role} · ${a.gender} · age ${a.age.toFixed(0)} · ${a.careerTrack}\nWallet ${a.wallet.toFixed(1)}C · Energy ${a.energy.toFixed(0)} · Edu ${a.education.toFixed(0)}\nDoing: ${a.action || "idle"}`;
+      act.innerHTML = `<button class="exec-btn" onclick="followTarget = {type:'agent', id:${a.id}}">FOLLOW CITIZEN</button>`;
+    }
   } else if (selected.type === "house") {
     const h = sim.households.find(x => x.id === selected.id);
-    if (h) { name = h.name; txt = `Level ${h.level} · Vault ${h.cashVault.toFixed(0)}C · Food ${h.foodReserve.toFixed(0)}\nHeirs: ${h.childrenIds.length} · Members: ${sim.agents.filter(a => a.householdId === h.id).length}`; }
+    if (h) {
+      name = h.name;
+      txt = `Level ${h.level} · Vault ${h.cashVault.toFixed(0)}C · Food ${h.foodReserve.toFixed(0)}\nHeirs: ${h.childrenIds.length} · Members: ${sim.agents.filter(a => a.householdId === h.id).length}`;
+    }
   } else if (selected.type === "ent") {
     const e = sim.enterprises.find(x => x.id === selected.id);
-    if (e) { name = e.name; txt = `${e.type} · Treasury ${e.treasury.toFixed(0)}C\nShare ${e.sharePrice.toFixed(2)}C · Integrity ${e.machineIntegrity.toFixed(0)}%`; }
+    if (e) {
+      name = e.name;
+      txt = `${e.type} · Treasury ${e.treasury.toFixed(0)}C\nShare ${e.sharePrice.toFixed(2)}C · Integrity ${e.machineIntegrity.toFixed(0)}%`;
+      act.innerHTML = `
+        <button class="exec-btn" onclick="sim.stateTreasury -= 15; const ent = sim.enterprises.find(x=>x.id==='${e.id}'); if(ent) ent.treasury += 15; sim.log('Granted 15C subsidy to ${e.name}.');">SUBSIDY (+15C)</button>
+        <button class="exec-btn" onclick="followTarget = {type:'ent', id:'${e.id}'}">FOLLOW BLDG</button>
+      `;
+    }
   } else if (selected.type === "wonder") {
     const w = sim.wonders.find(x => x.id === selected.id);
-    if (w) { name = w.name; txt = "A monument to civilization. Boosts culture and R&D."; }
+    if (w) { name = w.name; txt = "A magnificent monument boosting civilization culture & R&D."; }
   }
   t.innerText = name;
   d.innerText = txt;
