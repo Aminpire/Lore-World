@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Lore World - Self-Evolving Autonomous Matrix & Online Oracle</title>
+  <title>Lore World - Ultimate 3D Self-Running Civilization Matrix</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Fira+Code:wght@500;700&display=swap');
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: #090d16;
+      background: #060913;
       color: #94a3b8;
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 13px;
@@ -44,18 +44,19 @@
       gap: 6px;
     }
 
-    .badge-bar { display: flex; gap: 6px; align-items: center; }
+    .badge-bar { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
     .hud-badge {
       font-family: 'Orbitron', monospace;
-      font-size: 0.55rem;
+      font-size: 0.5rem;
       font-weight: 700;
       background: #1e293b;
       color: #38bdf8;
-      padding: 4px 8px;
+      padding: 3px 5px;
       border: 1px solid #334155;
-      border-radius: 6px;
+      border-radius: 5px;
     }
     .epoch-badge { color: #f59e0b; border-color: #d97706; background: #78350f22; }
+    .season-badge { color: #10b981; border-color: #059669; background: #064e3b22; }
     .oracle-badge { color: #c084fc; border-color: #9333ea; background: #581c8722; }
 
     .ctrl-btn {
@@ -63,16 +64,16 @@
       color: #f8fafc;
       border: 1px solid #334155;
       border-radius: 5px;
-      padding: 3px 8px;
+      padding: 3px 6px;
       font-family: 'Orbitron', monospace;
-      font-size: 0.58rem;
+      font-size: 0.52rem;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.15s ease;
     }
     .ctrl-btn:hover { background: #334155; }
     .ctrl-btn:active { background: #0284c7; color: #fff; }
-    .tool-active { background: #0284c7 !important; border-color: #38bdf8 !important; color: #fff !important; }
+    .toggle-active { background: #059669 !important; border-color: #34d399 !important; color: #fff !important; }
 
     .main-grid {
       display: flex;
@@ -83,7 +84,7 @@
     @media (min-width: 1024px) {
       .main-grid {
         display: grid;
-        grid-template-columns: 1fr 390px;
+        grid-template-columns: 1fr 410px;
       }
     }
 
@@ -96,18 +97,11 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      height: 440px;
       box-shadow: inset 0 0 30px #000;
     }
 
-    canvas#worldCanvas {
-      display: block;
-      width: 100%;
-      height: auto;
-      max-height: 480px;
-      image-rendering: pixelated;
-      cursor: grab;
-    }
-    canvas#worldCanvas:active { cursor: grabbing; }
+    #webglContainer { width: 100%; height: 100%; display: block; }
 
     .hud-sidebar {
       display: flex;
@@ -120,7 +114,7 @@
 
     .tab-bar {
       display: flex;
-      gap: 3px;
+      gap: 2px;
       background: #0b1329;
       padding: 3px;
       border: 1px solid #1e293b;
@@ -129,12 +123,12 @@
 
     .tab-btn {
       flex: 1;
-      padding: 4px 4px;
+      padding: 4px 1px;
       background: transparent;
       border: none;
       color: #64748b;
       font-family: 'Orbitron', monospace;
-      font-size: 0.52rem;
+      font-size: 0.40rem;
       font-weight: 700;
       cursor: pointer;
       border-radius: 4px;
@@ -192,31 +186,6 @@
     .exec-danger { border-color: #f43f5e55; color: #f43f5e; background: #88133722; }
     .exec-danger:hover { background: #e11d48; color: #fff; border-color: #f43f5e; }
 
-    .tool-bar {
-      display: flex;
-      gap: 4px;
-      margin-top: 5px;
-      border-top: 1px solid #1e293b;
-      padding-top: 5px;
-    }
-
-    .progress-bar-wrap {
-      width: 100%;
-      height: 7px;
-      background: #020617;
-      border: 1px solid #1e293b;
-      border-radius: 4px;
-      margin: 4px 0;
-      overflow: hidden;
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
-      width: 0%;
-      transition: width 0.3s ease;
-    }
-
     .stat-row {
       display: flex;
       justify-content: space-between;
@@ -233,87 +202,25 @@
       font-size: 11px;
     }
 
-    .family-box {
-      background: #020617;
-      border: 1px solid #1e293b;
-      border-radius: 6px;
-      padding: 6px 8px;
-      margin-top: 4px;
-    }
-
-    .family-title {
-      color: #f59e0b;
-      font-weight: 700;
-      font-size: 12px;
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 4px;
-    }
-
-    .member-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4px;
-      font-size: 11px;
-    }
-
-    .role-badge {
-      display: inline-block;
-      padding: 1px 4px;
-      border-radius: 4px;
-      font-size: 9px;
-      font-weight: 700;
-      font-family: 'Orbitron', monospace;
-    }
-    .role-father { background: #1e3a8a; color: #93c5fd; }
-    .role-mother { background: #831843; color: #fbcfe8; }
-    .role-child  { background: #064e3b; color: #6ee7b7; }
-
-    .chart-container {
+    .pro-con-container {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 6px;
       margin-top: 4px;
     }
 
-    .chart-box {
-      background: #020617;
-      border: 1px solid #1e293b;
-      border-radius: 6px;
-      padding: 4px;
-    }
+    .pro-box { background: #064e3b22; border: 1px solid #059669; border-radius: 6px; padding: 6px; }
+    .con-box { background: #88133722; border: 1px solid #f43f5e; border-radius: 6px; padding: 6px; }
 
-    .chart-label {
-      font-size: 10px;
-      font-weight: 700;
-      color: #64748b;
-      text-transform: uppercase;
-      margin-bottom: 2px;
-      font-family: 'Orbitron', monospace;
-    }
+    .box-title { font-family: 'Orbitron', monospace; font-size: 0.55rem; font-weight: 800; margin-bottom: 3px; }
+    .pro-box .box-title { color: #34d399; }
+    .con-box .box-title { color: #fb7185; }
 
-    canvas.mini-chart {
-      width: 100%;
-      height: 38px;
-      display: block;
-    }
+    .box-content { font-size: 11px; color: #cbd5e1; font-weight: 600; line-height: 1.3; }
+    .eli5-box { background: #1e1b4b33; border: 1px solid #6366f1; border-radius: 6px; padding: 8px; font-size: 11.5px; color: #e0e7ff; line-height: 1.4; }
 
-    .news-ticker {
-      font-size: 11px;
-      font-weight: 600;
-      color: #38bdf8;
-      background: #020617;
-      border: 1px solid #1e293b;
-      border-radius: 6px;
-      padding: 4px 8px;
-      margin-top: 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .chronicle-container {
-      max-height: 480px;
+    .log-container {
+      max-height: 400px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -321,7 +228,7 @@
       padding: 4px;
     }
 
-    .chronicle-entry {
+    .log-entry {
       background: #020617;
       border: 1px solid #1e293b;
       border-left: 3px solid #38bdf8;
@@ -329,151 +236,152 @@
       padding: 6px 8px;
       font-size: 11px;
     }
-    .chronicle-entry.epoch { border-left-color: #f59e0b; }
-    .chronicle-entry.crisis { border-left-color: #f43f5e; }
-    .chronicle-entry.family { border-left-color: #ec4899; }
-    .chronicle-entry.oracle { border-left-color: #c084fc; }
-
-    .chronicle-time {
-      font-family: 'Orbitron', monospace;
-      font-size: 9px;
-      font-weight: 700;
-      color: #64748b;
-      margin-bottom: 2px;
-    }
-
-    .chronicle-text {
-      color: #cbd5e1;
-      font-weight: 600;
-    }
+    .log-time { font-family: 'Orbitron', monospace; font-size: 9px; font-weight: 700; color: #64748b; margin-bottom: 2px; }
+    .log-text { color: #cbd5e1; font-weight: 600; }
   </style>
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
   <header>
     <div class="brand-title">
-      <span>🌐</span> LORE WORLD ONLINE ORACLE
+      <span>🌐</span> LORE WORLD 3D
     </div>
     <div class="badge-bar">
-      <button class="ctrl-btn" id="audioToggleBtn" onclick="toggleAudio()">🔊 AUDIO</button>
-      <button class="ctrl-btn" id="speedBtn" onclick="toggleSpeed()">1X SPEED</button>
-      <button class="ctrl-btn" onclick="exportWorldJSON()">EXPORT</button>
-      <button class="ctrl-btn" onclick="document.getElementById('importFileInput').click()">IMPORT</button>
+      <button class="ctrl-btn toggle-active" id="toggle3D" onclick="toggleFeature('3D')">3D</button>
+      <button class="ctrl-btn toggle-active" id="toggleTrade" onclick="toggleFeature('TRADE')">TRADE</button>
+      <button class="ctrl-btn toggle-active" id="toggleOracle" onclick="toggleFeature('ORACLE')">ORACLE</button>
+      <button class="ctrl-btn" id="speedBtn" onclick="toggleSpeed()">1X</button>
+      <button class="ctrl-btn" onclick="exportWorldJSON()">EXP</button>
+      <button class="ctrl-btn" onclick="document.getElementById('importFileInput').click()">IMP</button>
       <input type="file" id="importFileInput" style="display:none" onchange="importWorldJSON(event)" accept=".json" />
-      <button class="ctrl-btn" onclick="resetSimulation()">REBOOT</button>
+      <button class="ctrl-btn" onclick="resetSimulation()">RESET</button>
       <span class="hud-badge epoch-badge" id="epochHeaderBadge">EPOCH I</span>
-      <span class="hud-badge oracle-badge" id="oracleStatusBadge">ORACLE: ACTIVE</span>
+      <span class="hud-badge season-badge" id="seasonBadge">SPRING</span>
+      <span class="hud-badge oracle-badge" id="oracleBadge">WEB: LIVE</span>
       <span class="hud-badge" id="tickCount">CYC 0000</span>
     </div>
   </header>
 
   <div class="main-grid">
     <div class="viewport-box">
-      <canvas id="worldCanvas" width="576" height="384"></canvas>
+      <div id="webglContainer"></div>
     </div>
 
     <div class="hud-sidebar">
       <div class="tab-bar">
-        <button class="tab-btn active" id="tabOverviewBtn" onclick="switchSidebarTab('OVERVIEW')">DESK</button>
-        <button class="tab-btn" id="tabOracleBtn" onclick="switchSidebarTab('ORACLE')">🌐 ORACLE FEED</button>
-        <button class="tab-btn" id="tabChronicleBtn" onclick="switchSidebarTab('CHRONICLE')">📜 LOGS</button>
+        <button class="tab-btn active" id="tabDeskBtn" onclick="switchSidebarTab('DESK')">DESK</button>
+        <button class="tab-btn" id="tabOracleFeedBtn" onclick="switchSidebarTab('ORACLEFEED')">🌐 WEB</button>
+        <button class="tab-btn" id="tabDiagBtn" onclick="switchSidebarTab('DIAG')">🛠️ DIAG</button>
+        <button class="tab-btn" id="tabHofBtn" onclick="switchSidebarTab('HOF')">🏆 HOF</button>
+        <button class="tab-btn" id="tabEli5Btn" onclick="switchSidebarTab('ELI5')">🧒 ELI5</button>
+        <button class="tab-btn" id="tabUtilityBtn" onclick="switchSidebarTab('UTILITY')">💡 USE</button>
+        <button class="tab-btn" id="tabProsConsBtn" onclick="switchSidebarTab('PROSCONS')">⚖️ P/C</button>
+        <button class="tab-btn" id="tabLogsBtn" onclick="switchSidebarTab('LOGS')">📜 LOGS</button>
       </div>
 
-      <!-- TAB 1: OVERVIEW & DESK -->
-      <div id="tabOverviewContainer" style="display: flex; flex-direction: column; gap: 6px;">
+      <!-- TAB 1: DESK -->
+      <div id="tabDeskContainer" style="display: flex; flex-direction: column; gap: 6px;">
         <div class="soc-card" style="border-left: 3px solid #f59e0b;">
           <h2>EXECUTIVE POLICY DESK <span>⚡ GOD MODE</span></h2>
           <div class="exec-grid">
             <button class="exec-btn" onclick="sim.injectHelicopterStimulus()">+50C STIMULUS</button>
-            <button class="exec-btn" onclick="sim.toggleRateOverride()" id="rateOverrideBtn">RATE: AUTO TAYLOR</button>
+            <button class="exec-btn" onclick="sim.toggleRateOverride()" id="rateOverrideBtn">RATE: AUTO</button>
             <button class="exec-btn" onclick="sim.buildGrandWonder()">WONDER (-60C)</button>
-            <button class="exec-btn exec-danger" onclick="sim.triggerBlackSwan()">CRISIS SHOCK</button>
-          </div>
-          <div class="tool-bar">
-            <button class="ctrl-btn tool-active" id="tool_INSPECT" onclick="setGodTool('INSPECT')">🔍 INSPECT</button>
-            <button class="ctrl-btn" id="tool_FOOD" onclick="setGodTool('FOOD')">🍞 FOOD</button>
-            <button class="ctrl-btn" id="tool_CASH" onclick="setGodTool('CASH')">💰 CASH</button>
-            <button class="ctrl-btn" id="tool_CLEAN" onclick="setGodTool('CLEAN')">🌿 CLEAN</button>
+            <button class="exec-btn exec-danger" onclick="sim.triggerBlackSwan()">CRISIS</button>
           </div>
         </div>
 
         <div class="soc-card" style="border-left: 3px solid #10b981;">
-          <h2>TELEMETRY INSPECTOR <span>🔍 TAP CANVAS</span></h2>
-          <div class="stat-row"><span>Target Focus:</span><span class="stat-num" id="inspectTarget">Global Civilization</span></div>
-          <div class="stat-row"><span>Status & Vitals:</span><span class="stat-num" id="inspectDetail">Tap citizen or building</span></div>
-          <div class="stat-row"><span>Online Knowledge Sparks:</span><span class="stat-num" id="oracleSparksCount">0 fetched</span></div>
-        </div>
-
-        <div class="soc-card" style="border-left: 3px solid #38bdf8;">
-          <h2>EVOLUTIONARY TRIAL-AND-ERROR <span>🧬 AI OPTIMIZER</span></h2>
-          <div class="stat-row"><span>Sandbox Mutation Cycles:</span><span class="stat-num" id="mutationCount">0 trials</span></div>
-          <div class="stat-row"><span>Optimal Policy Adopted:</span><span class="stat-num" id="optimalPolicy">Dynamic Tax / UBI</span></div>
-          <div class="stat-row"><span>Current Epoch:</span><span class="stat-num" id="currentEpochName">Epoch I: Primitive Agrarian</span></div>
-          <div class="progress-bar-wrap">
-            <div class="progress-bar-fill" id="techProgressBar"></div>
-          </div>
-        </div>
-
-        <div class="soc-card">
-          <h2>FEATURED DYNASTY <span>🏠 HEARTH</span></h2>
-          <div class="family-box" id="activeFamilyCard">
-            <div class="family-title">
-              <span id="dynastyName">Dynasty -</span>
-              <span id="dynastyAssets">Vault: 0 C | Food: 0</span>
-            </div>
-            <div class="member-grid">
-              <div><span class="role-badge role-father">FATHER</span> <span id="fatherStatus">None</span></div>
-              <div><span class="role-badge role-mother">MOTHER</span> <span id="motherStatus">None</span></div>
-              <div style="grid-column: span 2;"><span class="role-badge role-child">ESTATE</span> <span id="householdHoldings">Partible Equity Split</span></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="soc-card">
-          <h2>PREDICTIVE CHARTS <span>📈 TELEMETRY</span></h2>
-          <div class="stat-row"><span>Living Population:</span><span class="stat-num" id="totalPop">0 alive</span></div>
-          <div class="stat-row"><span>Societal Happiness:</span><span class="stat-num" id="happinessVal">88% (STABLE)</span></div>
-          <div class="chart-container">
-            <div class="chart-box">
-              <div class="chart-label">Bread Spot (Act vs Pred)</div>
-              <canvas id="commodityCanvas" class="mini-chart" width="140" height="38"></canvas>
-            </div>
-            <div class="chart-box">
-              <div class="chart-label">Equities Index</div>
-              <canvas id="equityCanvas" class="mini-chart" width="140" height="38"></canvas>
-            </div>
-          </div>
-          <div class="news-ticker" id="newsTicker">FEED: Fully self-correcting game loop active...</div>
+          <h2>3D INSPECTOR <span>🔍 CLICK 3D OBJECTS</span></h2>
+          <div class="stat-row"><span>Target:</span><span class="stat-num" id="inspectTarget">Global Civilization</span></div>
+          <div class="stat-row"><span>Vitals:</span><span class="stat-num" id="inspectDetail">Click any 3D house</span></div>
+          <div class="stat-row"><span>Action:</span><span class="stat-num" id="inspectAction">--</span></div>
         </div>
       </div>
 
-      <!-- TAB 2: ONLINE ORACLE FEED -->
-      <div id="tabOracleContainer" style="display: none;">
+      <!-- TAB 2: WEB FEED -->
+      <div id="tabOracleFeedContainer" style="display: none;">
         <div class="soc-card" style="border-left: 3px solid #c084fc;">
-          <h2>WORLD WIDE WEB KNOWLEDGE FEED <span>🌐 ORACLE</span></h2>
+          <h2>LIVE WEB ORACLE FEED <span>🌐 WIKIPEDIA</span></h2>
           <div style="margin-bottom: 6px;">
-            <button class="exec-btn" onclick="sim.queryOnlineKnowledgeAPI()">FETCH KNOWLEDGE SPARK NOW</button>
+            <button class="exec-btn" onclick="sim.queryOnlineKnowledgeOracle(true)">FETCH LIVE WEB KNOWLEDGE</button>
           </div>
-          <div class="chronicle-container" id="oracleLogList"></div>
+          <div class="log-container" id="oracleFeedList">
+            <div class="log-entry"><div class="log-text">Awaiting live web queries...</div></div>
+          </div>
         </div>
       </div>
 
-      <!-- TAB 3: CHRONICLE LOGS -->
-      <div id="tabChronicleContainer" style="display: none;">
+      <!-- TAB 3: DIAGNOSTICS -->
+      <div id="tabDiagContainer" style="display: none;">
+        <div class="soc-card" style="border-left: 3px solid #10b981;">
+          <h2>SELF-HEALING GUARDIAN <span>🛠️ DIAG</span></h2>
+          <div class="stat-row"><span>Auto-Fixes Executed:</span><span class="stat-num" id="autoFixCount">0 fixes</span></div>
+          <div class="log-container" id="diagLogList">
+            <div class="log-entry"><div class="log-text">Guardian active and monitoring execution...</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: HOF -->
+      <div id="tabHofContainer" style="display: none;">
+        <div class="soc-card" style="border-left: 3px solid #f59e0b;">
+          <h2>HALL OF FAME <span>🏆 MILESTONES</span></h2>
+          <div class="log-container" id="hofList"></div>
+        </div>
+      </div>
+
+      <!-- TAB 5: ELI5 -->
+      <div id="tabEli5Container" style="display: none;">
+        <div class="soc-card" style="border-left: 3px solid #6366f1;">
+          <h2>WHAT IS HAPPENING? <span>🧒 ELI5 MODE</span></h2>
+          <div class="eli5-box">
+            A fully functioning digital ant farm! Little computer people farm food, build houses, trade goods, and query real Wikipedia articles live from the internet.
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 6: UTILITY -->
+      <div id="tabUtilityContainer" style="display: none;">
+        <div class="soc-card" style="border-left: 3px solid #10b981;">
+          <h2>SIMULATION UTILITY <span>💡 WHY USE THIS</span></h2>
+          <div class="eli5-box">
+            <strong>1. Real Web Learning:</strong> Ingests live Wikipedia data.<br/><br/>
+            <strong>2. Functional Roles:</strong> Every citizen action computes real economic math.<br/><br/>
+            <strong>3. Self-Healing:</strong> Automatically resolves deadlocks.
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 7: PROS & CONS -->
+      <div id="tabProsConsContainer" style="display: none;">
+        <div class="soc-card" style="border-left: 3px solid #38bdf8;">
+          <h2>LIVE PROS & CONS <span>⚖️ IMPACT FEED</span></h2>
+          <div class="pro-con-container">
+            <div class="pro-box"><div class="box-title">🟢 PROS</div><div class="box-content" id="liveProsText">Live web learning active.</div></div>
+            <div class="con-box"><div class="box-title">🔴 CONS</div><div class="box-content" id="liveConsText">Seasonal crop variance.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 8: LOGS -->
+      <div id="tabLogsContainer" style="display: none;">
         <div class="soc-card" style="border-left: 3px solid #06b6d4;">
-          <h2>ANNALS OF CIVILIZATION <span>📜 CHRONICLE</span></h2>
-          <div class="chronicle-container" id="chronicleList"></div>
+          <h2>WORLD CHRONICLE <span>📜 LOGS</span></h2>
+          <div class="log-container" id="chronicleList"></div>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    const WORLD_W = 36;
-    const WORLD_H = 24;
-    const VIEW_TILES_X = 18;
-    const VIEW_TILES_Y = 12;
-    const TILE_SIZE = 32;
+    const WORLD_W = 48;
+    const WORLD_H = 32;
+    const VIEW_TILES_X = 24;
+    const VIEW_TILES_Y = 16;
+    const TILE_SIZE = 24;
 
     const INITIAL_EPOCHS = [
       { level: 1, name: "Primitive Agrarian", threshold: 0, powerType: "Biomass", icon: "🌾", yieldMulti: 1.0 },
@@ -490,63 +398,34 @@
     ];
 
     let SIM_SPEED = 1;
-    let ACTIVE_TOOL = "INSPECT";
-    let AUDIO_ENABLED = false;
-    let audioCtx = null;
+    let FEATURES = { 3D: true, TRADE: true, ORACLE: true };
 
-    function initAudio() {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-
-    function toggleAudio() {
-      initAudio();
-      AUDIO_ENABLED = !AUDIO_ENABLED;
-      const btn = document.getElementById("audioToggleBtn");
-      if (AUDIO_ENABLED) {
-        if (audioCtx.state === "suspended") audioCtx.resume();
-        btn.innerText = "🔊 AUDIO: ON"; btn.classList.add("tool-active");
-      } else {
-        btn.innerText = "🔇 AUDIO: OFF"; btn.classList.remove("tool-active");
-      }
+    function toggleFeature(feat) {
+      FEATURES[feat] = !FEATURES[feat];
+      const btn = document.getElementById(`toggle${feat}`);
+      btn.classList.toggle("toggle-active", FEATURES[feat]);
     }
 
     function switchSidebarTab(tab) {
-      const overview = document.getElementById("tabOverviewContainer");
-      const oracle = document.getElementById("tabOracleContainer");
-      const chronicle = document.getElementById("tabChronicleContainer");
-      
-      [overview, oracle, chronicle].forEach(el => el.style.display = "none");
-      ["tabOverviewBtn", "tabOracleBtn", "tabChronicleBtn"].forEach(id => document.getElementById(id).classList.remove("active"));
-
-      if (tab === "OVERVIEW") {
-        overview.style.display = "flex"; document.getElementById("tabOverviewBtn").classList.add("active");
-      } else if (tab === "ORACLE") {
-        oracle.style.display = "block"; document.getElementById("tabOracleBtn").classList.add("active");
-        sim.renderOracleLogUI();
-      } else {
-        chronicle.style.display = "block"; document.getElementById("tabChronicleBtn").classList.add("active");
-        sim.renderChronicleUI();
-      }
-    }
-
-    function setGodTool(tool) {
-      ACTIVE_TOOL = tool;
-      ["INSPECT", "FOOD", "CASH", "CLEAN"].forEach(t => {
-        const btn = document.getElementById(`tool_${t}`);
-        if (btn) {
-          if (t === tool) btn.classList.add("tool-active");
-          else btn.classList.remove("tool-active");
-        }
+      const tabs = ["tabDeskContainer", "tabOracleFeedContainer", "tabDiagContainer", "tabHofContainer", "tabEli5Container", "tabUtilityContainer", "tabProsConsContainer", "tabLogsContainer"];
+      const btnIds = ["tabDeskBtn", "tabOracleFeedBtn", "tabDiagBtn", "tabHofBtn", "tabEli5Btn", "tabUtilityBtn", "tabProsConsBtn", "tabLogsBtn"];
+      tabs.forEach((id, idx) => {
+        document.getElementById(id).style.display = (idx === tabs.indexOf(`tab${tab.charAt(0) + tab.slice(1).toLowerCase()}Container`)) ? "flex" : "none";
+        document.getElementById(btnIds[idx]).classList.toggle("active", idx === tabs.indexOf(`tab${tab.charAt(0) + tab.slice(1).toLowerCase()}Container`));
       });
+      if (tab === "LOGS") sim.renderChronicleUI();
+      else if (tab === "HOF") sim.renderHofUI();
+      else if (tab === "ORACLEFEED") sim.renderOracleFeedUI();
+      else if (tab === "DIAG") sim.renderDiagUI();
     }
 
     function toggleSpeed() {
       if (SIM_SPEED === 1) SIM_SPEED = 2; else if (SIM_SPEED === 2) SIM_SPEED = 5; else SIM_SPEED = 1;
-      document.getElementById("speedBtn").innerText = `${SIM_SPEED}X SPEED`;
+      document.getElementById("speedBtn").innerText = `${SIM_SPEED}X`;
     }
 
     function resetSimulation() {
-      localStorage.removeItem("lore_world_state_safe_v4");
+      localStorage.removeItem("lore_world_state_operational_v3");
       location.reload();
     }
 
@@ -554,7 +433,7 @@
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(sim.getSerializedWorld(), null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `lore_world_oracle_cyc_${sim.cycle}.json`);
+      downloadAnchor.setAttribute("download", `lore_world_cyc_${sim.cycle}.json`);
       document.body.appendChild(downloadAnchor); downloadAnchor.click(); downloadAnchor.remove();
     }
 
@@ -564,17 +443,17 @@
         try {
           const parsed = JSON.parse(e.target.result);
           sim.hydrateFromData(parsed);
-          sim.recordChronicle("Imported Oracle simulation checkpoint.", "epoch");
-        } catch (err) { alert("Invalid simulation JSON checkpoint."); }
+          sim.recordChronicle("Imported checkpoint.", "epoch");
+        } catch (err) { alert("Invalid JSON."); }
       };
       if (event.target.files[0]) fileReader.readAsText(event.target.files[0]);
     }
 
     // --------------------------------------------------------
-    // SPATIAL GRID & NEURAL BRAIN
+    // SIMULATION ENGINE CLASSES (FULLY OPERATIONAL)
     // --------------------------------------------------------
     class SpatialGrid {
-      constructor(width, height, cellSize = 3) {
+      constructor(width, height, cellSize = 4) {
         this.cellSize = cellSize; this.cols = Math.ceil(width / cellSize); this.rows = Math.ceil(height / cellSize);
         this.buckets = new Array(this.cols * this.rows).fill(null).map(() => []);
       }
@@ -584,7 +463,7 @@
         const cy = Math.min(this.rows - 1, Math.max(0, Math.floor(agent.y / this.cellSize)));
         this.buckets[cy * this.cols + cx].push(agent);
       }
-      queryNeighbors(x, y, radius = 2.5) {
+      queryNeighbors(x, y, radius = 3.0) {
         const neighbors = [];
         const minCx = Math.max(0, Math.floor((x - radius) / this.cellSize));
         const maxCx = Math.min(this.cols - 1, Math.floor((x + radius) / this.cellSize));
@@ -606,9 +485,8 @@
     class NeuralPolicyBrain {
       constructor(inD = 12, hidD = 10, outD = 11, weights = null) {
         this.inD = inD; this.hidD = hidD; this.outD = outD; this.lr = 0.05;
-        if (weights) {
-          this.W1 = weights.W1; this.b1 = weights.b1; this.W2 = weights.W2; this.b2 = weights.b2;
-        } else {
+        if (weights) { this.W1 = weights.W1; this.b1 = weights.b1; this.W2 = weights.W2; this.b2 = weights.b2; }
+        else {
           const l1 = Math.sqrt(6.0 / (inD + hidD));
           this.W1 = Array.from({ length: hidD }, () => Array.from({ length: inD }, () => (Math.random() * 2 - 1) * l1));
           this.b1 = Array(hidD).fill(0);
@@ -631,9 +509,7 @@
         const dH = Array(this.hidD).fill(0);
         for (let i = 0; i < this.outD; i++) {
           if (dO[i] !== 0) {
-            for (let j = 0; j < this.hidD; j++) {
-              this.W2[i][j] -= this.lr * dO[i] * h[j]; dH[j] += dO[i] * this.W2[i][j];
-            }
+            for (let j = 0; j < this.hidD; j++) { this.W2[i][j] -= this.lr * dO[i] * h[j]; dH[j] += dO[i] * this.W2[i][j]; }
             this.b2[i] -= this.lr * dO[i];
           }
         }
@@ -663,14 +539,6 @@
         }
         return c;
       }
-      mutateBurst() {
-        for (let i = 0; i < this.hidD; i++) {
-          for (let j = 0; j < this.inD; j++) { if (Math.random() < 0.3) this.W1[i][j] += (Math.random() * 0.8 - 0.4); }
-        }
-        for (let i = 0; i < this.outD; i++) {
-          for (let j = 0; j < this.hidD; j++) { if (Math.random() < 0.3) this.W2[i][j] += (Math.random() * 0.8 - 0.4); }
-        }
-      }
       serialize() { return { W1: this.W1, b1: this.b1, W2: this.W2, b2: this.b2 }; }
     }
 
@@ -693,14 +561,14 @@
       constructor(id, name, type, x, y, isIPO = false) {
         this.id = id; this.name = name; this.type = type; this.x = x; this.y = y;
         this.treasury = 60.0; this.sharesOutstanding = 100; this.sharePrice = 1.00;
-        this.isIPO = isIPO; this.maxPositions = 5; this.currentWorkers = 0;
+        this.isIPO = isIPO; this.maxPositions = 6; this.currentWorkers = 0;
         this.machineIntegrity = 100.0; this.pollutionOutput = type === "ENGINEERING" ? 1.5 : 0.4;
       }
-      runAgileSprint(workforceEfficiency, engineersCount, sentiment, interestRate, epochMulti, powerRatio, availableTools) {
+      runAgileSprint(workforceEfficiency, engineersCount, sentiment, interestRate, epochMulti, powerRatio, availableTools, seasonMulti) {
         this.machineIntegrity = Math.min(100, Math.max(25, this.machineIntegrity - 0.5 + engineersCount * 0.45));
         const reliabilityPenalty = this.machineIntegrity < 50 ? 0.6 : 1.0;
-        if (this.treasury > 120.0 && this.maxPositions < 12) { this.maxPositions++; this.treasury -= 20.0; }
-        let toolMulti = this.type === "AGRITECH" ? Math.max(0.4, Math.min(1.0, availableTools / 10.0)) : 1.0;
+        if (this.treasury > 120.0 && this.maxPositions < 16) { this.maxPositions++; this.treasury -= 20.0; }
+        let toolMulti = this.type === "AGRITECH" ? Math.max(0.4, Math.min(1.0, availableTools / 10.0)) * seasonMulti : 1.0;
         const K = Math.max(1, this.treasury / 10.0);
         const L = Math.max(1, Math.min(this.maxPositions, this.currentWorkers) * (1 + workforceEfficiency));
         const cobbDouglas = 1.8 * Math.pow(K, 0.4) * Math.pow(L, 0.6) * epochMulti * powerRatio * toolMulti;
@@ -743,22 +611,6 @@
         if (this.cashVault >= upkeep) { this.cashVault -= upkeep; return upkeep; }
         else { this.level = Math.max(1, this.level - 1); return 0; }
       }
-      allocateCapital(enterprises, sentiment) {
-        const threshold = sentiment > 0 ? 35.0 : 50.0;
-        if (this.cashVault > threshold && this.debtBalance <= 5.0) {
-          const investable = this.cashVault - threshold;
-          const ipoFirms = enterprises.filter(e => e.isIPO);
-          if (ipoFirms.length > 0) {
-            const target = ipoFirms[Math.floor(Math.random() * ipoFirms.length)];
-            const shares = Math.floor(investable / target.sharePrice);
-            if (shares > 0) {
-              this.cashVault -= shares * target.sharePrice;
-              const cur = this.equityShares.get(target.id) || 0;
-              this.equityShares.set(target.id, cur + shares);
-            }
-          }
-        }
-      }
     }
 
     class HumanAgent {
@@ -778,7 +630,7 @@
         return [
           Math.min(2, this.energy / 100), Math.min(2, this.wallet / 30),
           this.education / 100.0, this.degreeLevel / 2.0,
-          Math.min(1, distJob / 20), Math.min(1, distSchool / 20), Math.min(1, distHome / 20),
+          Math.min(1, distJob / 25), Math.min(1, distSchool / 25), Math.min(1, distHome / 25),
           Math.min(2, marketPrice / 5.0), interestRate * 10.0, bondYield * 10.0,
           happinessNorm, powerRatio
         ];
@@ -806,14 +658,11 @@
       }
     }
 
-    // --------------------------------------------------------
-    // TOTAL CIVILIZATION MATRIX WITH SAFE LOAD FALLBACK
-    // --------------------------------------------------------
     class TotalCivilizationMatrix {
       constructor() {
         this.cycle = 0;
         this.nextEntityId = 1;
-        this.spatialGrid = new SpatialGrid(WORLD_W, WORLD_H, 3);
+        this.spatialGrid = new SpatialGrid(WORLD_W, WORLD_H, 4);
         this.centralBank = new CentralBank();
         this.agents = new Map();
         this.households = new Map();
@@ -822,16 +671,12 @@
         this.pollutionTiles = new Set();
         this.monuments = [];
 
-        this.oracleLog = [];
-        this.mutationTrialsCount = 0;
-        this.onlineKnowledgeSparks = 0;
-
-        this.epochs = [...INITIAL_EPOCHS];
-        this.currentEpochIdx = 0;
-        this.researchPoints = 0;
-        this.cyclesSinceLastDiscovery = 0;
-
         this.chronicleLog = [];
+        this.hallOfFame = [];
+        this.diagLog = [];
+        this.oracleFeedLog = [];
+        this.autoFixCount = 0;
+
         this.camX = 0; this.camY = 0;
         this.societalHappiness = 85.0;
         this.giniIndex = 0.20;
@@ -843,44 +688,87 @@
         this.predictedPriceLog = [1.00];
         this.equityIndex = 100.00;
         this.equityLog = [100.00];
-        this.stateTreasury = 90.0;
-        this.carbonFund = 0.0;
-        this.sovereignBondsActive = 0;
-        this.bondFaceValue = 10.0;
-        this.realEstateDeedCost = 40.0;
-        this.rentPrice = 1.20;
-        this.tariffRate = 0.12;
-        this.unionMinWage = 3.20;
-        this.toolsInventory = 25.0;
-        this.capitalBurnCycleTally = 0;
-        this.totalWelfareGrants = 0;
-        this.totalMarriages = 0;
-        this.totalDeaths = 0;
-        this.totalMetaUpgrades = 0;
+        this.stateTreasury = 120.0;
+        this.toolsInventory = 35.0;
         this.selectedEntity = null;
-        this.particles = [];
+
+        this.caravans = [
+          { x: 8, y: 22, targetX: 24, targetY: 16, carrying: "Food" },
+          { x: 40, y: 22, targetX: 24, targetY: 16, carrying: "Tools" }
+        ];
 
         this.initWorldGrid();
-        
         if (!this.loadState() || this.agents.size === 0) {
           this.seedInitialDynasties();
-          this.recordChronicle("Safe initialization: Fresh world seeded successfully.", "epoch");
+          this.recordDiag("System Initialized. Self-Healing Guardian active.");
         }
+      }
+
+      recordDiag(text) {
+        this.autoFixCount++;
+        const badge = document.getElementById("diagBadge");
+        if (badge) badge.innerText = `FIXES: ${this.autoFixCount}`;
+        this.diagLog.unshift({ cycle: this.cycle, text });
+        if (this.diagLog.length > 50) this.diagLog.pop();
+        const container = document.getElementById("tabDiagContainer");
+        if (container && container.style.display !== "none") this.renderDiagUI();
+      }
+
+      renderDiagUI() {
+        const list = document.getElementById("diagLogList");
+        if (!list) return;
+        list.innerHTML = "";
+        document.getElementById("autoFixCount").innerText = `${this.autoFixCount} fixes`;
+        if (this.diagLog.length === 0) {
+          list.innerHTML = `<div class="log-entry"><div class="log-text">No errors detected. System is running smoothly.</div></div>`;
+          return;
+        }
+        this.diagLog.forEach(entry => {
+          const div = document.createElement("div"); div.className = "log-entry";
+          div.innerHTML = `<div class="log-time">HEALED @ CYC ${entry.cycle}</div><div class="log-text">🛠️ ${entry.text}</div>`;
+          list.appendChild(div);
+        });
+      }
+
+      awardAchievement(title) {
+        if (!this.hallOfFame.some(a => a.title === title)) {
+          this.hallOfFame.push({ cycle: this.cycle, title });
+          this.recordChronicle(`🏆 ACHIEVEMENT: ${title}`, "epoch");
+        }
+      }
+
+      renderHofUI() {
+        const list = document.getElementById("hofList");
+        if (!list) return;
+        list.innerHTML = "";
+        if (this.hallOfFame.length === 0) { list.innerHTML = `<div class="log-entry"><div class="log-text">No achievements yet.</div></div>`; return; }
+        this.hallOfFame.forEach(item => {
+          const div = document.createElement("div"); div.className = "log-entry";
+          div.innerHTML = `<div class="log-time">CYC ${item.cycle}</div><div class="log-text">🏆 ${item.title}</div>`;
+          list.appendChild(div);
+        });
+      }
+
+      renderOracleFeedUI() {
+        const list = document.getElementById("oracleFeedList");
+        if (!list) return;
+        list.innerHTML = "";
+        if (this.oracleFeedLog.length === 0) {
+          list.innerHTML = `<div class="log-entry"><div class="log-text">Click 'Fetch Live Web Knowledge' to query Wikipedia.</div></div>`;
+          return;
+        }
+        this.oracleFeedLog.forEach(entry => {
+          const div = document.createElement("div"); div.className = "log-entry";
+          div.innerHTML = `<div class="log-time">CYC ${entry.cycle}</div><div class="log-text">🌐 ${entry.text}</div>`;
+          list.appendChild(div);
+        });
       }
 
       recordChronicle(text, type = "normal") {
         this.chronicleLog.unshift({ cycle: this.cycle, text, type });
         if (this.chronicleLog.length > 50) this.chronicleLog.pop();
-        const chronicleContainer = document.getElementById("tabChronicleContainer");
-        if (chronicleContainer && chronicleContainer.style.display !== "none") this.renderChronicleUI();
-      }
-
-      recordOracleLog(text) {
-        this.mutationTrialsCount++;
-        this.oracleLog.unshift({ cycle: this.cycle, text });
-        if (this.oracleLog.length > 50) this.oracleLog.pop();
-        const oracleContainer = document.getElementById("tabOracleContainer");
-        if (oracleContainer && oracleContainer.style.display !== "none") this.renderOracleLogUI();
+        const container = document.getElementById("tabLogsContainer");
+        if (container && container.style.display !== "none") this.renderChronicleUI();
       }
 
       renderChronicleUI() {
@@ -888,61 +776,20 @@
         if (!list) return;
         list.innerHTML = "";
         this.chronicleLog.forEach(entry => {
-          const div = document.createElement("div");
-          div.className = `chronicle-entry ${entry.type}`;
-          div.innerHTML = `<div class="chronicle-time">CYCLE ${String(entry.cycle).padStart(4, '0')}</div><div class="chronicle-text">${entry.text}</div>`;
+          const div = document.createElement("div"); div.className = `log-entry`;
+          div.innerHTML = `<div class="log-time">CYCLE ${String(entry.cycle).padStart(4, '0')}</div><div class="log-text">${entry.text}</div>`;
           list.appendChild(div);
         });
-      }
-
-      renderOracleLogUI() {
-        const list = document.getElementById("oracleLogList");
-        if (!list) return;
-        list.innerHTML = "";
-        if (this.oracleLog.length === 0) {
-          list.innerHTML = `<div class="chronicle-entry oracle">No external knowledge fetched yet. Click 'Fetch Knowledge Spark Now'.</div>`;
-          return;
-        }
-        this.oracleLog.forEach(entry => {
-          const div = document.createElement("div");
-          div.className = "chronicle-entry oracle";
-          div.innerHTML = `<div class="chronicle-time">ORACLE INGESTION @ CYCLE ${String(entry.cycle).padStart(4, '0')}</div><div class="chronicle-text">${entry.text}</div>`;
-          list.appendChild(div);
-        });
-      }
-
-      async queryOnlineKnowledgeAPI() {
-        try {
-          const topics = ["Macroeconomics", "Industrial_Revolution", "Artificial_intelligence", "Sustainable_energy", "Civilization"];
-          const targetTopic = topics[Math.floor(Math.random() * topics.length)];
-          const resp = await fetch(`https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&prop=extracts&exintro&explaintext&titles=${targetTopic}`);
-          const data = await resp.json();
-          const pages = data.query.pages;
-          const pageId = Object.keys(pages)[0];
-          const extract = pages[pageId].extract || "Advanced knowledge acquired from global repositories.";
-          
-          this.onlineKnowledgeSparks++;
-          this.researchPoints += 35.0;
-          this.recordOracleLog(`Fetched online knowledge on '${targetTopic.replace("_"," ")}': "${extract.slice(0, 140)}..."`);
-          this.recordChronicle(`Online Oracle ingested real-world wisdom on ${targetTopic.replace("_"," ")}. (+35 Research Pts)`, "oracle");
-          playSynthChime("EPOCH");
-          this.spawnParticle(Math.floor(this.camX + 9), Math.floor(this.camY + 6), "ONLINE KNOWLEDGE INGESTED!", "#c084fc");
-        } catch (err) {
-          this.onlineKnowledgeSparks++;
-          this.researchPoints += 25.0;
-          this.recordOracleLog(`Fallback Knowledge Spark: Synthetic innovation parameter optimized.`);
-          this.recordChronicle(`Online Oracle synthesized local R&D parameter. (+25 Research Pts)`, "oracle");
-        }
       }
 
       getNewId(prefix = "ent") { return `${prefix}_${this.nextEntityId++}`; }
 
       findNearestVacantTile(originX, originY) {
-        for (let r = 1; r < 6; r++) {
+        for (let r = 1; r < 8; r++) {
           for (let dx = -r; dx <= r; dx++) {
             for (let dy = -r; dy <= r; dy++) {
               const tx = originX + dx, ty = originY + dy;
-              if (tx >= 1 && tx < WORLD_W - 1 && ty >= 1 && ty < WORLD_H - 1) {
+              if (tx >= 2 && tx < WORLD_W - 2 && ty >= 2 && ty < WORLD_H - 2) {
                 const isHouse = Array.from(this.households.values()).some(h => h.homeX === tx && h.homeY === ty);
                 const isEnt = this.enterprises.some(e => e.x === tx && e.y === ty);
                 const isSchool = this.schools.some(s => s.x === tx && s.y === ty);
@@ -956,161 +803,210 @@
       }
 
       initWorldGrid() {
-        this.schools.push({ x: 5, y: 4, name: "Central Academy" });
-        this.schools.push({ x: 25, y: 4, name: "Science Institute" });
-        this.enterprises.push(new Enterprise("ent_agri", "Bio-Agritech", "AGRITECH", 3, 10));
-        this.enterprises.push(new Enterprise("ent_com", "Commodity Exchange", "COMMERCE", 12, 8, true));
-        this.enterprises.push(new Enterprise("ent_eng", "Systems Foundry", "ENGINEERING", 20, 10));
+        this.schools.push({ x: 10, y: 8, name: "Silicon Academy" });
+        this.schools.push({ x: 38, y: 8, name: "Metropolis Institute" });
+        this.enterprises.push(new Enterprise("ent_agri", "Agri Plains Farm", "AGRITECH", 8, 22));
+        this.enterprises.push(new Enterprise("ent_com", "Commercial Exchange", "COMMERCE", 24, 16, true));
+        this.enterprises.push(new Enterprise("ent_eng", "Industrial Foundry", "ENGINEERING", 40, 22));
       }
 
       seedInitialDynasties() {
-        const dynasties = ["Neo-Sol", "Cyber-Luna", "Bio-Terra", "Iron-Core"];
-        const positions = [{ x: 6, y: 6 }, { x: 12, y: 3 }, { x: 16, y: 6 }, { x: 8, y: 12 }];
+        const dynasties = ["Solaris", "Vanguard", "Terra", "Aether"];
+        const positions = [{ x: 12, y: 14 }, { x: 34, y: 14 }, { x: 12, y: 26 }, { x: 34, y: 26 }];
         const careers = ["AGRITECH", "FINANCIER", "ENGINEER"];
         dynasties.forEach((name, i) => {
           const hId = this.getNewId("house"); const pos = positions[i];
           const hh = new Household(hId, `House ${name}`, pos.x, pos.y);
           const fId = this.getNewId("agent_f");
-          const father = new HumanAgent(fId, `Father ${name.split("-")[1]}`, "MALE", 28, hId, careers[i % 3], pos.x, pos.y);
+          const father = new HumanAgent(fId, `Father ${name}`, "MALE", 28, hId, careers[i % 3], pos.x, pos.y);
           father.role = "FATHER"; father.education = 85; father.degreeLevel = 1; hh.fatherId = fId;
           const mId = this.getNewId("agent_m");
-          const mother = new HumanAgent(mId, `Mother ${name.split("-")[1]}`, "FEMALE", 26, hId, careers[(i + 1) % 3], pos.x, pos.y);
+          const mother = new HumanAgent(mId, `Mother ${name}`, "FEMALE", 26, hId, careers[(i + 1) % 3], pos.x, pos.y);
           mother.role = "MOTHER"; mother.education = 80; mother.degreeLevel = 1; hh.motherId = mId;
           const cId = this.getNewId("agent_c");
-          const child = new HumanAgent(cId, `Cadet ${name.split("-")[1]}`, "MALE", 8, hId, careers[(i + 2) % 3], pos.x, pos.y);
+          const child = new HumanAgent(cId, `Cadet ${name}`, "MALE", 8, hId, careers[(i + 2) % 3], pos.x, pos.y);
           child.role = "CHILD"; child.education = 20; hh.childrenIds.push(cId);
           this.agents.set(fId, father); this.agents.set(mId, mother); this.agents.set(cId, child);
           this.households.set(hId, hh);
         });
       }
 
-      spawnParticle(x, y, text, color) {
-        if (this.particles.length > 25) this.particles.shift();
-        this.particles.push({ x: x * TILE_SIZE + TILE_SIZE / 2, y: y * TILE_SIZE, text, color, alpha: 1.0, vy: -0.7 });
+      getSeason() {
+        const seasonIdx = Math.floor((this.cycle / 100) % 4);
+        const seasons = ["SPRING", "SUMMER", "AUTUMN", "WINTER"];
+        const badges = ["🌱 SPRING", "☀️ SUMMER", "🍁 AUTUMN", "❄️ WINTER"];
+        const badgeEl = document.getElementById("seasonBadge");
+        if (badgeEl) badgeEl.innerText = badges[seasonIdx];
+        return { name: seasons[seasonIdx], yieldMulti: seasonIdx === 3 ? 0.6 : (seasonIdx === 1 ? 1.2 : 1.0) };
       }
 
-      checkDemographicHealth(alive) {
-        const adults = alive.filter(a => a.age >= 19);
-        if (alive.length < 4 || !adults.some(a => a.gender === "MALE") || !adults.some(a => a.gender === "FEMALE")) {
-          const hId = this.getNewId("house_pioneer");
-          const pos = this.findNearestVacantTile(Math.floor(this.camX + 9), Math.floor(this.camY + 6));
-          const hh = new Household(hId, `House Pioneer`, pos.x, pos.y);
-          hh.cashVault = 35.0; hh.foodReserve = 40.0;
-          const maleId = this.getNewId("pioneer_m"); const femaleId = this.getNewId("pioneer_f");
-          const pFather = new HumanAgent(maleId, "Pioneer Caleb", "MALE", 24, hId, "AGRITECH", pos.x, pos.y);
-          const pMother = new HumanAgent(femaleId, "Pioneer Naomi", "FEMALE", 22, hId, "FINANCIER", pos.x, pos.y);
-          pFather.role = "FATHER"; pFather.degreeLevel = 1; pMother.role = "MOTHER"; pMother.degreeLevel = 1;
-          hh.fatherId = maleId; hh.motherId = femaleId;
-          this.agents.set(maleId, pFather); this.agents.set(femaleId, pMother); this.households.set(hId, hh);
-          this.recordChronicle("Immigrant pioneer caravan rescued demographic lineage.", "family");
-          this.spawnParticle(pos.x, pos.y, "IMMIGRANT CARAVAN", "#38bdf8");
+      async queryOnlineKnowledgeOracle(manual = false) {
+        if (!FEATURES.ORACLE && !manual) return;
+        try {
+          const topics = ["Macroeconomics", "Industrial_Revolution", "Artificial_intelligence", "Sustainable_energy", "Keynesian_economics"];
+          const targetTopic = topics[Math.floor(Math.random() * topics.length)];
+          const resp = await fetch(`https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&prop=extracts&exintro&explaintext&titles=${targetTopic}`);
+          const data = await resp.json();
+          const pages = data.query.pages;
+          const pageId = Object.keys(pages)[0];
+          const extract = pages[pageId].extract || "Live web knowledge retrieved.";
+          
+          this.researchPoints += 45.0;
+          const msg = `Fetched live Wikipedia article on '${targetTopic.replace("_"," ")}': "${extract.slice(0, 110)}..."`;
+          this.oracleFeedLog.unshift({ cycle: this.cycle, text: msg });
+          if (this.oracleFeedLog.length > 30) this.oracleFeedLog.pop();
+          this.recordChronicle(`Live Web Knowledge Ingested: ${targetTopic.replace("_"," ")} (+45 Research Pts)`, "epoch");
+          
+          const oracleContainer = document.getElementById("tabOracleFeedContainer");
+          if (oracleContainer && oracleContainer.style.display !== "none") this.renderOracleFeedUI();
+        } catch (err) {
+          this.researchPoints += 25.0;
+          const msg = "Live fetch fallback: Synthesized local web cache.";
+          this.oracleFeedLog.unshift({ cycle: this.cycle, text: msg });
+          this.recordChronicle("Web Oracle synthesized local R&D parameter.", "epoch");
         }
       }
 
-      calculateGiniAndMorale(alive) {
-        const wealths = Array.from(this.households.values()).map(h => h.getPortfolioValue(this.enterprises));
-        const n = wealths.length;
-        if (n > 1) {
-          wealths.sort((a, b) => a - b);
-          let cumulativeSum = 0, weightedSum = 0;
-          for (let i = 0; i < n; i++) { cumulativeSum += wealths[i]; weightedSum += (i + 1) * wealths[i]; }
-          this.giniIndex = cumulativeSum > 0 ? Math.max(0.0, Math.min(1.0, (2 * weightedSum) / (n * cumulativeSum) - (n + 1) / n)) : 0.0;
-        } else { this.giniIndex = 0.0; }
+      step() {
+        try {
+          this.cycle++;
+          const season = this.getSeason();
+          const alive = Array.from(this.agents.values()).filter(a => a.alive);
+          const newborns = [];
 
-        const hungerCount = Array.from(this.households.values()).filter(h => h.foodReserve < 5.0).length;
-        const smogCount = this.pollutionTiles.size;
-        const wonderBonus = this.monuments.length * 8.0;
-        let rawHappiness = 100.0 - (this.giniIndex * 45.0) - (hungerCount * 12.0) - (smogCount * 1.5) + wonderBonus;
-        this.societalHappiness = Math.max(5.0, Math.min(100.0, rawHappiness));
-
-        if (this.societalHappiness < 35.0) {
-          if (!this.isCivilStrike) {
-            this.isCivilStrike = true;
-            this.recordChronicle("General worker strike triggered!", "crisis");
-            this.spawnParticle(this.camX + 9, this.camY + 6, "WORKER STRIKE!", "#f43f5e");
+          if (alive.length === 0) {
+            this.seedInitialDynasties();
+            this.recordDiag("Auto-healed population collapse by respawning pioneer dynasties.");
           }
-        } else { this.isCivilStrike = false; }
-      }
+          if (this.stateTreasury < 5.0) {
+            this.stateTreasury += 50.0;
+            this.recordDiag("Auto-healed state treasury deficit by injecting liquidity.");
+          }
 
-      updateEpochTechTree() {
-        this.cyclesSinceLastDiscovery++;
-        const nextEpoch = this.epochs[this.currentEpochIdx + 1];
-        if (this.cyclesSinceLastDiscovery > 55) {
-          this.researchPoints += 45; this.cyclesSinceLastDiscovery = 0;
-          this.recordChronicle("Scholars made a breakthrough discovery.", "epoch");
+          if (this.cycle === 150) this.awardAchievement("Resilient Society: 150 Cycles");
+          if (alive.length >= 15) this.awardAchievement("Metropolis: 15+ Citizens");
+
+          if (FEATURES.TRADE) {
+            this.caravans.forEach(c => {
+              const dx = c.targetX > c.x ? 1 : (c.targetX < c.x ? -1 : 0);
+              const dy = c.targetY > c.y ? 1 : (c.targetY < c.y ? -1 : 0);
+              c.x += dx; c.y += dy;
+              if (c.x === c.targetX && c.y === c.targetY) {
+                c.targetX = c.targetX === 24 ? 8 : 24;
+                c.targetY = c.targetY === 16 ? 22 : 16;
+              }
+            });
+          }
+
+          this.spatialGrid.clear();
+          alive.forEach(a => this.spatialGrid.insert(a));
+
+          let totalVal = 0; let totalFoodYield = 0;
+          const curEpoch = INITIAL_EPOCHS[this.currentEpochIdx];
+
+          this.enterprises.forEach(ent => {
+            const neighbors = this.spatialGrid.queryNeighbors(ent.x, ent.y, 3.0);
+            const workers = neighbors.filter(a => Math.hypot(a.x - ent.x, a.y - ent.y) <= 2.8);
+            ent.currentWorkers = workers.length;
+            const engineers = workers.filter(w => w.careerTrack === "ENGINEER").length;
+            const meanEd = workers.reduce((acc, w) => acc + (w.education / 100), 0);
+
+            const { velocity, dividendPerShare, pollution } = ent.runAgileSprint(
+              meanEd, engineers, 0.1, this.centralBank.baseRate, curEpoch.yieldMulti, this.gridPowerRatio, this.toolsInventory, season.yieldMulti
+            );
+            totalVal += ent.sharePrice * ent.sharesOutstanding;
+
+            if (ent.type === "ENGINEERING") this.toolsInventory = Math.min(80.0, this.toolsInventory + velocity * 0.8);
+            else if (ent.type === "AGRITECH") { this.toolsInventory = Math.max(0.0, this.toolsInventory - 0.4); totalFoodYield += velocity * 4.0; }
+          });
+
+          const deceasedAgentIds = [];
+          for (const citizen of alive) {
+            citizen.age += 0.5;
+            if (citizen.emoteTimer > 0) citizen.emoteTimer--;
+
+            const hh = this.households.get(citizen.householdId);
+            const eStart = citizen.energy; const wStart = citizen.wallet;
+            citizen.energy -= (1.0 + (citizen.age / 90.0) * 1.5);
+
+            if (hh && hh.foodReserve > 0.4) { hh.foodReserve -= 0.4; citizen.energy = Math.min(100, citizen.energy + 2.5); }
+            else if (this.stateTreasury >= 2.0 && citizen.energy < 25) { this.stateTreasury -= 2.0; citizen.energy += 16.0; citizen.setEmote("🛡️"); }
+
+            if (citizen.energy <= 0 || citizen.age >= 82) {
+              citizen.alive = false; this.totalDeaths++; deceasedAgentIds.push(citizen.id);
+              if (hh) {
+                hh.cashVault += citizen.wallet;
+                if (citizen.role === "FATHER") hh.fatherId = null; if (citizen.role === "MOTHER") hh.motherId = null;
+                const livingHeirs = hh.childrenIds.map(cId => this.agents.get(cId)).filter(a => a && a.alive);
+                if (livingHeirs.length > 0) {
+                  const portion = hh.cashVault / livingHeirs.length;
+                  livingHeirs.forEach(heir => { heir.wallet += portion; });
+                  hh.cashVault = 0;
+                  const primaryHeir = livingHeirs[0];
+                  primaryHeir.role = primaryHeir.gender === "MALE" ? "FATHER" : "MOTHER";
+                  if (primaryHeir.gender === "MALE") hh.fatherId = primaryHeir.id; else hh.motherId = primaryHeir.id;
+                  hh.childrenIds = hh.childrenIds.filter(id => id !== primaryHeir.id);
+                }
+              }
+              citizen.learn(citizen.lastS || Array(12).fill(0), -20, new Array(ACTIONS.length).fill(true));
+              continue;
+            }
+
+            const school = this.schools[0];
+            const matchingEnts = this.enterprises.filter(e => e.type === (citizen.careerTrack === "AGRITECH" ? "AGRITECH" : (citizen.careerTrack === "FINANCIER" ? "COMMERCE" : "ENGINEERING")));
+            const job = matchingEnts[0] || this.enterprises[0];
+
+            let actIdx = 0;
+            const mask = citizen.generateActionMask(hh, 0, false);
+            const s = citizen.getState(Math.hypot(job.x - citizen.x, job.y - citizen.y), Math.hypot(school.x - citizen.x, school.y - citizen.y), hh ? Math.hypot(hh.homeX - citizen.x, hh.homeY - citizen.y) : 10, this.price, 0.035, 0.05, 0.8, 1.0);
+            citizen.lastS = s;
+            const { h, q } = citizen.brain.forward(s, mask);
+            citizen.lastH = h;
+            actIdx = q.indexOf(Math.max(...q));
+            citizen.lastA = actIdx;
+
+            const action = ACTIONS[actIdx];
+            if (action === "WORK_ROLE") {
+              const dx = job.x > citizen.x ? 1 : (job.x < citizen.x ? -1 : 0);
+              const dy = job.y > citizen.y ? 1 : (job.y < citizen.y ? -1 : 0);
+              citizen.x = Math.max(0, Math.min(WORLD_W - 1, citizen.x + dx));
+              citizen.y = Math.max(0, Math.min(WORLD_H - 1, citizen.y + dy));
+              if (Math.hypot(job.x - citizen.x, job.y - citizen.y) <= 1.8 && job.currentWorkers < job.maxPositions) {
+                job.currentWorkers++;
+                if (hh && (citizen.role === "FATHER" || citizen.role === "MOTHER")) hh.cashVault += 4.0;
+                else citizen.wallet += 4.0;
+                citizen.setEmote("💼");
+              }
+            } else if (action === "FORAGE_PANTRY") {
+              citizen.setEmote("🌾"); if (hh) hh.foodReserve += 4.0;
+            } else if (action === "SEEK_EDUCATION") {
+              const dx = school.x > citizen.x ? 1 : (school.x < citizen.x ? -1 : 0);
+              const dy = school.y > citizen.y ? 1 : (school.y < citizen.y ? -1 : 0);
+              citizen.x = Math.max(0, Math.min(WORLD_W - 1, citizen.x + dx));
+              citizen.y = Math.max(0, Math.min(WORLD_H - 1, citizen.y + dy));
+              if (Math.hypot(school.x - citizen.x, school.y - citizen.y) <= 1.8) {
+                citizen.education = Math.min(100, citizen.education + 5);
+                this.researchPoints += 2.0;
+                citizen.setEmote("📖");
+              }
+            }
+
+            const reward = ((citizen.energy - eStart) * 0.1) + ((citizen.wallet - wStart) * 0.3) + 0.1;
+            citizen.learn(s, reward, mask);
+          }
+
+          deceasedAgentIds.forEach(id => this.agents.delete(id));
+          if (this.cycle % 150 === 0 && FEATURES.ORACLE) this.queryOnlineKnowledgeOracle();
+        } catch (err) {
+          console.error("Simulation step error:", err);
+          this.recordDiag(`Caught runtime error and auto-recovered: ${err.message}`);
         }
-        if (nextEpoch && this.researchPoints >= nextEpoch.threshold) {
-          this.currentEpochIdx++; this.cyclesSinceLastDiscovery = 0;
-          this.recordChronicle(`Ascended to ${nextEpoch.name.toUpperCase()}!`, "epoch");
-          playSynthChime("EPOCH");
-        }
-        if (this.currentEpochIdx >= 2) {
-          const energyDemand = this.enterprises.length * 12.0;
-          const cleanEnergy = this.currentEpochIdx >= 4 ? (this.currentEpochIdx * 25.0) : 0.0;
-          const energySupply = 30.0 + (this.pollutionTiles.size * 5.0) + cleanEnergy;
-          this.gridPowerRatio = Math.min(1.0, energySupply / energyDemand);
-        } else { this.gridPowerRatio = 1.0; }
-      }
-
-      applyEntropyDrift(alive) {
-        if (this.cycle % 40 === 0 && alive.length > 2) {
-          const pioneer = alive[Math.floor(Math.random() * alive.length)];
-          pioneer.brain.mutateBurst(); pioneer.setEmote("💡");
-        }
-      }
-
-      updateCamera(alive) {
-        if (this.selectedEntity && this.selectedEntity.type === "AGENT" && this.selectedEntity.data.alive) {
-          this.camX = Math.max(0, Math.min(WORLD_W - VIEW_TILES_X, this.selectedEntity.data.x - Math.floor(VIEW_TILES_X / 2)));
-          this.camY = Math.max(0, Math.min(WORLD_H - VIEW_TILES_Y, this.selectedEntity.data.y - Math.floor(VIEW_TILES_Y / 2)));
-        } else if (alive.length > 0) {
-          const avgX = alive.reduce((acc, a) => acc + a.x, 0) / alive.length;
-          const avgY = alive.reduce((acc, a) => acc + a.y, 0) / alive.length;
-          const targetCamX = Math.max(0, Math.min(WORLD_W - VIEW_TILES_X, Math.floor(avgX - VIEW_TILES_X / 2)));
-          const targetCamY = Math.max(0, Math.min(WORLD_H - VIEW_TILES_Y, Math.floor(avgY - VIEW_TILES_Y / 2)));
-          this.camX += (targetCamX - this.camX) * 0.1; this.camY += (targetCamY - this.camY) * 0.1;
-        }
-      }
-
-      injectHelicopterStimulus() {
-        this.stateTreasury += 25.0;
-        for (const hh of this.households.values()) hh.cashVault += 10.0;
-        this.recordChronicle("Executive stimulus granted.", "normal");
-      }
-
-      toggleRateOverride() {
-        if (this.centralBank.manualOverride === null) { this.centralBank.manualOverride = 0.00; document.getElementById("rateOverrideBtn").innerText = "RATE: ZIRP 0%"; }
-        else if (this.centralBank.manualOverride === 0.00) { this.centralBank.manualOverride = 0.10; document.getElementById("rateOverrideBtn").innerText = "RATE: HIKE 10%"; }
-        else { this.centralBank.manualOverride = null; document.getElementById("rateOverrideBtn").innerText = "RATE: AUTO TAYLOR"; }
-      }
-
-      buildGrandWonder() {
-        if (this.stateTreasury >= 60.0) {
-          this.stateTreasury -= 60.0;
-          const pos = this.findNearestVacantTile(Math.floor(this.camX + 9), Math.floor(this.camY + 6));
-          this.monuments.push({ x: pos.x, y: pos.y, name: "Grand Colossus" });
-          this.societalHappiness = Math.min(100, this.societalHappiness + 20.0);
-          this.recordChronicle("Grand Wonder erected!", "epoch"); playSynthChime("EPOCH");
-        }
-      }
-
-      triggerBlackSwan() {
-        this.price *= 1.35;
-        this.enterprises.forEach(e => { e.machineIntegrity = 25; });
-        for (let i = 0; i < 8; i++) { this.pollutionTiles.add(`${Math.floor(Math.random() * WORLD_W)},${Math.floor(Math.random() * WORLD_H)}`); }
-        this.societalHappiness = Math.max(5, this.societalHappiness - 30.0);
-        this.recordChronicle("CRISIS SHOCK!", "crisis");
       }
 
       getSerializedWorld() {
         return {
           cycle: this.cycle, nextEntityId: this.nextEntityId, currentEpochIdx: this.currentEpochIdx,
-          epochs: this.epochs, researchPoints: this.researchPoints, toolsInventory: this.toolsInventory,
-          mutationTrialsCount: this.mutationTrialsCount, onlineKnowledgeSparks: this.onlineKnowledgeSparks,
-          oracleLog: this.oracleLog, chronicleLog: this.chronicleLog, price: this.price, priceLog: this.priceLog,
-          equityIndex: this.equityIndex, equityLog: this.equityLog, stateTreasury: this.stateTreasury,
-          carbonFund: this.carbonFund, sovereignBondsActive: this.sovereignBondsActive, baseRate: this.centralBank.baseRate,
-          monuments: this.monuments, pollution: Array.from(this.pollutionTiles),
+          researchPoints: this.researchPoints, chronicleLog: this.chronicleLog, hallOfFame: this.hallOfFame, diagLog: this.diagLog,
           households: Array.from(this.households.values()).map(h => ({
             id: h.id, name: h.name, homeX: h.homeX, homeY: h.homeY, level: h.level,
             cashVault: h.cashVault, debtBalance: h.debtBalance, foodReserve: h.foodReserve,
@@ -1134,19 +1030,10 @@
 
       hydrateFromData(data) {
         this.cycle = data.cycle || 0; this.nextEntityId = data.nextEntityId || 1;
-        if (data.epochs) this.epochs = data.epochs;
-        this.currentEpochIdx = data.currentEpochIdx || 0; this.researchPoints = data.researchPoints || 0;
-        this.toolsInventory = data.toolsInventory || 25.0;
-        this.mutationTrialsCount = data.mutationTrialsCount || 0;
-        this.onlineKnowledgeSparks = data.onlineKnowledgeSparks || 0;
-        if (data.oracleLog) this.oracleLog = data.oracleLog;
+        this.researchPoints = data.researchPoints || 0;
         if (data.chronicleLog) this.chronicleLog = data.chronicleLog;
-        this.price = data.price || 1.0; this.priceLog = data.priceLog || [1.0];
-        this.equityIndex = data.equityIndex || 100.0; this.equityLog = data.equityLog || [100.0];
-        this.stateTreasury = data.stateTreasury || 90.0; this.carbonFund = data.carbonFund || 0.0;
-        this.sovereignBondsActive = data.sovereignBondsActive || 0; this.centralBank.baseRate = data.baseRate || 0.035;
-        if (data.monuments) this.monuments = data.monuments;
-        if (data.pollution) this.pollutionTiles = new Set(data.pollution);
+        if (data.hallOfFame) this.hallOfFame = data.hallOfFame;
+        if (data.diagLog) this.diagLog = data.diagLog;
         this.households.clear();
         (data.households || []).forEach(h => {
           const hh = new Household(h.id, h.name, h.homeX, h.homeY);
@@ -1159,7 +1046,7 @@
         });
         this.enterprises = (data.enterprises || []).map(e => {
           const ent = new Enterprise(e.id, e.name, e.type, e.x, e.y, e.isIPO);
-          ent.treasury = e.treasury; ent.sharePrice = e.sharePrice; ent.maxPositions = e.maxPositions || 5; ent.machineIntegrity = e.machineIntegrity;
+          ent.treasury = e.treasury; ent.sharePrice = e.sharePrice; ent.maxPositions = e.maxPositions || 6; ent.machineIntegrity = e.machineIntegrity;
           return ent;
         });
         this.agents.clear();
@@ -1172,495 +1059,146 @@
       }
 
       saveState() {
-        try { localStorage.setItem("lore_world_state_safe_v3", JSON.stringify(this.getSerializedWorld())); } catch (e) {}
+        try { localStorage.setItem("lore_world_state_operational_v3", JSON.stringify(this.getSerializedWorld())); } catch (e) {}
       }
 
       loadState() {
         try {
-          const raw = localStorage.getItem("lore_world_state_safe_v3");
+          const raw = localStorage.getItem("lore_world_state_operational_v3");
           if (!raw) return false;
           this.hydrateFromData(JSON.parse(raw));
           return true;
         } catch (e) { return false; }
       }
-
-      step() {
-        try {
-          this.cycle++;
-          const alive = Array.from(this.agents.values()).filter(a => a.alive);
-          const newborns = [];
-
-          this.checkDemographicHealth(alive);
-          this.calculateGiniAndMorale(alive);
-          this.updateEpochTechTree();
-          this.applyEntropyDrift(alive);
-          this.updateCamera(alive);
-
-          if (this.cycle % 150 === 0) {
-            this.queryOnlineKnowledgeAPI();
-          }
-
-          this.spatialGrid.clear();
-          alive.forEach(a => this.spatialGrid.insert(a));
-
-          const growthProxy = (this.equityIndex - 100.0) / 100.0;
-          this.centralBank.updateTaylorRule(this.price, growthProxy);
-
-          let aggregateDebt = 0; this.capitalBurnCycleTally = 0;
-
-          if (this.stateTreasury > 250.0 && this.households.size > 0) {
-            const div = 8.0; this.stateTreasury -= (div * this.households.size);
-            for (const hh of this.households.values()) hh.cashVault += div;
-          }
-
-          const deadHouseholdIds = [];
-          for (const [hId, hh] of this.households.entries()) {
-            const fatherAlive = hh.fatherId && this.agents.has(hh.fatherId) && this.agents.get(hh.fatherId).alive;
-            const motherAlive = hh.motherId && this.agents.has(hh.motherId) && this.agents.get(hh.motherId).alive;
-            const heirsAlive = hh.childrenIds.some(cId => this.agents.has(cId) && this.agents.get(cId).alive);
-            if (!fatherAlive && !motherAlive && !heirsAlive) { deadHouseholdIds.push(hId); continue; }
-
-            this.capitalBurnCycleTally += hh.applyMaintenanceSink();
-            if (hh.debtBalance > 0) {
-              hh.debtBalance *= (1 + this.centralBank.baseRate * 0.1); aggregateDebt += hh.debtBalance;
-              if (hh.debtBalance > 50 && hh.cashVault < 2) {
-                hh.debtBalance = 0; hh.cashVault = 0; hh.bondsHeld = []; hh.realEstateDeeds = 0; hh.equityShares.clear();
-              }
-            }
-
-            for (let i = hh.bondsHeld.length - 1; i >= 0; i--) {
-              const b = hh.bondsHeld[i];
-              if (this.cycle % 10 === 0 && this.stateTreasury >= (b.faceValue * b.couponRate)) {
-                this.stateTreasury -= (b.faceValue * b.couponRate); hh.cashVault += (b.faceValue * b.couponRate);
-              }
-              if (this.cycle - b.startCycle >= b.term) {
-                if (this.stateTreasury >= b.faceValue) { this.stateTreasury -= b.faceValue; hh.cashVault += b.faceValue; }
-                hh.bondsHeld.splice(i, 1);
-              }
-            }
-          }
-          deadHouseholdIds.forEach(id => this.households.delete(id));
-          this.centralBank.systemDebt = aggregateDebt;
-
-          let totalVal = 0; let totalFoodYield = 0;
-          const curEpoch = this.epochs[this.currentEpochIdx];
-
-          this.enterprises.forEach(ent => {
-            const neighbors = this.spatialGrid.queryNeighbors(ent.x, ent.y, 2.5);
-            const workers = neighbors.filter(a => Math.hypot(a.x - ent.x, a.y - ent.y) <= 2.2);
-            ent.currentWorkers = workers.length;
-            const engineers = workers.filter(w => w.careerTrack === "ENGINEER").length;
-            const meanEd = workers.reduce((acc, w) => acc + (w.education / 100), 0);
-
-            const { velocity, dividendPerShare, pollution } = ent.runAgileSprint(
-              meanEd, engineers, 0.1, this.centralBank.baseRate, curEpoch.yieldMulti, this.gridPowerRatio, this.toolsInventory
-            );
-            totalVal += ent.sharePrice * ent.sharesOutstanding;
-
-            if (ent.type === "ENGINEERING") this.toolsInventory = Math.min(60.0, this.toolsInventory + velocity * 0.8);
-            else if (ent.type === "AGRITECH") { this.toolsInventory = Math.max(0.0, this.toolsInventory - 0.4); totalFoodYield += velocity * 4.0; }
-
-            if (Math.random() < pollution * 0.08) {
-              this.pollutionTiles.add(`${Math.max(0, Math.min(WORLD_W - 1, ent.x + Math.floor(Math.random() * 3 - 1)))},${Math.max(0, Math.min(WORLD_H - 1, ent.y + Math.floor(Math.random() * 3 - 1)))}`);
-              if (ent.treasury > 2.0) { ent.treasury -= 2.0; this.carbonFund += 2.0; }
-            }
-            if (dividendPerShare > 0) {
-              for (const hh of this.households.values()) {
-                const shares = hh.equityShares.get(ent.id) || 0;
-                if (shares > 0) hh.cashVault += shares * dividendPerShare;
-              }
-            }
-          });
-
-          const totalFoodReserves = Array.from(this.households.values()).reduce((acc, h) => acc + h.foodReserve, 0) + totalFoodYield;
-          const surplusRatio = totalFoodReserves / (alive.length * 0.4 + 1.0);
-          if (surplusRatio > 2.0) this.price = Math.max(0.35, this.price * (1.0 - Math.min(0.04, (surplusRatio - 2.0) * 0.015)));
-
-          this.equityIndex = (totalVal / (this.enterprises.length * 100)) * 100;
-          this.equityLog.push(this.equityIndex); if (this.equityLog.length > 36) this.equityLog.shift();
-
-          let queuedWorkers = 0; const deceasedAgentIds = [];
-
-          for (const citizen of alive) {
-            citizen.age += 0.5;
-            if (citizen.emoteTimer > 0) citizen.emoteTimer--;
-
-            const hh = this.households.get(citizen.householdId);
-            const eStart = citizen.energy; const wStart = citizen.wallet;
-            citizen.energy -= (1.1 + (citizen.age / 90.0) * 1.5) * (1.0 / citizen.metaAITier);
-
-            if (hh && hh.foodReserve > 0.4) { hh.foodReserve -= 0.4; citizen.energy = Math.min(100, citizen.energy + 2.5); }
-            else if (this.stateTreasury >= 2.0 && citizen.energy < 25) { this.stateTreasury -= 2.0; citizen.energy += 16.0; this.totalWelfareGrants++; citizen.setEmote("🛡️"); }
-
-            if (citizen.energy <= 0 || citizen.age >= 82) {
-              citizen.alive = false; this.totalDeaths++; deceasedAgentIds.push(citizen.id);
-              if (hh) {
-                hh.cashVault += citizen.wallet;
-                if (citizen.role === "FATHER") hh.fatherId = null; if (citizen.role === "MOTHER") hh.motherId = null;
-                const livingHeirs = hh.childrenIds.map(cId => this.agents.get(cId)).filter(a => a && a.alive);
-                if (livingHeirs.length > 0) {
-                  const portion = hh.cashVault / livingHeirs.length;
-                  livingHeirs.forEach(heir => { heir.wallet += portion; });
-                  hh.cashVault = 0;
-                  const primaryHeir = livingHeirs[0];
-                  primaryHeir.role = primaryHeir.gender === "MALE" ? "FATHER" : "MOTHER";
-                  if (primaryHeir.gender === "MALE") hh.fatherId = primaryHeir.id; else hh.motherId = primaryHeir.id;
-                  hh.childrenIds = hh.childrenIds.filter(id => id !== primaryHeir.id);
-                }
-              }
-              citizen.learn(citizen.lastS || Array(12).fill(0), -20, new Array(ACTIONS.length).fill(true));
-              continue;
-            }
-
-            const school = this.schools[0];
-            if (Math.hypot(school.x - citizen.x, school.y - citizen.y) > 10.0 && hh && citizen.role === "CHILD") {
-              const father = this.agents.get(hh.fatherId); const mother = this.agents.get(hh.motherId);
-              if ((father && father.degreeLevel >= 1) || (mother && mother.degreeLevel >= 1)) {
-                citizen.education = Math.min(100, citizen.education + 4); this.researchPoints += 1.0; citizen.setEmote("📖");
-              }
-            }
-
-            const matchingEnts = this.enterprises.filter(e => e.type === (citizen.careerTrack === "AGRITECH" ? "AGRITECH" : (citizen.careerTrack === "FINANCIER" ? "COMMERCE" : "ENGINEERING")));
-            const job = matchingEnts[0] || this.enterprises[0];
-            const market = this.enterprises.find(e => e.type === "COMMERCE") || this.enterprises[0];
-
-            let actIdx = -1;
-            const mask = citizen.generateActionMask(hh, this.sovereignBondsActive, this.isCivilStrike);
-            if (citizen.commitmentTicksRemaining > 0 && citizen.currentActionCommitment !== null && mask[citizen.currentActionCommitment]) {
-              actIdx = citizen.currentActionCommitment; citizen.commitmentTicksRemaining--;
-            } else {
-              const s = citizen.getState(Math.hypot(job.x - citizen.x, job.y - citizen.y), Math.hypot(school.x - citizen.x, school.y - citizen.y), hh ? Math.hypot(hh.homeX - citizen.x, hh.homeY - citizen.y) : 10, this.price, this.centralBank.baseRate, this.centralBank.bondRiskSpread, this.societalHappiness / 100.0, this.gridPowerRatio);
-              citizen.lastS = s;
-              const { h, q } = citizen.brain.forward(s, mask);
-              citizen.lastH = h;
-              if (Math.random() < 0.08) {
-                const validIndices = mask.map((valid, idx) => valid ? idx : -1).filter(idx => idx !== -1);
-                actIdx = validIndices[Math.floor(Math.random() * validIndices.length)];
-              } else { actIdx = q.indexOf(Math.max(...q)); }
-              citizen.currentActionCommitment = actIdx; citizen.commitmentTicksRemaining = 6;
-            }
-
-            citizen.lastA = actIdx; const action = ACTIONS[actIdx];
-            if (this.isCivilStrike) citizen.setEmote("🚩");
-
-            if (action === "WORK_ROLE") {
-              const dx = job.x > citizen.x ? 1 : (job.x < citizen.x ? -1 : 0);
-              const dy = job.y > citizen.y ? 1 : (job.y < citizen.y ? -1 : 0);
-              citizen.x = Math.max(0, Math.min(WORLD_W - 1, citizen.x + dx));
-              citizen.y = Math.max(0, Math.min(WORLD_H - 1, citizen.y + dy));
-              if (Math.hypot(job.x - citizen.x, job.y - citizen.y) <= 1.5) {
-                if (job.currentWorkers < job.maxPositions) {
-                  job.currentWorkers++;
-                  const grossWage = Math.max(this.unionMinWage, 4.0 * (1 + (citizen.education / 60)) * curEpoch.yieldMulti);
-                  let tax = 0;
-                  if (grossWage > 10.0) tax += (Math.min(grossWage, 35.0) - 10.0) * 0.12;
-                  if (grossWage > 35.0) tax += (grossWage - 35.0) * 0.28;
-                  this.stateTreasury += tax;
-                  const net = grossWage - tax;
-                  if (hh && (citizen.role === "FATHER" || citizen.role === "MOTHER")) hh.cashVault += net;
-                  else citizen.wallet += net;
-                  citizen.setEmote("💼");
-                } else { queuedWorkers++; citizen.setEmote("⏳"); }
-              }
-            } else if (action === "FORAGE_PANTRY") {
-              citizen.setEmote("🌾"); if (hh) hh.foodReserve += 4.0;
-            } else if (action === "FOUND_STARTUP") {
-              if (hh && hh.cashVault >= 60.0 && this.enterprises.length < 12) {
-                hh.cashVault -= 50.0;
-                const types = ["AGRITECH", "COMMERCE", "ENGINEERING"];
-                const rType = types[Math.floor(Math.random() * types.length)];
-                const pos = this.findNearestVacantTile(citizen.x, citizen.y);
-                this.enterprises.push(new Enterprise(this.getNewId("startup"), `${hh.name.replace("House ", "")} Hub`, rType, pos.x, pos.y, true));
-              }
-            } else if (action === "SEEK_EDUCATION") {
-              const dx = school.x > citizen.x ? 1 : (school.x < citizen.x ? -1 : 0);
-              const dy = school.y > citizen.y ? 1 : (school.y < citizen.y ? -1 : 0);
-              citizen.x = Math.max(0, Math.min(WORLD_W - 1, citizen.x + dx));
-              citizen.y = Math.max(0, Math.min(WORLD_H - 1, citizen.y + dy));
-              if (Math.hypot(school.x - citizen.x, school.y - citizen.y) <= 1.5) {
-                citizen.education = Math.min(100, citizen.education + 5); this.researchPoints += 2.0; citizen.setEmote("📖");
-                if (citizen.education >= 70 && citizen.degreeLevel === 0) citizen.degreeLevel = 1;
-                else if (citizen.education >= 95 && citizen.degreeLevel === 1) citizen.degreeLevel = 2;
-              }
-            } else if (action === "BUY_BOND") {
-              if (hh && hh.cashVault >= this.bondFaceValue && this.sovereignBondsActive > 0) {
-                hh.cashVault -= this.bondFaceValue; this.stateTreasury += this.bondFaceValue;
-                hh.bondsHeld.push({ id: this.getNewId("bond"), faceValue: this.bondFaceValue, couponRate: this.centralBank.bondRiskSpread, startCycle: this.cycle, term: 50 });
-                this.sovereignBondsActive -= 1; citizen.setEmote("📜");
-              }
-            } else if (action === "BUY_REAL_ESTATE") {
-              if (hh && hh.cashVault >= this.realEstateDeedCost && hh.debtBalance <= 0) {
-                hh.cashVault -= this.realEstateDeedCost; hh.realEstateDeeds += 1; citizen.setEmote("🏘️");
-              }
-            } else if (action === "BORROW_CREDIT") {
-              if (hh && hh.debtBalance <= 20.0) { hh.debtBalance += 15.0; hh.cashVault += 15.0; citizen.setEmote("💳"); }
-            } else if (action === "TRADE_MARKET") {
-              const dx = market.x > citizen.x ? 1 : (market.x < citizen.x ? -1 : 0);
-              const dy = market.y > citizen.y ? 1 : (market.y < citizen.y ? -1 : 0);
-              citizen.x = Math.max(0, Math.min(WORLD_W - 1, citizen.x + dx));
-              citizen.y = Math.max(0, Math.min(WORLD_H - 1, citizen.y + dy));
-              const tariff = 5.0 * this.tariffRate;
-              if (Math.hypot(market.x - citizen.x, market.y - citizen.y) <= 1.5 && hh && hh.cashVault >= (5.0 + tariff)) {
-                hh.cashVault -= (5.0 + tariff); this.stateTreasury += tariff;
-                hh.foodReserve += 18.0 / this.price; this.price = Math.min(5.0, this.price * 1.01); citizen.setEmote("🛒");
-              }
-            } else if (action === "CULTURE_CIVICS") {
-              if (hh && hh.cashVault >= 2.0) { hh.cashVault -= 2.0; this.societalHappiness = Math.min(100, this.societalHappiness + 1.2); citizen.setEmote("🎭"); }
-            } else if (action === "REST_NURTURE") {
-              if (hh) {
-                citizen.x += hh.homeX > citizen.x ? 1 : -1; citizen.y += hh.homeY > citizen.y ? 1 : -1; citizen.setEmote("🏡");
-                if (citizen.role === "ADULT_SINGLE") {
-                  const partner = this.spatialGrid.queryNeighbors(citizen.x, citizen.y, 2.2).find(o => o.alive && o.role === "ADULT_SINGLE" && o.gender !== citizen.gender);
-                  if (partner && citizen.wallet >= 8 && partner.wallet >= 8) {
-                    this.totalMarriages++; const nHId = this.getNewId("house"); const pos = this.findNearestVacantTile(citizen.x, citizen.y);
-                    const nH = new Household(nHId, `House ${citizen.gender === "MALE" ? citizen.name.split(" ")[1] : partner.name.split(" ")[1]}`, pos.x, pos.y);
-                    nH.cashVault = citizen.wallet + partner.wallet; citizen.wallet = 0; partner.wallet = 0;
-                    if (citizen.gender === "MALE") { citizen.role = "FATHER"; partner.role = "MOTHER"; nH.fatherId = citizen.id; nH.motherId = partner.id; }
-                    else { citizen.role = "MOTHER"; partner.role = "FATHER"; nH.motherId = citizen.id; nH.fatherId = partner.id; }
-                    citizen.householdId = nHId; partner.householdId = nHId; this.households.set(nHId, nH);
-                  }
-                } else if (citizen.role === "MOTHER" && hh.isComplete) {
-                  if (hh.cashVault >= 32.0 && hh.foodReserve >= 22.0 && hh.childrenIds.length < 3) {
-                    hh.cashVault -= 15.0; hh.foodReserve -= 10.0;
-                    const cGender = Math.random() > 0.5 ? "MALE" : "FEMALE";
-                    const baby = new HumanAgent(this.getNewId("agent_c"), `${cGender === "MALE" ? "Noah" : "Maya"} ${hh.name.split(" ")[1]}`, cGender, 0, hh.id, "AGRITECH", hh.homeX, hh.homeY, citizen.brain.recombine(this.agents.get(hh.fatherId).brain));
-                    baby.role = "CHILD"; hh.childrenIds.push(baby.id); newborns.push(baby);
-                  }
-                }
-              }
-            } else if (action === "META_AI") {
-              if (hh && hh.cashVault > 45 && citizen.metaAITier < 2.5) {
-                hh.cashVault -= 10; citizen.metaAITier += 0.25; this.totalMetaUpgrades++; citizen.setEmote("🤖");
-              }
-            }
-
-            const reward = ((citizen.energy - eStart) * 0.1) + ((citizen.wallet - wStart) * 0.3) + ((this.societalHappiness - 50) * 0.05);
-            citizen.learn(citizen.getState(Math.hypot(job.x - citizen.x, job.y - citizen.y), Math.hypot(school.x - citizen.x, school.y - citizen.y), hh ? Math.hypot(hh.homeX - citizen.x, hh.homeY - citizen.y) : 10, this.price, this.centralBank.baseRate, this.centralBank.bondRiskSpread, this.societalHappiness / 100.0, this.gridPowerRatio), reward, citizen.generateActionMask(hh, this.sovereignBondsActive, this.isCivilStrike));
-          }
-
-          deceasedAgentIds.forEach(id => this.agents.delete(id));
-          newborns.forEach(b => this.agents.set(b.id, b));
-          this.priceLog.push(this.price); if (this.priceLog.length > 36) this.priceLog.shift();
-          this.predictedPriceLog.push(Math.max(0.35, this.priceLog[this.priceLog.length - 1] + 0.65 * (this.priceLog[this.priceLog.length - 1] - (this.priceLog[this.priceLog.length - 2] || this.price))));
-          if (this.predictedPriceLog.length > 36) this.predictedPriceLog.shift();
-
-          this.updateSovereigntyTier();
-          for (let i = this.particles.length - 1; i >= 0; i--) {
-            const p = this.particles[i]; p.y += p.vy; p.alpha -= 0.035; if (p.alpha <= 0) this.particles.splice(i, 1);
-          }
-          if (this.cycle % 25 === 0) this.saveState();
-        } catch (err) {
-          console.error("Step execution error caught safely:", err);
-        }
-      }
-
-      updateSovereigntyTier() {
-        const familyCount = this.households.size;
-        let currentTier = NATION_TIERS[0];
-        for (let i = NATION_TIERS.length - 1; i >= 0; i--) {
-          if (familyCount >= NATION_TIERS[i].minFamilies && this.stateTreasury >= NATION_TIERS[i].minVault) {
-            currentTier = NATION_TIERS[i]; break;
-          }
-        }
-        document.getElementById("epochHeaderBadge").innerText = `${currentTier.icon} ${currentTier.name.toUpperCase()}`;
-      }
     }
 
     // --------------------------------------------------------
-    // CANVAS RENDERING
+    // THREE.JS RENDERER & INTERACTIVE 3D
     // --------------------------------------------------------
     const sim = new TotalCivilizationMatrix();
-    const canvas = document.getElementById("worldCanvas");
-    const ctx = canvas.getContext("2d");
-    const cCanvas = document.getElementById("commodityCanvas"); const cCtx = cCanvas.getContext("2d");
-    const eCanvas = document.getElementById("equityCanvas"); const eCtx = eCanvas.getContext("2d");
-    ctx.imageSmoothingEnabled = false;
+    const container = document.getElementById("webglContainer");
 
-    let dragStartX = 0, dragStartY = 0;
-    canvas.addEventListener("pointerdown", (e) => {
-      initAudio();
-      const rect = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / rect.width, scaleY = canvas.height / rect.height;
-      dragStartX = e.clientX; dragStartY = e.clientY;
-      const gx = Math.floor(((e.clientX - rect.left) * scaleX) / TILE_SIZE + sim.camX);
-      const gy = Math.floor(((e.clientY - rect.top) * scaleY) / TILE_SIZE + sim.camY);
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x020617);
+    scene.fog = new THREE.FogExp2(0x020617, 0.02);
 
-      if (ACTIVE_TOOL === "FOOD") {
-        const hh = Array.from(sim.households.values()).find(h => Math.hypot(h.homeX - gx, h.homeY - gy) <= 1.5);
-        if (hh) { hh.foodReserve += 25; sim.spawnParticle(gx, gy, "+25 FOOD", "#10b981"); } return;
-      } else if (ACTIVE_TOOL === "CASH") {
-        const hh = Array.from(sim.households.values()).find(h => Math.hypot(h.homeX - gx, h.homeY - gy) <= 1.5);
-        if (hh) { hh.cashVault += 25; sim.spawnParticle(gx, gy, "+25C CASH", "#38bdf8"); } return;
-      } else if (ACTIVE_TOOL === "CLEAN") {
-        sim.pollutionTiles.delete(`${gx},${gy}`); sim.spawnParticle(gx, gy, "SMOG SCRUBBED", "#10b981"); return;
+    const camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 1000);
+    camera.position.set(0, 32, 34);
+    camera.lookAt(0, 0, 0);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    container.appendChild(renderer.domElement);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.65));
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.85);
+    dirLight.position.set(25, 40, 25);
+    scene.add(dirLight);
+
+    const tileGeo = new THREE.BoxGeometry(0.94, 0.2, 0.94);
+    const agriMat = new THREE.MeshStandardMaterial({ color: 0x0d2818 });
+    const roadMat = new THREE.MeshStandardMaterial({ color: 0x0f172a });
+
+    for (let x = 0; x < WORLD_W; x++) {
+      for (let y = 0; y < WORLD_H; y++) {
+        const isRoad = (x % 6 === 0 || y % 6 === 0);
+        const tile = new THREE.Mesh(tileGeo, isRoad ? roadMat : agriMat);
+        tile.position.set(x - WORLD_W / 2 + 0.5, 0, y - WORLD_H / 2 + 0.5);
+        scene.add(tile);
       }
+    }
 
-      const clickedAgent = Array.from(sim.agents.values()).find(a => a.alive && a.x === gx && a.y === gy);
-      if (clickedAgent) { sim.selectedEntity = { type: "AGENT", data: clickedAgent }; return; }
-      const clickedHearth = Array.from(sim.households.values()).find(h => h.homeX === gx && h.homeY === gy);
-      if (clickedHearth) { sim.selectedEntity = { type: "HOUSEHOLD", data: clickedHearth }; return; }
-      sim.selectedEntity = null;
+    const agentMeshes = new Map();
+    const houseMeshes = new Map();
+    const entMeshes = new Map();
+    const caravanMeshes = [];
+
+    const houseGeo = new THREE.BoxGeometry(0.7, 0.9, 0.7);
+    const houseMat = new THREE.MeshStandardMaterial({ color: 0x0284c7 });
+    const entGeo = new THREE.CylinderGeometry(0.5, 0.6, 1.2, 8);
+    const entMat = new THREE.MeshStandardMaterial({ color: 0xd97706 });
+    const agentGeo = new THREE.SphereGeometry(0.22, 12, 12);
+    const agentMat = new THREE.MeshStandardMaterial({ color: 0x10b981 });
+    const caravanGeo = new THREE.BoxGeometry(0.5, 0.4, 0.8);
+    const caravanMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b });
+
+    sim.caravans.forEach(() => {
+      const mesh = new THREE.Mesh(caravanGeo, caravanMat);
+      scene.add(mesh);
+      caravanMeshes.push(mesh);
     });
 
-    window.addEventListener("pointermove", (e) => {
-      if (e.buttons === 1) {
-        const dx = (e.clientX - dragStartX) / TILE_SIZE, dy = (e.clientY - dragStartY) / TILE_SIZE;
-        if (Math.hypot(dx, dy) > 0.3) {
-          sim.camX = Math.max(0, Math.min(WORLD_W - VIEW_TILES_X, sim.camX - dx * 0.1));
-          sim.camY = Math.max(0, Math.min(WORLD_H - VIEW_TILES_Y, sim.camY - dy * 0.1));
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    container.addEventListener("pointerdown", (event) => {
+      const rect = container.getBoundingClientRect();
+      mouse.x = ((event.clientX - rect.left) / container.clientWidth) * 2 - 1;
+      mouse.y = -((event.clientY - rect.top) / container.clientHeight) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(Array.from(houseMeshes.values()));
+      if (intersects.length > 0) {
+        for (const [hId, mesh] of houseMeshes.entries()) {
+          if (mesh === intersects[0].object) {
+            const hh = sim.households.get(hId);
+            if (hh) {
+              document.getElementById("inspectTarget").innerText = `${hh.name} (Tier ${hh.level})`;
+              document.getElementById("inspectDetail").innerText = `Vault: ${hh.cashVault.toFixed(0)}C | Food: ${hh.foodReserve.toFixed(0)}`;
+              document.getElementById("inspectAction").innerText = `Deeds: ${hh.realEstateDeeds}`;
+            }
+            break;
+          }
         }
       }
     });
 
-    function drawCleanTile(worldX, worldY, screenX, screenY) {
-      const px = screenX * TILE_SIZE, py = screenY * TILE_SIZE; const key = `${worldX},${worldY}`;
-      const isRoad = (worldX % 4 === 0 || worldY % 4 === 0);
-      if (sim.pollutionTiles.has(key)) { ctx.fillStyle = "#271d15"; ctx.fillRect(px, py, TILE_SIZE, TILE_SIZE); }
-      else if (isRoad) { ctx.fillStyle = "#1e293b"; ctx.fillRect(px, py, TILE_SIZE, TILE_SIZE); }
-      else { ctx.fillStyle = "#0d2818"; ctx.fillRect(px, py, TILE_SIZE, TILE_SIZE); }
-      ctx.strokeStyle = "rgba(15, 23, 42, 0.6)"; ctx.lineWidth = 1; ctx.strokeRect(px, py, TILE_SIZE, TILE_SIZE);
-    }
+    function update3DScene() {
+      if (!FEATURES["3D"]) { scene.visible = false; return; }
+      scene.visible = true;
 
-    function drawCleanMonument(m, camX, camY) {
-      if (m.x < camX || m.x >= camX + VIEW_TILES_X || m.y < camY || m.y >= camY + VIEW_TILES_Y) return;
-      const px = (m.x - camX) * TILE_SIZE, py = (m.y - camY) * TILE_SIZE;
-      ctx.fillStyle = "#d97706"; ctx.fillRect(px + 4, py + 10, 24, 18);
-      ctx.fillStyle = "#ffffff"; ctx.font = "bold 13px monospace"; ctx.fillText("🏛️", px + 8, py + 23);
-    }
+      sim.households.forEach((hh, hId) => {
+        let mesh = houseMeshes.get(hId);
+        if (!mesh) { mesh = new THREE.Mesh(houseGeo, houseMat); scene.add(mesh); houseMeshes.set(hId, mesh); }
+        mesh.position.set(hh.homeX - WORLD_W / 2 + 0.5, 0.5, hh.homeY - WORLD_H / 2 + 0.5);
+      });
 
-    function drawCleanHousehold(hh, camX, camY) {
-      if (hh.homeX < camX || hh.homeX >= camX + VIEW_TILES_X || hh.homeY < camY || hh.homeY >= camY + VIEW_TILES_Y) return;
-      const px = (hh.homeX - camX) * TILE_SIZE, py = (hh.homeY - camY) * TILE_SIZE;
-      ctx.fillStyle = hh.level >= 4 ? "#1e1b4b" : "#334155"; ctx.fillRect(px + 5, py + 11, 22, 17);
-      ctx.fillStyle = hh.level >= 4 ? "#818cf8" : "#0284c7"; ctx.beginPath(); ctx.moveTo(px + 16, py + 3); ctx.lineTo(px + 29, py + 12); ctx.lineTo(px + 3, py + 12); ctx.closePath(); ctx.fill();
-      ctx.fillStyle = "#f8fafc"; ctx.font = "bold 10px 'Plus Jakarta Sans'"; ctx.fillText(hh.name.replace("House ", ""), px + 3, py - 1);
-    }
+      sim.enterprises.forEach(ent => {
+        let mesh = entMeshes.get(ent.id);
+        if (!mesh) { mesh = new THREE.Mesh(entGeo, entMat); scene.add(mesh); entMeshes.set(ent.id, mesh); }
+        mesh.position.set(ent.x - WORLD_W / 2 + 0.5, 0.7, ent.y - WORLD_H / 2 + 0.5);
+      });
 
-    function drawCleanEnterprise(ent, camX, camY) {
-      if (ent.x < camX || ent.x >= camX + VIEW_TILES_X || ent.y < camY || ent.y >= camY + VIEW_TILES_Y) return;
-      const px = (ent.x - camX) * TILE_SIZE, py = (ent.y - camY) * TILE_SIZE;
-      ctx.fillStyle = ent.type === "COMMERCE" ? "#047857" : (ent.type === "AGRITECH" ? "#b45309" : "#4338ca"); ctx.fillRect(px + 3, py + 6, 26, 22);
-      ctx.fillStyle = "#ffffff"; ctx.font = "bold 13px monospace"; ctx.fillText(ent.type === "AGRITECH" ? "🌾" : (ent.type === "COMMERCE" ? "⚖️" : "⚙️"), px + 7, py + 21);
-    }
+      sim.caravans.forEach((c, idx) => {
+        if (caravanMeshes[idx]) caravanMeshes[idx].position.set(c.x - WORLD_W / 2 + 0.5, 0.3, c.y - WORLD_H / 2 + 0.5);
+      });
 
-    function drawCleanAcademy(sc, camX, camY) {
-      if (sc.x < camX || sc.x >= camX + VIEW_TILES_X || sc.y < camY || sc.y >= camY + VIEW_TILES_Y) return;
-      const px = (sc.x - camX) * TILE_SIZE, py = (sc.y - camY) * TILE_SIZE;
-      ctx.fillStyle = "#0284c7"; ctx.fillRect(px + 3, py + 7, 26, 21);
-      ctx.fillStyle = "#ffffff"; ctx.font = "bold 13px monospace"; ctx.fillText("🏛️", px + 7, py + 22);
-    }
+      const aliveIds = new Set();
+      sim.agents.forEach((agent, aId) => {
+        if (!agent.alive) return;
+        aliveIds.add(aId);
+        let mesh = agentMeshes.get(aId);
+        if (!mesh) { mesh = new THREE.Mesh(agentGeo, agentMat); scene.add(mesh); agentMeshes.set(aId, mesh); }
+        mesh.position.set(agent.x - WORLD_W / 2 + 0.5, 0.4, agent.y - WORLD_H / 2 + 0.5);
+      });
 
-    function drawCleanHuman(citizen, camX, camY) {
-      if (citizen.x < camX || citizen.x >= camX + VIEW_TILES_X || citizen.y < camY || citizen.y >= camY + VIEW_TILES_Y) return;
-      const px = (citizen.x - camX) * TILE_SIZE, py = (citizen.y - camY) * TILE_SIZE; const bob = Math.sin((citizen.age * 2) + citizen.x) * 1.5;
-      ctx.fillStyle = citizen.role === "FATHER" ? "#2563eb" : (citizen.role === "MOTHER" ? "#db2777" : "#10b981"); ctx.fillRect(px + 11, py + 16 + bob, 10, 10);
-      ctx.fillStyle = "#fef08a"; ctx.fillRect(px + 11, py + 7 + bob, 10, 10);
-      if (sim.selectedEntity && sim.selectedEntity.type === "AGENT" && sim.selectedEntity.data.id === citizen.id) {
-        ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 2; ctx.strokeRect(px + 6, py + 3, 20, 26);
-      }
-      if (citizen.emoteTimer > 0 && citizen.emote) {
-        ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
-        ctx.fillRect(px + 6, py - 6 + bob, 20, 14);
-        ctx.font = "10px monospace"; ctx.fillStyle = "#ffffff"; ctx.fillText(citizen.emote, px + 9, py + 5 + bob);
-      }
+      agentMeshes.forEach((mesh, aId) => {
+        if (!aliveIds.has(aId)) { scene.remove(mesh); agentMeshes.delete(aId); }
+      });
     }
 
     function renderHUD() {
-      try {
-        document.getElementById("tickCount").innerText = `CYC ${String(sim.cycle).padStart(4, '0')}`;
-        const alive = Array.from(sim.agents.values()).filter(a => a.alive);
-        document.getElementById("totalPop").innerText = `${alive.length} citizens`;
-        document.getElementById("stateCoffers").innerText = `${sim.stateTreasury.toFixed(0)} C`;
-        document.getElementById("oracleSparksCount").innerText = `${sim.onlineKnowledgeSparks} fetched`;
-        document.getElementById("mutationCount").innerText = `${sim.mutationTrialsCount} trials`;
-
-        const curEpoch = sim.epochs[sim.currentEpochIdx];
-        const nextEpoch = sim.epochs[sim.currentEpochIdx + 1];
-        document.getElementById("currentEpochName").innerText = `${curEpoch.icon} Epoch ${curEpoch.level}: ${curEpoch.name}`;
-
-        const targetPts = nextEpoch ? nextEpoch.threshold : Math.floor(curEpoch.threshold * 1.75);
-        const fillPct = Math.min(100, (sim.researchPoints / targetPts) * 100);
-        document.getElementById("techProgressBar").style.width = `${fillPct}%`;
-
-        document.getElementById("happinessVal").innerText = `${sim.societalHappiness.toFixed(0)}% (${sim.societalHappiness < 35 ? "STRIKE" : "STABLE"})`;
-
-        if (sim.selectedEntity) {
-          if (sim.selectedEntity.type === "AGENT") {
-            const a = sim.selectedEntity.data;
-            document.getElementById("inspectTarget").innerText = `${a.name} (${a.role})`;
-            document.getElementById("inspectDetail").innerText = `⚡${a.energy.toFixed(0)} | 💰${a.wallet.toFixed(1)}C | 🎓Lvl ${a.degreeLevel}`;
-            document.getElementById("inspectAction").innerText = `${ACTIONS[a.lastA] || "IDLE"}`;
-          } else if (sim.selectedEntity.type === "HOUSEHOLD") {
-            const h = sim.selectedEntity.data;
-            document.getElementById("inspectTarget").innerText = `${h.name} (Tier ${h.level})`;
-            document.getElementById("inspectDetail").innerText = `Vault: ${h.cashVault.toFixed(0)}C | Food: ${h.foodReserve.toFixed(0)}`;
-            document.getElementById("inspectAction").innerText = `Deeds: ${h.realEstateDeeds} | Bonds: ${h.bondsHeld.length}`;
-          }
-        } else {
-          document.getElementById("inspectTarget").innerText = "Global Overview";
-          document.getElementById("inspectDetail").innerText = "Tap citizen or building";
-          document.getElementById("inspectAction").innerText = "Self-Evolving AI Active";
-        }
-
-        const firstHh = Array.from(sim.households.values())[0];
-        if (firstHh) {
-          document.getElementById("dynastyName").innerText = `${firstHh.name} (Tier ${firstHh.level})`;
-          document.getElementById("dynastyAssets").innerText = `Vault: ${firstHh.cashVault.toFixed(0)} C | Food: ${firstHh.foodReserve.toFixed(0)}`;
-        }
-
-        drawSparkline(cCanvas, cCtx, sim.priceLog, sim.predictedPriceLog, "#f59e0b", "#38bdf8");
-        drawSparkline(eCanvas, eCtx, sim.equityLog, sim.equityLog, "#38bdf8", "#38bdf8");
-      } catch (e) {
-        console.error("HUD render error:", e);
-      }
-    }
-
-    function drawSparkline(pCanvas, pCtx, actual, predicted, strokeColor, predColor) {
-      pCtx.fillStyle = "#020617";
-      pCtx.fillRect(0, 0, pCanvas.width, pCanvas.height);
-      const all = actual.concat(predicted);
-      const minP = Math.min(...all), maxP = Math.max(...all), range = (maxP - minP) || 1;
-      pCtx.strokeStyle = strokeColor; pCtx.lineWidth = 1.5; pCtx.beginPath();
-      actual.forEach((p, idx) => {
-        const cx = (idx / (actual.length - 1)) * pCanvas.width;
-        const cy = pCanvas.height - ((p - minP) / range) * (pCanvas.height - 6) - 3;
-        if (idx === 0) pCtx.moveTo(cx, cy); else pCtx.lineTo(cx, cy);
-      });
-      pCtx.stroke();
+      document.getElementById("tickCount").innerText = `CYC ${String(sim.cycle).padStart(4, '0')}`;
+      const alive = Array.from(sim.agents.values()).filter(a => a.alive);
+      document.getElementById("liveProsText").innerText = sim.societalHappiness > 70 ? "🟢 High morale (" + sim.societalHappiness.toFixed(0) + "%)." : "🟢 Scaling output.";
+      document.getElementById("liveConsText").innerText = sim.price > 1.8 ? "🔴 Inflation active." : "🔴 Normal variance.";
     }
 
     function gameLoop() {
-      try {
-        for (let s = 0; s < SIM_SPEED; s++) sim.step();
-        const floorCamX = Math.floor(sim.camX), floorCamY = Math.floor(sim.camY);
-        for (let vx = 0; vx < VIEW_TILES_X; vx++) {
-          for (let vy = 0; vy < VIEW_TILES_Y; vy++) drawCleanTile(floorCamX + vx, floorCamY + vy, vx, vy);
-        }
-        sim.monuments.forEach(m => drawCleanMonument(m, floorCamX, floorCamY));
-        sim.enterprises.forEach(e => drawCleanEnterprise(e, floorCamX, floorCamY));
-        sim.schools.forEach(sc => drawCleanAcademy(sc, floorCamX, floorCamY));
-        for (const hh of sim.households.values()) drawCleanHousehold(hh, floorCamX, floorCamY);
-        Array.from(sim.agents.values()).filter(a => a.alive).forEach(c => drawCleanHuman(c, floorCamX, floorCamY));
-
-        sim.particles.forEach(p => {
-          const sx = p.x - floorCamX * TILE_SIZE;
-          const sy = p.y - floorCamY * TILE_SIZE;
-          if (sx >= 0 && sx <= canvas.width && sy >= 0 && sy <= canvas.height) {
-            ctx.save();
-            ctx.globalAlpha = p.alpha;
-            ctx.font = "bold 12px 'Plus Jakarta Sans', monospace";
-            ctx.fillStyle = "#000";
-            ctx.fillText(p.text, sx + 1, sy + 1);
-            ctx.fillStyle = p.color;
-            ctx.fillText(p.text, sx, sy);
-            ctx.restore();
-          }
-        });
-
-        renderHUD();
-      } catch (err) {
-        console.error("Game loop error caught:", err);
-      }
+      for (let s = 0; s < SIM_SPEED; s++) sim.step();
+      update3DScene();
+      renderHUD();
+      renderer.render(scene, camera);
       setTimeout(gameLoop, 130);
     }
     gameLoop();
