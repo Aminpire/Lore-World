@@ -443,7 +443,7 @@
               <canvas id="equityCanvas" class="mini-chart" width="140" height="38"></canvas>
             </div>
           </div>
-          <div class="news-ticker" id="newsTicker">FEED: Online Oracle learning engine and particle render loop active...</div>
+          <div class="news-ticker" id="newsTicker">FEED: Online Oracle learning engine and safe state fallback active...</div>
         </div>
       </div>
 
@@ -546,7 +546,7 @@
     }
 
     function resetSimulation() {
-      localStorage.removeItem("lore_world_state_oracle_v2");
+      localStorage.removeItem("lore_world_state_safe_v3");
       location.reload();
     }
 
@@ -807,7 +807,7 @@
     }
 
     // --------------------------------------------------------
-    // TOTAL CIVILIZATION MATRIX WITH ONLINE ORACLE & TRIAL-AND-ERROR
+    // TOTAL CIVILIZATION MATRIX WITH SAFE LOAD FALLBACK
     // --------------------------------------------------------
     class TotalCivilizationMatrix {
       constructor() {
@@ -822,7 +822,6 @@
         this.pollutionTiles = new Set();
         this.monuments = [];
 
-        // Online Oracle Knowledge & Trial-and-Error Optimizer
         this.oracleLog = [];
         this.mutationTrialsCount = 0;
         this.onlineKnowledgeSparks = 0;
@@ -862,9 +861,11 @@
         this.particles = [];
 
         this.initWorldGrid();
-        if (!this.loadState()) {
+        
+        // Safe load with automatic fallback if state is empty or broken
+        if (!this.loadState() || this.agents.size === 0) {
           this.seedInitialDynasties();
-          this.recordChronicle("Online Oracle Matrix online: Self-learning and web data ingestion active.", "epoch");
+          this.recordChronicle("Safe initialization: Fresh world seeded successfully.", "epoch");
         }
       }
 
@@ -1172,12 +1173,12 @@
       }
 
       saveState() {
-        try { localStorage.setItem("lore_world_state_oracle_v2", JSON.stringify(this.getSerializedWorld())); } catch (e) {}
+        try { localStorage.setItem("lore_world_state_safe_v3", JSON.stringify(this.getSerializedWorld())); } catch (e) {}
       }
 
       loadState() {
         try {
-          const raw = localStorage.getItem("lore_world_state_oracle_v2");
+          const raw = localStorage.getItem("lore_world_state_safe_v3");
           if (!raw) return false;
           this.hydrateFromData(JSON.parse(raw));
           return true;
@@ -1185,269 +1186,273 @@
       }
 
       step() {
-        this.cycle++;
-        const alive = Array.from(this.agents.values()).filter(a => a.alive);
-        const newborns = [];
+        try {
+          this.cycle++;
+          const alive = Array.from(this.agents.values()).filter(a => a.alive);
+          const newborns = [];
 
-        this.checkDemographicHealth(alive);
-        this.calculateGiniAndMorale(alive);
-        this.updateEpochTechTree();
-        this.applyEntropyDrift(alive);
-        this.updateCamera(alive);
+          this.checkDemographicHealth(alive);
+          this.calculateGiniAndMorale(alive);
+          this.updateEpochTechTree();
+          this.applyEntropyDrift(alive);
+          this.updateCamera(alive);
 
-        if (this.cycle % 150 === 0) {
-          this.queryOnlineKnowledgeAPI();
-        }
-
-        this.spatialGrid.clear();
-        alive.forEach(a => this.spatialGrid.insert(a));
-
-        const growthProxy = (this.equityIndex - 100.0) / 100.0;
-        this.centralBank.updateTaylorRule(this.price, growthProxy);
-
-        let aggregateDebt = 0; this.capitalBurnCycleTally = 0;
-
-        if (this.stateTreasury > 250.0 && this.households.size > 0) {
-          const div = 8.0; this.stateTreasury -= (div * this.households.size);
-          for (const hh of this.households.values()) hh.cashVault += div;
-        }
-
-        const deadHouseholdIds = [];
-        for (const [hId, hh] of this.households.entries()) {
-          const fatherAlive = hh.fatherId && this.agents.has(hh.fatherId) && this.agents.get(hh.fatherId).alive;
-          const motherAlive = hh.motherId && this.agents.has(hh.motherId) && this.agents.get(hh.motherId).alive;
-          const heirsAlive = hh.childrenIds.some(cId => this.agents.has(cId) && this.agents.get(cId).alive);
-          if (!fatherAlive && !motherAlive && !heirsAlive) { deadHouseholdIds.push(hId); continue; }
-
-          this.capitalBurnCycleTally += hh.applyMaintenanceSink();
-          if (hh.debtBalance > 0) {
-            hh.debtBalance *= (1 + this.centralBank.baseRate * 0.1); aggregateDebt += hh.debtBalance;
-            if (hh.debtBalance > 50 && hh.cashVault < 2) {
-              hh.debtBalance = 0; hh.cashVault = 0; hh.bondsHeld = []; hh.realEstateDeeds = 0; hh.equityShares.clear();
-            }
+          if (this.cycle % 150 === 0) {
+            this.queryOnlineKnowledgeAPI();
           }
 
-          for (let i = hh.bondsHeld.length - 1; i >= 0; i--) {
-            const b = hh.bondsHeld[i];
-            if (this.cycle % 10 === 0 && this.stateTreasury >= (b.faceValue * b.couponRate)) {
-              this.stateTreasury -= (b.faceValue * b.couponRate); hh.cashVault += (b.faceValue * b.couponRate);
-            }
-            if (this.cycle - b.startCycle >= b.term) {
-              if (this.stateTreasury >= b.faceValue) { this.stateTreasury -= b.faceValue; hh.cashVault += b.faceValue; }
-              hh.bondsHeld.splice(i, 1);
-            }
+          this.spatialGrid.clear();
+          alive.forEach(a => this.spatialGrid.insert(a));
+
+          const growthProxy = (this.equityIndex - 100.0) / 100.0;
+          this.centralBank.updateTaylorRule(this.price, growthProxy);
+
+          let aggregateDebt = 0; this.capitalBurnCycleTally = 0;
+
+          if (this.stateTreasury > 250.0 && this.households.size > 0) {
+            const div = 8.0; this.stateTreasury -= (div * this.households.size);
+            for (const hh of this.households.values()) hh.cashVault += div;
           }
-        }
-        deadHouseholdIds.forEach(id => this.households.delete(id));
-        this.centralBank.systemDebt = aggregateDebt;
 
-        let totalVal = 0; let totalFoodYield = 0;
-        const curEpoch = this.epochs[this.currentEpochIdx];
+          const deadHouseholdIds = [];
+          for (const [hId, hh] of this.households.entries()) {
+            const fatherAlive = hh.fatherId && this.agents.has(hh.fatherId) && this.agents.get(hh.fatherId).alive;
+            const motherAlive = hh.motherId && this.agents.has(hh.motherId) && this.agents.get(hh.motherId).alive;
+            const heirsAlive = hh.childrenIds.some(cId => this.agents.has(cId) && this.agents.get(cId).alive);
+            if (!fatherAlive && !motherAlive && !heirsAlive) { deadHouseholdIds.push(hId); continue; }
 
-        this.enterprises.forEach(ent => {
-          const neighbors = this.spatialGrid.queryNeighbors(ent.x, ent.y, 2.5);
-          const workers = neighbors.filter(a => Math.hypot(a.x - ent.x, a.y - ent.y) <= 2.2);
-          ent.currentWorkers = workers.length;
-          const engineers = workers.filter(w => w.careerTrack === "ENGINEER").length;
-          const meanEd = workers.reduce((acc, w) => acc + (w.education / 100), 0);
-
-          const { velocity, dividendPerShare, pollution } = ent.runAgileSprint(
-            meanEd, engineers, 0.1, this.centralBank.baseRate, curEpoch.yieldMulti, this.gridPowerRatio, this.toolsInventory
-          );
-          totalVal += ent.sharePrice * ent.sharesOutstanding;
-
-          if (ent.type === "ENGINEERING") this.toolsInventory = Math.min(60.0, this.toolsInventory + velocity * 0.8);
-          else if (ent.type === "AGRITECH") { this.toolsInventory = Math.max(0.0, this.toolsInventory - 0.4); totalFoodYield += velocity * 4.0; }
-
-          if (Math.random() < pollution * 0.08) {
-            this.pollutionTiles.add(`${Math.max(0, Math.min(WORLD_W - 1, ent.x + Math.floor(Math.random() * 3 - 1)))},${Math.max(0, Math.min(WORLD_H - 1, ent.y + Math.floor(Math.random() * 3 - 1)))}`);
-            if (ent.treasury > 2.0) { ent.treasury -= 2.0; this.carbonFund += 2.0; }
-          }
-          if (dividendPerShare > 0) {
-            for (const hh of this.households.values()) {
-              const shares = hh.equityShares.get(ent.id) || 0;
-              if (shares > 0) hh.cashVault += shares * dividendPerShare;
-            }
-          }
-        });
-
-        const totalFoodReserves = Array.from(this.households.values()).reduce((acc, h) => acc + h.foodReserve, 0) + totalFoodYield;
-        const surplusRatio = totalFoodReserves / (alive.length * 0.4 + 1.0);
-        if (surplusRatio > 2.0) this.price = Math.max(0.35, this.price * (1.0 - Math.min(0.04, (surplusRatio - 2.0) * 0.015)));
-
-        this.equityIndex = (totalVal / (this.enterprises.length * 100)) * 100;
-        this.equityLog.push(this.equityIndex); if (this.equityLog.length > 36) this.equityLog.shift();
-
-        let queuedWorkers = 0; const deceasedAgentIds = [];
-
-        for (const citizen of alive) {
-          citizen.age += 0.5;
-          if (citizen.emoteTimer > 0) citizen.emoteTimer--;
-
-          const hh = this.households.get(citizen.householdId);
-          const eStart = citizen.energy; const wStart = citizen.wallet;
-          citizen.energy -= (1.1 + (citizen.age / 90.0) * 1.5) * (1.0 / citizen.metaAITier);
-
-          if (hh && hh.foodReserve > 0.4) { hh.foodReserve -= 0.4; citizen.energy = Math.min(100, citizen.energy + 2.5); }
-          else if (this.stateTreasury >= 2.0 && citizen.energy < 25) { this.stateTreasury -= 2.0; citizen.energy += 16.0; this.totalWelfareGrants++; citizen.setEmote("🛡️"); }
-
-          if (citizen.energy <= 0 || citizen.age >= 82) {
-            citizen.alive = false; this.totalDeaths++; deceasedAgentIds.push(citizen.id);
-            if (hh) {
-              hh.cashVault += citizen.wallet;
-              if (citizen.role === "FATHER") hh.fatherId = null; if (citizen.role === "MOTHER") hh.motherId = null;
-              const livingHeirs = hh.childrenIds.map(cId => this.agents.get(cId)).filter(a => a && a.alive);
-              if (livingHeirs.length > 0) {
-                const portion = hh.cashVault / livingHeirs.length;
-                livingHeirs.forEach(heir => { heir.wallet += portion; });
-                hh.cashVault = 0;
-                const primaryHeir = livingHeirs[0];
-                primaryHeir.role = primaryHeir.gender === "MALE" ? "FATHER" : "MOTHER";
-                if (primaryHeir.gender === "MALE") hh.fatherId = primaryHeir.id; else hh.motherId = primaryHeir.id;
-                hh.childrenIds = hh.childrenIds.filter(id => id !== primaryHeir.id);
+            this.capitalBurnCycleTally += hh.applyMaintenanceSink();
+            if (hh.debtBalance > 0) {
+              hh.debtBalance *= (1 + this.centralBank.baseRate * 0.1); aggregateDebt += hh.debtBalance;
+              if (hh.debtBalance > 50 && hh.cashVault < 2) {
+                hh.debtBalance = 0; hh.cashVault = 0; hh.bondsHeld = []; hh.realEstateDeeds = 0; hh.equityShares.clear();
               }
             }
-            citizen.learn(citizen.lastS || Array(12).fill(0), -20, new Array(ACTIONS.length).fill(true));
-            continue;
-          }
 
-          const school = this.schools[0];
-          if (Math.hypot(school.x - citizen.x, school.y - citizen.y) > 10.0 && hh && citizen.role === "CHILD") {
-            const father = this.agents.get(hh.fatherId); const mother = this.agents.get(hh.motherId);
-            if ((father && father.degreeLevel >= 1) || (mother && mother.degreeLevel >= 1)) {
-              citizen.education = Math.min(100, citizen.education + 4); this.researchPoints += 1.0; citizen.setEmote("📖");
-            }
-          }
-
-          const matchingEnts = this.enterprises.filter(e => e.type === (citizen.careerTrack === "AGRITECH" ? "AGRITECH" : (citizen.careerTrack === "FINANCIER" ? "COMMERCE" : "ENGINEERING")));
-          const job = matchingEnts[0] || this.enterprises[0];
-          const market = this.enterprises.find(e => e.type === "COMMERCE") || this.enterprises[0];
-
-          let actIdx = -1;
-          const mask = citizen.generateActionMask(hh, this.sovereignBondsActive, this.isCivilStrike);
-          if (citizen.commitmentTicksRemaining > 0 && citizen.currentActionCommitment !== null && mask[citizen.currentActionCommitment]) {
-            actIdx = citizen.currentActionCommitment; citizen.commitmentTicksRemaining--;
-          } else {
-            const s = citizen.getState(Math.hypot(job.x - citizen.x, job.y - citizen.y), Math.hypot(school.x - citizen.x, school.y - citizen.y), hh ? Math.hypot(hh.homeX - citizen.x, hh.homeY - citizen.y) : 10, this.price, this.centralBank.baseRate, this.centralBank.bondRiskSpread, this.societalHappiness / 100.0, this.gridPowerRatio);
-            citizen.lastS = s;
-            const { h, q } = citizen.brain.forward(s, mask);
-            citizen.lastH = h;
-            if (Math.random() < 0.08) {
-              const validIndices = mask.map((valid, idx) => valid ? idx : -1).filter(idx => idx !== -1);
-              actIdx = validIndices[Math.floor(Math.random() * validIndices.length)];
-            } else { actIdx = q.indexOf(Math.max(...q)); }
-            citizen.currentActionCommitment = actIdx; citizen.commitmentTicksRemaining = 6;
-          }
-
-          citizen.lastA = actIdx; const action = ACTIONS[actIdx];
-          if (this.isCivilStrike) citizen.setEmote("🚩");
-
-          if (action === "WORK_ROLE") {
-            const dx = job.x > citizen.x ? 1 : (job.x < citizen.x ? -1 : 0);
-            const dy = job.y > citizen.y ? 1 : (job.y < citizen.y ? -1 : 0);
-            citizen.x = Math.max(0, Math.min(WORLD_W - 1, citizen.x + dx));
-            citizen.y = Math.max(0, Math.min(WORLD_H - 1, citizen.y + dy));
-            if (Math.hypot(job.x - citizen.x, job.y - citizen.y) <= 1.5) {
-              if (job.currentWorkers < job.maxPositions) {
-                job.currentWorkers++;
-                const grossWage = Math.max(this.unionMinWage, 4.0 * (1 + (citizen.education / 60)) * curEpoch.yieldMulti);
-                let tax = 0;
-                if (grossWage > 10.0) tax += (Math.min(grossWage, 35.0) - 10.0) * 0.12;
-                if (grossWage > 35.0) tax += (grossWage - 35.0) * 0.28;
-                this.stateTreasury += tax;
-                const net = grossWage - tax;
-                if (hh && (citizen.role === "FATHER" || citizen.role === "MOTHER")) hh.cashVault += net;
-                else citizen.wallet += net;
-                citizen.setEmote("💼");
-              } else { queuedWorkers++; citizen.setEmote("⏳"); }
-            }
-          } else if (action === "FORAGE_PANTRY") {
-            citizen.setEmote("🌾"); if (hh) hh.foodReserve += 4.0;
-          } else if (action === "FOUND_STARTUP") {
-            if (hh && hh.cashVault >= 60.0 && this.enterprises.length < 12) {
-              hh.cashVault -= 50.0;
-              const types = ["AGRITECH", "COMMERCE", "ENGINEERING"];
-              const rType = types[Math.floor(Math.random() * types.length)];
-              const pos = this.findNearestVacantTile(citizen.x, citizen.y);
-              this.enterprises.push(new Enterprise(this.getNewId("startup"), `${hh.name.replace("House ", "")} Hub`, rType, pos.x, pos.y, true));
-            }
-          } else if (action === "SEEK_EDUCATION") {
-            const dx = school.x > citizen.x ? 1 : (school.x < citizen.x ? -1 : 0);
-            const dy = school.y > citizen.y ? 1 : (school.y < citizen.y ? -1 : 0);
-            citizen.x = Math.max(0, Math.min(WORLD_W - 1, citizen.x + dx));
-            citizen.y = Math.max(0, Math.min(WORLD_H - 1, citizen.y + dy));
-            if (Math.hypot(school.x - citizen.x, school.y - citizen.y) <= 1.5) {
-              citizen.education = Math.min(100, citizen.education + 5); this.researchPoints += 2.0; citizen.setEmote("📖");
-              if (citizen.education >= 70 && citizen.degreeLevel === 0) citizen.degreeLevel = 1;
-              else if (citizen.education >= 95 && citizen.degreeLevel === 1) citizen.degreeLevel = 2;
-            }
-          } else if (action === "BUY_BOND") {
-            if (hh && hh.cashVault >= this.bondFaceValue && this.sovereignBondsActive > 0) {
-              hh.cashVault -= this.bondFaceValue; this.stateTreasury += this.bondFaceValue;
-              hh.bondsHeld.push({ id: this.getNewId("bond"), faceValue: this.bondFaceValue, couponRate: this.centralBank.bondRiskSpread, startCycle: this.cycle, term: 50 });
-              this.sovereignBondsActive -= 1; citizen.setEmote("📜");
-            }
-          } else if (action === "BUY_REAL_ESTATE") {
-            if (hh && hh.cashVault >= this.realEstateDeedCost && hh.debtBalance <= 0) {
-              hh.cashVault -= this.realEstateDeedCost; hh.realEstateDeeds += 1; citizen.setEmote("🏘️");
-            }
-          } else if (action === "BORROW_CREDIT") {
-            if (hh && hh.debtBalance <= 20.0) { hh.debtBalance += 15.0; hh.cashVault += 15.0; citizen.setEmote("💳"); }
-          } else if (action === "TRADE_MARKET") {
-            const dx = market.x > citizen.x ? 1 : (market.x < citizen.x ? -1 : 0);
-            const dy = market.y > citizen.y ? 1 : (market.y < citizen.y ? -1 : 0);
-            citizen.x = Math.max(0, Math.min(WORLD_W - 1, citizen.x + dx));
-            citizen.y = Math.max(0, Math.min(WORLD_H - 1, citizen.y + dy));
-            const tariff = 5.0 * this.tariffRate;
-            if (Math.hypot(market.x - citizen.x, market.y - citizen.y) <= 1.5 && hh && hh.cashVault >= (5.0 + tariff)) {
-              hh.cashVault -= (5.0 + tariff); this.stateTreasury += tariff;
-              hh.foodReserve += 18.0 / this.price; this.price = Math.min(5.0, this.price * 1.01); citizen.setEmote("🛒");
-            }
-          } else if (action === "CULTURE_CIVICS") {
-            if (hh && hh.cashVault >= 2.0) { hh.cashVault -= 2.0; this.societalHappiness = Math.min(100, this.societalHappiness + 1.2); citizen.setEmote("🎭"); }
-          } else if (action === "REST_NURTURE") {
-            if (hh) {
-              citizen.x += hh.homeX > citizen.x ? 1 : -1; citizen.y += hh.homeY > citizen.y ? 1 : -1; citizen.setEmote("🏡");
-              if (citizen.role === "ADULT_SINGLE") {
-                const partner = this.spatialGrid.queryNeighbors(citizen.x, citizen.y, 2.2).find(o => o.alive && o.role === "ADULT_SINGLE" && o.gender !== citizen.gender);
-                if (partner && citizen.wallet >= 8 && partner.wallet >= 8) {
-                  this.totalMarriages++; const nHId = this.getNewId("house"); const pos = this.findNearestVacantTile(citizen.x, citizen.y);
-                  const nH = new Household(nHId, `House ${citizen.gender === "MALE" ? citizen.name.split(" ")[1] : partner.name.split(" ")[1]}`, pos.x, pos.y);
-                  nH.cashVault = citizen.wallet + partner.wallet; citizen.wallet = 0; partner.wallet = 0;
-                  if (citizen.gender === "MALE") { citizen.role = "FATHER"; partner.role = "MOTHER"; nH.fatherId = citizen.id; nH.motherId = partner.id; }
-                  else { citizen.role = "MOTHER"; partner.role = "FATHER"; nH.motherId = citizen.id; nH.fatherId = partner.id; }
-                  citizen.householdId = nHId; partner.householdId = nHId; this.households.set(nHId, nH);
-                }
-              } else if (citizen.role === "MOTHER" && hh.isComplete) {
-                if (hh.cashVault >= 32.0 && hh.foodReserve >= 22.0 && hh.childrenIds.length < 3) {
-                  hh.cashVault -= 15.0; hh.foodReserve -= 10.0;
-                  const cGender = Math.random() > 0.5 ? "MALE" : "FEMALE";
-                  const baby = new HumanAgent(this.getNewId("agent_c"), `${cGender === "MALE" ? "Noah" : "Maya"} ${hh.name.split(" ")[1]}`, cGender, 0, hh.id, "AGRITECH", hh.homeX, hh.homeY, citizen.brain.recombine(this.agents.get(hh.fatherId).brain));
-                  baby.role = "CHILD"; hh.childrenIds.push(baby.id); newborns.push(baby);
-                }
+            for (let i = hh.bondsHeld.length - 1; i >= 0; i--) {
+              const b = hh.bondsHeld[i];
+              if (this.cycle % 10 === 0 && this.stateTreasury >= (b.faceValue * b.couponRate)) {
+                this.stateTreasury -= (b.faceValue * b.couponRate); hh.cashVault += (b.faceValue * b.couponRate);
+              }
+              if (this.cycle - b.startCycle >= b.term) {
+                if (this.stateTreasury >= b.faceValue) { this.stateTreasury -= b.faceValue; hh.cashVault += b.faceValue; }
+                hh.bondsHeld.splice(i, 1);
               }
             }
-          } else if (action === "META_AI") {
-            if (hh && hh.cashVault > 45 && citizen.metaAITier < 2.5) {
-              hh.cashVault -= 10; citizen.metaAITier += 0.25; this.totalMetaUpgrades++; citizen.setEmote("🤖");
+          }
+          deadHouseholdIds.forEach(id => this.households.delete(id));
+          this.centralBank.systemDebt = aggregateDebt;
+
+          let totalVal = 0; let totalFoodYield = 0;
+          const curEpoch = this.epochs[this.currentEpochIdx];
+
+          this.enterprises.forEach(ent => {
+            const neighbors = this.spatialGrid.queryNeighbors(ent.x, ent.y, 2.5);
+            const workers = neighbors.filter(a => Math.hypot(a.x - ent.x, a.y - ent.y) <= 2.2);
+            ent.currentWorkers = workers.length;
+            const engineers = workers.filter(w => w.careerTrack === "ENGINEER").length;
+            const meanEd = workers.reduce((acc, w) => acc + (w.education / 100), 0);
+
+            const { velocity, dividendPerShare, pollution } = ent.runAgileSprint(
+              meanEd, engineers, 0.1, this.centralBank.baseRate, curEpoch.yieldMulti, this.gridPowerRatio, this.toolsInventory
+            );
+            totalVal += ent.sharePrice * ent.sharesOutstanding;
+
+            if (ent.type === "ENGINEERING") this.toolsInventory = Math.min(60.0, this.toolsInventory + velocity * 0.8);
+            else if (ent.type === "AGRITECH") { this.toolsInventory = Math.max(0.0, this.toolsInventory - 0.4); totalFoodYield += velocity * 4.0; }
+
+            if (Math.random() < pollution * 0.08) {
+              this.pollutionTiles.add(`${Math.max(0, Math.min(WORLD_W - 1, ent.x + Math.floor(Math.random() * 3 - 1)))},${Math.max(0, Math.min(WORLD_H - 1, ent.y + Math.floor(Math.random() * 3 - 1)))}`);
+              if (ent.treasury > 2.0) { ent.treasury -= 2.0; this.carbonFund += 2.0; }
             }
+            if (dividendPerShare > 0) {
+              for (const hh of this.households.values()) {
+                const shares = hh.equityShares.get(ent.id) || 0;
+                if (shares > 0) hh.cashVault += shares * dividendPerShare;
+              }
+            }
+          });
+
+          const totalFoodReserves = Array.from(this.households.values()).reduce((acc, h) => acc + h.foodReserve, 0) + totalFoodYield;
+          const surplusRatio = totalFoodReserves / (alive.length * 0.4 + 1.0);
+          if (surplusRatio > 2.0) this.price = Math.max(0.35, this.price * (1.0 - Math.min(0.04, (surplusRatio - 2.0) * 0.015)));
+
+          this.equityIndex = (totalVal / (this.enterprises.length * 100)) * 100;
+          this.equityLog.push(this.equityIndex); if (this.equityLog.length > 36) this.equityLog.shift();
+
+          let queuedWorkers = 0; const deceasedAgentIds = [];
+
+          for (const citizen of alive) {
+            citizen.age += 0.5;
+            if (citizen.emoteTimer > 0) citizen.emoteTimer--;
+
+            const hh = this.households.get(citizen.householdId);
+            const eStart = citizen.energy; const wStart = citizen.wallet;
+            citizen.energy -= (1.1 + (citizen.age / 90.0) * 1.5) * (1.0 / citizen.metaAITier);
+
+            if (hh && hh.foodReserve > 0.4) { hh.foodReserve -= 0.4; citizen.energy = Math.min(100, citizen.energy + 2.5); }
+            else if (this.stateTreasury >= 2.0 && citizen.energy < 25) { this.stateTreasury -= 2.0; citizen.energy += 16.0; this.totalWelfareGrants++; citizen.setEmote("🛡️"); }
+
+            if (citizen.energy <= 0 || citizen.age >= 82) {
+              citizen.alive = false; this.totalDeaths++; deceasedAgentIds.push(citizen.id);
+              if (hh) {
+                hh.cashVault += citizen.wallet;
+                if (citizen.role === "FATHER") hh.fatherId = null; if (citizen.role === "MOTHER") hh.motherId = null;
+                const livingHeirs = hh.childrenIds.map(cId => this.agents.get(cId)).filter(a => a && a.alive);
+                if (livingHeirs.length > 0) {
+                  const portion = hh.cashVault / livingHeirs.length;
+                  livingHeirs.forEach(heir => { heir.wallet += portion; });
+                  hh.cashVault = 0;
+                  const primaryHeir = livingHeirs[0];
+                  primaryHeir.role = primaryHeir.gender === "MALE" ? "FATHER" : "MOTHER";
+                  if (primaryHeir.gender === "MALE") hh.fatherId = primaryHeir.id; else hh.motherId = primaryHeir.id;
+                  hh.childrenIds = hh.childrenIds.filter(id => id !== primaryHeir.id);
+                }
+              }
+              citizen.learn(citizen.lastS || Array(12).fill(0), -20, new Array(ACTIONS.length).fill(true));
+              continue;
+            }
+
+            const school = this.schools[0];
+            if (Math.hypot(school.x - citizen.x, school.y - citizen.y) > 10.0 && hh && citizen.role === "CHILD") {
+              const father = this.agents.get(hh.fatherId); const mother = this.agents.get(hh.motherId);
+              if ((father && father.degreeLevel >= 1) || (mother && mother.degreeLevel >= 1)) {
+                citizen.education = Math.min(100, citizen.education + 4); this.researchPoints += 1.0; citizen.setEmote("📖");
+              }
+            }
+
+            const matchingEnts = this.enterprises.filter(e => e.type === (citizen.careerTrack === "AGRITECH" ? "AGRITECH" : (citizen.careerTrack === "FINANCIER" ? "COMMERCE" : "ENGINEERING")));
+            const job = matchingEnts[0] || this.enterprises[0];
+            const market = this.enterprises.find(e => e.type === "COMMERCE") || this.enterprises[0];
+
+            let actIdx = -1;
+            const mask = citizen.generateActionMask(hh, this.sovereignBondsActive, this.isCivilStrike);
+            if (citizen.commitmentTicksRemaining > 0 && citizen.currentActionCommitment !== null && mask[citizen.currentActionCommitment]) {
+              actIdx = citizen.currentActionCommitment; citizen.commitmentTicksRemaining--;
+            } else {
+              const s = citizen.getState(Math.hypot(job.x - citizen.x, job.y - citizen.y), Math.hypot(school.x - citizen.x, school.y - citizen.y), hh ? Math.hypot(hh.homeX - citizen.x, hh.homeY - citizen.y) : 10, this.price, this.centralBank.baseRate, this.centralBank.bondRiskSpread, this.societalHappiness / 100.0, this.gridPowerRatio);
+              citizen.lastS = s;
+              const { h, q } = citizen.brain.forward(s, mask);
+              citizen.lastH = h;
+              if (Math.random() < 0.08) {
+                const validIndices = mask.map((valid, idx) => valid ? idx : -1).filter(idx => idx !== -1);
+                actIdx = validIndices[Math.floor(Math.random() * validIndices.length)];
+              } else { actIdx = q.indexOf(Math.max(...q)); }
+              citizen.currentActionCommitment = actIdx; citizen.commitmentTicksRemaining = 6;
+            }
+
+            citizen.lastA = actIdx; const action = ACTIONS[actIdx];
+            if (this.isCivilStrike) citizen.setEmote("🚩");
+
+            if (action === "WORK_ROLE") {
+              const dx = job.x > citizen.x ? 1 : (job.x < citizen.x ? -1 : 0);
+              const dy = job.y > citizen.y ? 1 : (job.y < citizen.y ? -1 : 0);
+              citizen.x = Math.max(0, Math.min(WORLD_W - 1, citizen.x + dx));
+              citizen.y = Math.max(0, Math.min(WORLD_H - 1, citizen.y + dy));
+              if (Math.hypot(job.x - citizen.x, job.y - citizen.y) <= 1.5) {
+                if (job.currentWorkers < job.maxPositions) {
+                  job.currentWorkers++;
+                  const grossWage = Math.max(this.unionMinWage, 4.0 * (1 + (citizen.education / 60)) * curEpoch.yieldMulti);
+                  let tax = 0;
+                  if (grossWage > 10.0) tax += (Math.min(grossWage, 35.0) - 10.0) * 0.12;
+                  if (grossWage > 35.0) tax += (grossWage - 35.0) * 0.28;
+                  this.stateTreasury += tax;
+                  const net = grossWage - tax;
+                  if (hh && (citizen.role === "FATHER" || citizen.role === "MOTHER")) hh.cashVault += net;
+                  else citizen.wallet += net;
+                  citizen.setEmote("💼");
+                } else { queuedWorkers++; citizen.setEmote("⏳"); }
+              }
+            } else if (action === "FORAGE_PANTRY") {
+              citizen.setEmote("🌾"); if (hh) hh.foodReserve += 4.0;
+            } else if (action === "FOUND_STARTUP") {
+              if (hh && hh.cashVault >= 60.0 && this.enterprises.length < 12) {
+                hh.cashVault -= 50.0;
+                const types = ["AGRITECH", "COMMERCE", "ENGINEERING"];
+                const rType = types[Math.floor(Math.random() * types.length)];
+                const pos = this.findNearestVacantTile(citizen.x, citizen.y);
+                this.enterprises.push(new Enterprise(this.getNewId("startup"), `${hh.name.replace("House ", "")} Hub`, rType, pos.x, pos.y, true));
+              }
+            } else if (action === "SEEK_EDUCATION") {
+              const dx = school.x > citizen.x ? 1 : (school.x < citizen.x ? -1 : 0);
+              const dy = school.y > citizen.y ? 1 : (school.y < citizen.y ? -1 : 0);
+              citizen.x = Math.max(0, Math.min(WORLD_W - 1, citizen.x + dx));
+              citizen.y = Math.max(0, Math.min(WORLD_H - 1, citizen.y + dy));
+              if (Math.hypot(school.x - citizen.x, school.y - citizen.y) <= 1.5) {
+                citizen.education = Math.min(100, citizen.education + 5); this.researchPoints += 2.0; citizen.setEmote("📖");
+                if (citizen.education >= 70 && citizen.degreeLevel === 0) citizen.degreeLevel = 1;
+                else if (citizen.education >= 95 && citizen.degreeLevel === 1) citizen.degreeLevel = 2;
+              }
+            } else if (action === "BUY_BOND") {
+              if (hh && hh.cashVault >= this.bondFaceValue && this.sovereignBondsActive > 0) {
+                hh.cashVault -= this.bondFaceValue; this.stateTreasury += this.bondFaceValue;
+                hh.bondsHeld.push({ id: this.getNewId("bond"), faceValue: this.bondFaceValue, couponRate: this.centralBank.bondRiskSpread, startCycle: this.cycle, term: 50 });
+                this.sovereignBondsActive -= 1; citizen.setEmote("📜");
+              }
+            } else if (action === "BUY_REAL_ESTATE") {
+              if (hh && hh.cashVault >= this.realEstateDeedCost && hh.debtBalance <= 0) {
+                hh.cashVault -= this.realEstateDeedCost; hh.realEstateDeeds += 1; citizen.setEmote("🏘️");
+              }
+            } else if (action === "BORROW_CREDIT") {
+              if (hh && hh.debtBalance <= 20.0) { hh.debtBalance += 15.0; hh.cashVault += 15.0; citizen.setEmote("💳"); }
+            } else if (action === "TRADE_MARKET") {
+              const dx = market.x > citizen.x ? 1 : (market.x < citizen.x ? -1 : 0);
+              const dy = market.y > citizen.y ? 1 : (market.y < citizen.y ? -1 : 0);
+              citizen.x = Math.max(0, Math.min(WORLD_W - 1, citizen.x + dx));
+              citizen.y = Math.max(0, Math.min(WORLD_H - 1, citizen.y + dy));
+              const tariff = 5.0 * this.tariffRate;
+              if (Math.hypot(market.x - citizen.x, market.y - citizen.y) <= 1.5 && hh && hh.cashVault >= (5.0 + tariff)) {
+                hh.cashVault -= (5.0 + tariff); this.stateTreasury += tariff;
+                hh.foodReserve += 18.0 / this.price; this.price = Math.min(5.0, this.price * 1.01); citizen.setEmote("🛒");
+              }
+            } else if (action === "CULTURE_CIVICS") {
+              if (hh && hh.cashVault >= 2.0) { hh.cashVault -= 2.0; this.societalHappiness = Math.min(100, this.societalHappiness + 1.2); citizen.setEmote("🎭"); }
+            } else if (action === "REST_NURTURE") {
+              if (hh) {
+                citizen.x += hh.homeX > citizen.x ? 1 : -1; citizen.y += hh.homeY > citizen.y ? 1 : -1; citizen.setEmote("🏡");
+                if (citizen.role === "ADULT_SINGLE") {
+                  const partner = this.spatialGrid.queryNeighbors(citizen.x, citizen.y, 2.2).find(o => o.alive && o.role === "ADULT_SINGLE" && o.gender !== citizen.gender);
+                  if (partner && citizen.wallet >= 8 && partner.wallet >= 8) {
+                    this.totalMarriages++; const nHId = this.getNewId("house"); const pos = this.findNearestVacantTile(citizen.x, citizen.y);
+                    const nH = new Household(nHId, `House ${citizen.gender === "MALE" ? citizen.name.split(" ")[1] : partner.name.split(" ")[1]}`, pos.x, pos.y);
+                    nH.cashVault = citizen.wallet + partner.wallet; citizen.wallet = 0; partner.wallet = 0;
+                    if (citizen.gender === "MALE") { citizen.role = "FATHER"; partner.role = "MOTHER"; nH.fatherId = citizen.id; nH.motherId = partner.id; }
+                    else { citizen.role = "MOTHER"; partner.role = "FATHER"; nH.motherId = citizen.id; nH.fatherId = partner.id; }
+                    citizen.householdId = nHId; partner.householdId = nHId; this.households.set(nHId, nH);
+                  }
+                } else if (citizen.role === "MOTHER" && hh.isComplete) {
+                  if (hh.cashVault >= 32.0 && hh.foodReserve >= 22.0 && hh.childrenIds.length < 3) {
+                    hh.cashVault -= 15.0; hh.foodReserve -= 10.0;
+                    const cGender = Math.random() > 0.5 ? "MALE" : "FEMALE";
+                    const baby = new HumanAgent(this.getNewId("agent_c"), `${cGender === "MALE" ? "Noah" : "Maya"} ${hh.name.split(" ")[1]}`, cGender, 0, hh.id, "AGRITECH", hh.homeX, hh.homeY, citizen.brain.recombine(this.agents.get(hh.fatherId).brain));
+                    baby.role = "CHILD"; hh.childrenIds.push(baby.id); newborns.push(baby);
+                  }
+                }
+              }
+            } else if (action === "META_AI") {
+              if (hh && hh.cashVault > 45 && citizen.metaAITier < 2.5) {
+                hh.cashVault -= 10; citizen.metaAITier += 0.25; this.totalMetaUpgrades++; citizen.setEmote("🤖");
+              }
+            }
+
+            const reward = ((citizen.energy - eStart) * 0.1) + ((citizen.wallet - wStart) * 0.3) + ((this.societalHappiness - 50) * 0.05);
+            citizen.learn(citizen.getState(Math.hypot(job.x - citizen.x, job.y - citizen.y), Math.hypot(school.x - citizen.x, school.y - citizen.y), hh ? Math.hypot(hh.homeX - citizen.x, hh.homeY - citizen.y) : 10, this.price, this.centralBank.baseRate, this.centralBank.bondRiskSpread, this.societalHappiness / 100.0, this.gridPowerRatio), reward, citizen.generateActionMask(hh, this.sovereignBondsActive, this.isCivilStrike));
           }
 
-          const reward = ((citizen.energy - eStart) * 0.1) + ((citizen.wallet - wStart) * 0.3) + ((this.societalHappiness - 50) * 0.05);
-          citizen.learn(citizen.getState(Math.hypot(job.x - citizen.x, job.y - citizen.y), Math.hypot(school.x - citizen.x, school.y - citizen.y), hh ? Math.hypot(hh.homeX - citizen.x, hh.homeY - citizen.y) : 10, this.price, this.centralBank.baseRate, this.centralBank.bondRiskSpread, this.societalHappiness / 100.0, this.gridPowerRatio), reward, citizen.generateActionMask(hh, this.sovereignBondsActive, this.isCivilStrike));
-        }
+          deceasedAgentIds.forEach(id => this.agents.delete(id));
+          newborns.forEach(b => this.agents.set(b.id, b));
+          this.priceLog.push(this.price); if (this.priceLog.length > 36) this.priceLog.shift();
+          this.predictedPriceLog.push(Math.max(0.35, this.priceLog[this.priceLog.length - 1] + 0.65 * (this.priceLog[this.priceLog.length - 1] - (this.priceLog[this.priceLog.length - 2] || this.price))));
+          if (this.predictedPriceLog.length > 36) this.predictedPriceLog.shift();
 
-        deceasedAgentIds.forEach(id => this.agents.delete(id));
-        newborns.forEach(b => this.agents.set(b.id, b));
-        this.priceLog.push(this.price); if (this.priceLog.length > 36) this.priceLog.shift();
-        this.predictedPriceLog.push(Math.max(0.35, this.priceLog[this.priceLog.length - 1] + 0.65 * (this.priceLog[this.priceLog.length - 1] - (this.priceLog[this.priceLog.length - 2] || this.price))));
-        if (this.predictedPriceLog.length > 36) this.predictedPriceLog.shift();
-
-        this.updateSovereigntyTier();
-        for (let i = this.particles.length - 1; i >= 0; i--) {
-          const p = this.particles[i]; p.y += p.vy; p.alpha -= 0.035; if (p.alpha <= 0) this.particles.splice(i, 1);
+          this.updateSovereigntyTier();
+          for (let i = this.particles.length - 1; i >= 0; i--) {
+            const p = this.particles[i]; p.y += p.vy; p.alpha -= 0.035; if (p.alpha <= 0) this.particles.splice(i, 1);
+          }
+          if (this.cycle % 25 === 0) this.saveState();
+        } catch (err) {
+          console.error("Step execution error caught safely:", err);
         }
-        if (this.cycle % 25 === 0) this.saveState();
       }
 
       updateSovereigntyTier() {
@@ -1560,6 +1565,52 @@
       }
     }
 
+    function renderHUD() {
+      document.getElementById("tickCount").innerText = `CYC ${String(sim.cycle).padStart(4, '0')}`;
+      const alive = Array.from(sim.agents.values()).filter(a => a.alive);
+      document.getElementById("totalPop").innerText = `${alive.length} citizens`;
+      document.getElementById("stateCoffers").innerText = `${sim.stateTreasury.toFixed(0)} C`;
+      document.getElementById("oracleSparksCount").innerText = `${sim.onlineKnowledgeSparks} fetched`;
+      document.getElementById("mutationCount").innerText = `${sim.mutationTrialsCount} trials`;
+
+      const curEpoch = sim.epochs[sim.currentEpochIdx];
+      const nextEpoch = sim.epochs[sim.currentEpochIdx + 1];
+      document.getElementById("currentEpochName").innerText = `${curEpoch.icon} Epoch ${curEpoch.level}: ${curEpoch.name}`;
+
+      const targetPts = nextEpoch ? nextEpoch.threshold : Math.floor(curEpoch.threshold * 1.75);
+      const fillPct = Math.min(100, (sim.researchPoints / targetPts) * 100);
+      document.getElementById("techProgressBar").style.width = `${fillPct}%`;
+
+      document.getElementById("happinessVal").innerText = `${sim.societalHappiness.toFixed(0)}% (${sim.societalHappiness < 35 ? "STRIKE" : "STABLE"})`;
+
+      if (sim.selectedEntity) {
+        if (sim.selectedEntity.type === "AGENT") {
+          const a = sim.selectedEntity.data;
+          document.getElementById("inspectTarget").innerText = `${a.name} (${a.role})`;
+          document.getElementById("inspectDetail").innerText = `⚡${a.energy.toFixed(0)} | 💰${a.wallet.toFixed(1)}C | 🎓Lvl ${a.degreeLevel}`;
+          document.getElementById("inspectAction").innerText = `${ACTIONS[a.lastA] || "IDLE"}`;
+        } else if (sim.selectedEntity.type === "HOUSEHOLD") {
+          const h = sim.selectedEntity.data;
+          document.getElementById("inspectTarget").innerText = `${h.name} (Tier ${h.level})`;
+          document.getElementById("inspectDetail").innerText = `Vault: ${h.cashVault.toFixed(0)}C | Food: ${h.foodReserve.toFixed(0)}`;
+          document.getElementById("inspectAction").innerText = `Deeds: ${h.realEstateDeeds} | Bonds: ${h.bondsHeld.length}`;
+        }
+      } else {
+        document.getElementById("inspectTarget").innerText = "Global Overview";
+        document.getElementById("inspectDetail").innerText = "Tap citizen or building";
+        document.getElementById("inspectAction").innerText = "Self-Evolving AI Active";
+      }
+
+      const firstHh = Array.from(sim.households.values())[0];
+      if (firstHh) {
+        document.getElementById("dynastyName").innerText = `${firstHh.name} (Tier ${firstHh.level})`;
+        document.getElementById("dynastyAssets").innerText = `Vault: ${firstHh.cashVault.toFixed(0)} C | Food: ${firstHh.foodReserve.toFixed(0)}`;
+      }
+
+      drawSparkline(cCanvas, cCtx, sim.priceLog, sim.predictedPriceLog, "#f59e0b", "#38bdf8");
+      drawSparkline(eCanvas, eCtx, sim.equityLog, sim.equityLog, "#38bdf8", "#38bdf8");
+    }
+
     function gameLoop() {
       for (let s = 0; s < SIM_SPEED; s++) sim.step();
       const floorCamX = Math.floor(sim.camX), floorCamY = Math.floor(sim.camY);
@@ -1572,7 +1623,6 @@
       for (const hh of sim.households.values()) drawCleanHousehold(hh, floorCamX, floorCamY);
       Array.from(sim.agents.values()).filter(a => a.alive).forEach(c => drawCleanHuman(c, floorCamX, floorCamY));
 
-      // Render Floating Particles & Text Effects
       sim.particles.forEach(p => {
         const sx = p.x - floorCamX * TILE_SIZE;
         const sy = p.y - floorCamY * TILE_SIZE;
