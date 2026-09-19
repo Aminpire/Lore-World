@@ -1,606 +1,1060 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Lore World - Unified Infinite Autonomous Matrix</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Outfit:wght@700;900&family=Fira+Code:wght@500;700&display=swap');
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #0f111a; color: #f1f5f9; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; min-height: 100vh; display: flex; flex-direction: column; padding: 6px; user-select: none; }
-    header { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: #1e2230; border: 2px solid #3b4252; border-left: 6px solid #ff79c6; border-radius: 8px; box-shadow: 0 4px 0 #000; margin-bottom: 6px; }
-    .brand-title { font-family: 'Outfit', sans-serif; font-size: 0.85rem; font-weight: 900; color: #ff79c6; letter-spacing: 1px; text-transform: uppercase; }
-    .badge-bar { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
-    .hud-badge { font-family: 'Outfit', sans-serif; font-size: 0.55rem; font-weight: 700; background: #282c3d; color: #8be9fd; padding: 3px 6px; border: 2px solid #44475a; border-radius: 4px; }
-    .ctrl-btn { background: #282c3d; color: #f8fafc; border: 2px solid #44475a; border-radius: 5px; padding: 3px 7px; font-family: 'Outfit', sans-serif; font-size: 0.55rem; font-weight: 700; cursor: pointer; transition: all 0.1s ease; box-shadow: 0 2px 0 #000; }
-    .ctrl-btn:hover { background: #44475a; }
-    .ctrl-btn:active { transform: translateY(2px); box-shadow: none; }
-    .toggle-active { background: #50fa7b !important; border-color: #2e8b57 !important; color: #000 !important; }
-    .main-grid { display: flex; flex-direction: column; gap: 6px; }
-    @media (min-width: 1024px) { .main-grid { display: grid; grid-template-columns: 1fr 410px; } }
-    .viewport-box { background: #090a0f; border: 2px solid #3b4252; border-radius: 8px; position: relative; overflow: hidden; width: 100%; height: 460px; box-shadow: inset 0 0 20px #000; }
-    #webglContainer { width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: block; }
-    #webglContainer canvas { width: 100% !important; height: 100% !important; display: block; }
-    .hud-sidebar { display: flex; flex-direction: column; gap: 6px; max-height: 88vh; overflow-y: auto; padding-right: 2px; }
-    .tab-bar { display: flex; flex-wrap: wrap; gap: 2px; background: #161822; padding: 3px; border: 2px solid #3b4252; border-radius: 6px; }
-    .tab-btn { flex: 1 1 16%; padding: 4px 1px; background: transparent; border: none; color: #6272a4; font-family: 'Outfit', sans-serif; font-size: 0.32rem; font-weight: 700; cursor: pointer; border-radius: 3px; text-align: center; }
-    .tab-btn.active { background: #282c3d; color: #ff79c6; border: 1px solid #6272a4; }
-    .soc-card { background: #181b25; border: 2px solid #3b4252; border-radius: 8px; padding: 8px 10px; box-shadow: 0 3px 0 #000; display: none; }
-    .soc-card.active-card { display: block; }
-    .soc-card h2 { font-family: 'Outfit', sans-serif; font-size: 0.65rem; font-weight: 900; color: #f8fafc; margin-bottom: 6px; letter-spacing: 0.5px; border-bottom: 2px solid #282c3d; padding-bottom: 4px; text-transform: uppercase; }
-    .exec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: 4px; }
-    .exec-btn { background: #282c3d; border: 2px solid #44475a; color: #8be9fd; font-family: 'Outfit', sans-serif; font-size: 0.56rem; font-weight: 700; padding: 5px 6px; border-radius: 5px; cursor: pointer; text-align: center; box-shadow: 0 2px 0 #000; }
-    .exec-btn:hover { background: #44475a; }
-    .exec-btn:active { transform: translateY(2px); box-shadow: none; }
-    .exec-danger { border-color: #ff5555; color: #ff5555; }
-    .stat-row { display: flex; justify-content: space-between; margin-bottom: 3px; font-size: 12px; font-weight: 700; }
-    .stat-num { color: #50fa7b; font-weight: 900; font-family: 'Outfit', sans-serif; font-size: 11px; }
-    .log-container { max-height: 330px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; padding: 4px; }
-    .log-entry { background: #0f111a; border: 2px solid #282c3d; border-left: 4px solid #ff79c6; border-radius: 5px; padding: 6px 8px; font-size: 11px; }
-    .log-time { font-family: 'Outfit', sans-serif; font-size: 9px; font-weight: 700; color: #6272a4; margin-bottom: 2px; }
-    .log-text { color: #f8fafc; font-weight: 600; }
-  </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lore World - Ultimate Autonomous Civilization Matrix</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Fira+Code:wght@500;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#060913;color:#94a3b8;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;min-height:100vh;display:flex;flex-direction:column;padding:6px;user-select:none}
+header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:8px 12px;background:#0f172a;border:1px solid #1e293b;border-left:4px solid #38bdf8;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.4);margin-bottom:6px}
+.brand-title{font-family:'Orbitron',monospace;font-size:.78rem;font-weight:800;color:#38bdf8;letter-spacing:1px;display:flex;align-items:center;gap:6px}
+.badge-bar{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.hud-badge{font-family:'Orbitron',monospace;font-size:.5rem;font-weight:700;background:#1e293b;color:#38bdf8;padding:3px 5px;border:1px solid #334155;border-radius:5px}
+.epoch-badge{color:#f59e0b;border-color:#d97706;background:#78350f22}
+.space-badge{color:#818cf8;border-color:#6366f1;background:#312e8122}
+.ctrl-btn{background:#1e293b;color:#f8fafc;border:1px solid #334155;border-radius:5px;padding:3px 6px;font-family:'Orbitron',monospace;font-size:.52rem;font-weight:700;cursor:pointer;transition:all .15s ease}
+.ctrl-btn:hover{background:#334155}
+.ctrl-btn:active{background:#0284c7;color:#fff}
+.toggle-active{background:#059669!important;border-color:#34d399!important;color:#fff!important}
+.paused{background:#d97706!important;border-color:#f59e0b!important;color:#fff!important}
+.main-grid{display:flex;flex-direction:column;gap:6px}
+@media (min-width:1024px){.main-grid{display:grid;grid-template-columns:1fr 410px}}
+.viewport-box{background:#020617;border:1px solid #1e293b;border-radius:8px;position:relative;overflow:hidden;width:100%;height:460px;box-shadow:inset 0 0 30px #000}
+@media (min-width:1024px){.viewport-box{height:82vh}}
+#webglContainer{width:100%;height:100%;position:absolute;top:0;left:0;display:block;touch-action:none;cursor:grab}
+#webglContainer canvas{width:100%!important;height:100%!important;display:block}
+.overlay{position:absolute;pointer-events:none;font-family:'Fira Code',monospace;font-size:10px;color:#cbd5e1}
+#ticker{left:8px;bottom:8px;right:8px;background:#020617cc;border:1px solid #1e293b;border-left:3px solid #38bdf8;border-radius:5px;padding:5px 8px}
+#hint{left:8px;top:8px;color:#64748b;background:#020617aa;padding:3px 6px;border-radius:4px}
+.hud-sidebar{display:flex;flex-direction:column;gap:6px;max-height:88vh;overflow-y:auto;padding-right:2px}
+.tab-bar{display:flex;flex-wrap:wrap;gap:2px;background:#0b1329;padding:3px;border:1px solid #1e293b;border-radius:6px}
+.tab-btn{flex:1 1 30%;padding:5px 2px;background:transparent;border:none;color:#64748b;font-family:'Orbitron',monospace;font-size:.5rem;font-weight:700;cursor:pointer;border-radius:4px;text-align:center}
+.tab-btn:hover{color:#94a3b8}
+.tab-btn.active{background:#1e293b;color:#38bdf8;border:1px solid #334155}
+.soc-card{background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:8px 10px;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+.soc-card h2{font-family:'Orbitron',monospace;font-size:.62rem;font-weight:800;color:#f8fafc;margin-bottom:6px;letter-spacing:.5px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1e293b;padding-bottom:4px}
+.exec-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:4px}
+.exec-btn{background:#1e293b;border:1px solid #334155;color:#38bdf8;font-family:'Orbitron',monospace;font-size:.56rem;font-weight:700;padding:6px;border-radius:5px;cursor:pointer;text-align:center;transition:all .15s ease}
+.exec-btn:hover{background:#334155;border-color:#38bdf8}
+.exec-danger{border-color:#f43f5e55;color:#f43f5e;background:#88133722}
+.exec-danger:hover{background:#e11d48;color:#fff;border-color:#f43f5e}
+.stat-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;font-size:12px;font-weight:600;gap:8px}
+.stat-num{color:#38bdf8;font-weight:700;font-family:'Orbitron',monospace;font-size:11px;text-align:right}
+.bar{height:5px;background:#1e293b;border-radius:3px;overflow:hidden;margin:2px 0 6px}
+.bar>i{display:block;height:100%;background:#38bdf8;width:0;transition:width .3s}
+.log-container{max-height:380px;overflow-y:auto;display:flex;flex-direction:column;gap:5px;padding:4px}
+.log-entry{background:#020617;border:1px solid #1e293b;border-left:3px solid #38bdf8;border-radius:5px;padding:6px 8px;font-size:11px}
+.log-time{font-family:'Orbitron',monospace;font-size:9px;font-weight:700;color:#64748b;margin-bottom:2px}
+.log-text{color:#cbd5e1;font-weight:600;word-break:break-word}
+.up{color:#34d399}.down{color:#f43f5e}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
-  <header>
-    <div class="brand-title"><span>✒️</span> LORE WORLD UNIFIED</div>
-    <div class="badge-bar">
-      <button class="ctrl-btn toggle-active" id="btn3D" onclick="toggle3D()">TOON 3D</button>
-      <button class="ctrl-btn" id="speedBtn" onclick="toggleSpeed()">1X</button>
-      <button class="ctrl-btn" onclick="forceReboot()">REBOOT</button>
-      <span class="hud-badge" id="tickCount">CYC 0000</span>
+<header>
+  <div class="brand-title"><span>🌐</span> LORE WORLD 3D</div>
+  <div class="badge-bar">
+    <button class="ctrl-btn toggle-active" id="toggle3D" onclick="toggleFeature('3D')">3D</button>
+    <button class="ctrl-btn toggle-active" id="toggleSPACE" onclick="toggleFeature('SPACE')">SPACE</button>
+    <button class="ctrl-btn" id="pauseBtn" onclick="togglePause()">PAUSE</button>
+    <button class="ctrl-btn" id="speedBtn" onclick="toggleSpeed()">1X</button>
+    <button class="ctrl-btn" onclick="sim.saveGame(true)">SAVE</button>
+    <button class="ctrl-btn" onclick="exportWorldJSON()">EXP</button>
+    <button class="ctrl-btn" onclick="resetSimulation()">RESET</button>
+    <span class="hud-badge epoch-badge" id="epochHeaderBadge">EPOCH I</span>
+    <span class="hud-badge space-badge" id="spaceBadge">COLONISTS: 0</span>
+    <span class="hud-badge" id="tickCount">CYC 0000</span>
+  </div>
+</header>
+
+<div class="main-grid">
+  <div class="viewport-box">
+    <div id="webglContainer"></div>
+    <div class="overlay" id="hint">Drag: rotate · Wheel/Pinch: zoom · Click: inspect · Space: pause</div>
+    <div class="overlay" id="ticker">World initialised.</div>
+  </div>
+
+  <div class="hud-sidebar">
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tabDeskBtn" onclick="switchSidebarTab('DESK')">🏛️ DESK</button>
+      <button class="tab-btn" id="tabGenealogyBtn" onclick="switchSidebarTab('GENEALOGY')">🧬 GEN</button>
+      <button class="tab-btn" id="tabMarketBtn" onclick="switchSidebarTab('MARKET')">📈 MKT</button>
+      <button class="tab-btn" id="tabSpaceBtn" onclick="switchSidebarTab('SPACE')">🚀 SPACE</button>
+      <button class="tab-btn" id="tabTechTreeBtn" onclick="switchSidebarTab('TECHTREE')">🔬 TECH</button>
+      <button class="tab-btn" id="tabOracleBtn" onclick="switchSidebarTab('ORACLE')">🌐 WEB</button>
+      <button class="tab-btn" id="tabClimateBtn" onclick="switchSidebarTab('CLIMATE')">🌍 ECO</button>
+      <button class="tab-btn" id="tabDisasterBtn" onclick="switchSidebarTab('DISASTER')">⚡ FIRE</button>
+      <button class="tab-btn" id="tabJusticeBtn" onclick="switchSidebarTab('JUSTICE')">⚖️ LAW</button>
+      <button class="tab-btn" id="tabDiagBtn" onclick="switchSidebarTab('DIAG')">🛠️ DIAG</button>
+      <button class="tab-btn" id="tabLogsBtn" onclick="switchSidebarTab('LOGS')">📜 LOGS</button>
     </div>
-  </header>
 
-  <div class="main-grid">
-    <div class="viewport-box"><div id="webglContainer"></div></div>
-
-    <div class="hud-sidebar">
-      <div class="tab-bar" id="tabBar"></div>
-      
-      <!-- DESK -->
-      <div id="c-desk" class="soc-card active-card" style="border-left: 4px solid #ffb86c;">
-        <h2>EXECUTIVE DESK <span>⚡ GOD MODE</span></h2>
+    <!-- TAB 1: DESK -->
+    <div id="tabDeskContainer" style="display:flex;flex-direction:column;gap:6px;">
+      <div class="soc-card" style="border-left:3px solid #f59e0b;">
+        <h2>EXECUTIVE POLICY DESK <span>⚡ GOD MODE</span></h2>
         <div class="exec-grid">
-          <button class="exec-btn" onclick="sim.stimulus()">+50C STIMULUS</button>
-          <button class="exec-btn" onclick="sim.wonder()">BUILD WONDER</button>
-          <button class="exec-btn exec-danger" onclick="sim.crisis()">CRISIS</button>
+          <button class="exec-btn" onclick="sim.injectHelicopterStimulus()">+50C STIMULUS</button>
+          <button class="exec-btn" onclick="sim.toggleRateOverride()" id="rateOverrideBtn">RATE: AUTO</button>
+          <button class="exec-btn" onclick="sim.buildGrandWonder()">WONDER (-60C)</button>
+          <button class="exec-btn exec-danger" onclick="sim.triggerBlackSwan()">CRISIS</button>
         </div>
-        <br>
-        <div class="stat-row"><span>State Treasury:</span><span class="stat-num" id="ui-treasury">0 C</span></div>
-        <div class="stat-row"><span>Active Policy:</span><span class="stat-num" id="ui-policy">Capitalism</span></div>
-        <div class="stat-row"><span>Tax Rate:</span><span class="stat-num" id="ui-tax">8%</span></div>
       </div>
 
-      <!-- CHARTS -->
-      <div id="c-charts" class="soc-card" style="border-left: 4px solid #ff79c6;">
-        <h2>ANALYTICS & CHARTS <span>📈 VISUAL FEED</span></h2>
-        <div class="stat-row"><span>Market Trend Velocity:</span><span class="stat-num" id="ui-velocity">+2.4%</span></div>
-        <canvas id="marketCanvas" width="370" height="150" style="width:100%; height:130px; background:#0f111a; border-radius:4px; margin-top:4px; border:1px solid #3b4252; display:block;"></canvas>
-        <div style="margin-top:6px; font-size:10px; color:#6272a4; font-weight:600;" id="eli5-feed">ELI5: Capital aggregates organically from micro-enterprise production into national economic growth.</div>
+      <div class="soc-card" style="border-left:3px solid #38bdf8;">
+        <h2>LIVE DASHBOARD <span>📊 STATS</span></h2>
+        <div class="stat-row"><span>Population:</span><span class="stat-num" id="statPop">0</span></div>
+        <div class="stat-row"><span>State Treasury:</span><span class="stat-num" id="statTreasury">0 C</span></div>
+        <div class="stat-row"><span>R&amp;D Points:</span><span class="stat-num" id="statRD">0</span></div>
+        <div class="stat-row"><span>Output / cycle:</span><span class="stat-num" id="statGDP">0</span></div>
+        <div class="stat-row"><span>Tax Rate / Interest:</span><span class="stat-num" id="statTax">8% / 3.5%</span></div>
+        <div class="stat-row"><span>Wonders Built:</span><span class="stat-num" id="statWonders">0</span></div>
+        <div class="stat-row"><span>Tech progress to next tier (50 PTS):</span></div>
+        <div class="bar"><i id="techBar"></i></div>
       </div>
 
-      <!-- GENEALOGY -->
-      <div id="c-gen" class="soc-card" style="border-left: 4px solid #ff79c6;">
-        <h2>DYNASTY TREE <span>🧬 FAMILY</span></h2>
-        <div class="log-container" id="l-gen"></div>
+      <div class="soc-card" style="border-left:3px solid #10b981;">
+        <h2>3D INSPECTOR <span>🔍 CLICK OBJECTS</span></h2>
+        <div class="stat-row"><span>Target:</span><span class="stat-num" id="inspectTarget">Global Civilization</span></div>
+        <div class="stat-row"><span>Active Policy:</span><span class="stat-num" id="inspectPolicy">Capitalism</span></div>
+        <div class="log-text" id="inspectDetail" style="font-size:11px;margin-top:4px;">Click any house, factory, citizen or wonder in the 3D view.</div>
       </div>
+    </div>
 
-      <!-- MARKET -->
-      <div id="c-mkt" class="soc-card" style="border-left: 4px solid #50fa7b;">
-        <h2>STOCK EXCHANGE <span>📈 IPO TICKER</span></h2>
-        <div class="stat-row"><span>Market Cap:</span><span class="stat-num" id="ui-cap">0 C</span></div>
-        <div class="log-container" id="l-mkt"></div>
+    <!-- TAB 2: GENEALOGY -->
+    <div id="tabGenealogyContainer" style="display:none;">
+      <div class="soc-card" style="border-left:3px solid #38bdf8;">
+        <h2>DYNASTY GENEALOGY TREE <span>🧬 FAMILY</span></h2>
+        <div class="log-container" id="genealogyList"></div>
       </div>
+    </div>
 
-      <!-- SPACE -->
-      <div id="c-space" class="soc-card" style="border-left: 4px solid #8be9fd;">
-        <h2>SPACE PROGRAM <span>🚀 ORBITAL</span></h2>
-        <button class="exec-btn" style="width:100%; margin-bottom:6px;" onclick="sim.launch()">LAUNCH ROCKET (75 R&D)</button>
-        <div class="stat-row"><span>Colonists:</span><span class="stat-num" id="ui-colonists">0</span></div>
-        <div class="stat-row"><span>Satellites:</span><span class="stat-num" id="ui-sats">0</span></div>
-        <div class="log-container" id="l-space"></div>
+    <!-- TAB 3: MARKET -->
+    <div id="tabMarketContainer" style="display:none;">
+      <div class="soc-card" style="border-left:3px solid #34d399;">
+        <h2>PUBLIC STOCK EXCHANGE <span>📈 IPO TICKER</span></h2>
+        <div class="stat-row"><span>Market Cap Index:</span><span class="stat-num" id="marketCapVal">1,200.0 C</span></div>
+        <div class="log-container" id="marketLogList"></div>
       </div>
+    </div>
 
-      <!-- TECH -->
-      <div id="c-tech" class="soc-card" style="border-left: 4px solid #bd93f9;">
-        <h2>PATENT OFFICE <span>🔬 R&D</span></h2>
-        <button class="exec-btn" style="width:100%; margin-bottom:6px;" onclick="sim.unlock()">UNLOCK TECH (50 R&D)</button>
-        <div class="stat-row"><span>Tech Tier:</span><span class="stat-num" id="ui-tier">1</span></div>
-        <div class="stat-row"><span>R&D Points:</span><span class="stat-num" id="ui-rnd">0</span></div>
-        <div class="log-container" id="l-tech"></div>
+    <!-- TAB 4: SPACE -->
+    <div id="tabSpaceContainer" style="display:none;">
+      <div class="soc-card" style="border-left:3px solid #6366f1;">
+        <h2>ORBITAL SPACE PROGRAM <span>🚀 COLONIZATION</span></h2>
+        <div style="margin-bottom:6px;">
+          <button class="exec-btn" onclick="sim.launchRocketMission()">LAUNCH ROCKET (75 PTS)</button>
+        </div>
+        <div class="stat-row"><span>Colonists:</span><span class="stat-num" id="spaceColonistCount">0 citizens</span></div>
+        <div class="log-container" id="spaceLogList"></div>
       </div>
+    </div>
 
-      <!-- ORACLE -->
-      <div id="c-web" class="soc-card" style="border-left: 4px solid #ffb86c;">
-        <h2>WEB ORACLE <span>🌐 WIKI FEED</span></h2>
-        <button class="exec-btn" style="width:100%; margin-bottom:6px;" onclick="sim.fetchWiki()">FETCH KNOWLEDGE</button>
-        <div class="log-container" id="l-web"></div>
+    <!-- TAB 5: TECH -->
+    <div id="tabTechTreeContainer" style="display:none;">
+      <div class="soc-card" style="border-left:3px solid #38bdf8;">
+        <h2>PATENT OFFICE <span>🔬 R&amp;D</span></h2>
+        <div style="margin-bottom:6px;">
+          <button class="exec-btn" onclick="sim.unlockTechTier()">UNLOCK TECH (50 PTS)</button>
+        </div>
+        <div class="log-container" id="techTreeList"></div>
       </div>
+    </div>
 
-      <!-- CLIMATE -->
-      <div id="c-eco" class="soc-card" style="border-left: 4px solid #50fa7b;">
-        <h2>PLANETARY CLIMATE <span>🌍 ECO</span></h2>
-        <div class="stat-row"><span>Carbon:</span><span class="stat-num" id="ui-carbon">350 PPM</span></div>
-        <div class="stat-row"><span>Temp Drift:</span><span class="stat-num" id="ui-temp">+0.0 °C</span></div>
-        <div class="log-container" id="l-eco"></div>
+    <!-- TAB 6: WEB ORACLE -->
+    <div id="tabOracleContainer" style="display:none;">
+      <div class="soc-card" style="border-left:3px solid #c084fc;">
+        <h2>WIKIPEDIA WEB ORACLE <span>🌐 LIVE FEED</span></h2>
+        <div style="margin-bottom:6px;">
+          <button class="exec-btn" onclick="sim.queryOnlineKnowledgeOracle(true)">FETCH WIKIPEDIA</button>
+        </div>
+        <div class="log-container" id="oracleFeedList"></div>
       </div>
+    </div>
 
-      <!-- DISASTER -->
-      <div id="c-fire" class="soc-card" style="border-left: 4px solid #ff5555;">
-        <h2>EMERGENCY MGMT <span>⚡ DISASTERS</span></h2>
-        <div class="stat-row"><span>Active Emergencies:</span><span class="stat-num" id="ui-emerg">0</span></div>
-        <div class="log-container" id="l-fire"></div>
+    <!-- TAB 7: CLIMATE -->
+    <div id="tabClimateContainer" style="display:none;">
+      <div class="soc-card" style="border-left:3px solid #34d399;">
+        <h2>PLANETARY CLIMATE <span>🌍 CARBON</span></h2>
+        <div class="stat-row"><span>Atmospheric Carbon:</span><span class="stat-num" id="carbonVal">350 PPM</span></div>
+        <div class="stat-row"><span>Temperature Drift:</span><span class="stat-num" id="tempVal">+0.0 °C</span></div>
+        <div class="log-container" id="climateLogList"></div>
       </div>
+    </div>
 
-      <!-- JUSTICE -->
-      <div id="c-law" class="soc-card" style="border-left: 4px solid #bd93f9;">
-        <h2>JUSTICE DEPT <span>⚖️ LAW</span></h2>
-        <div class="stat-row"><span>Arrests Made:</span><span class="stat-num" id="ui-arrests">0</span></div>
-        <div class="log-container" id="l-law"></div>
+    <!-- TAB 8: DISASTER -->
+    <div id="tabDisasterContainer" style="display:none;">
+      <div class="soc-card" style="border-left:3px solid #f43f5e;">
+        <h2>EMERGENCY MANAGEMENT <span>⚡ DISASTERS</span></h2>
+        <div class="stat-row"><span>Active Emergencies:</span><span class="stat-num" id="activeDisasterCount">0 active</span></div>
+        <div class="log-container" id="disasterLogList"></div>
       </div>
+    </div>
 
-      <!-- DIAGNOSTICS -->
-      <div id="c-diag" class="soc-card" style="border-left: 4px solid #50fa7b;">
-        <h2>SELF-HEALING <span>🛠️ GUARDIAN</span></h2>
-        <div class="stat-row"><span>Auto-Fixes:</span><span class="stat-num" id="ui-fixes">0</span></div>
-        <div class="log-container" id="l-diag"></div>
+    <!-- TAB 9: JUSTICE -->
+    <div id="tabJusticeContainer" style="display:none;">
+      <div class="soc-card" style="border-left:3px solid #f43f5e;">
+        <h2>DEPARTMENT OF JUSTICE <span>⚖️ LAW</span></h2>
+        <div class="stat-row"><span>Arrests Made:</span><span class="stat-num" id="arrestCount">0 citizens</span></div>
+        <div class="log-container" id="justiceLogList"></div>
       </div>
+    </div>
 
-      <!-- LOGS -->
-      <div id="c-logs" class="soc-card" style="border-left: 4px solid #8be9fd;">
-        <h2>WORLD CHRONICLE <span>📜 HISTORY</span></h2>
-        <div class="log-container" id="l-logs"></div>
+    <!-- TAB 10: DIAGNOSTICS -->
+    <div id="tabDiagContainer" style="display:none;">
+      <div class="soc-card" style="border-left:3px solid #10b981;">
+        <h2>SELF-HEALING GUARDIAN <span>🛠️ DIAG</span></h2>
+        <div class="stat-row"><span>Auto-Fixes:</span><span class="stat-num" id="autoFixCount">0 fixes</span></div>
+        <div class="log-container" id="diagLogList"></div>
+      </div>
+    </div>
+
+    <!-- TAB 11: LOGS -->
+    <div id="tabLogsContainer" style="display:none;">
+      <div class="soc-card" style="border-left:3px solid #06b6d4;">
+        <h2>WORLD CHRONICLE <span>📜 LOGS</span></h2>
+        <div class="log-container" id="chronicleList"></div>
       </div>
     </div>
   </div>
+</div>
 
-  <script>
-    let totalFixes = 0;
-    window.onerror = function(msg) {
-      totalFixes++;
-      setTxt("ui-fixes", totalFixes);
-      console.warn("Self-Healing Guardian Intercept:", msg);
-      if (window.sim) {
-        window.sim.log("diag", `Auto-recovered exception: ${msg}`, "🛡️");
+<script>
+const SAVE_KEY = "loreWorldSave_v2";
+let totalFixes = 0;
+const guardianLogs = [];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function recordGuardianFix(msg) {
+  totalFixes++;
+  const badge = document.getElementById("autoFixCount");
+  if (badge) badge.innerText = `${totalFixes} fixes`;
+  guardianLogs.unshift({ cycle: window.sim ? window.sim.cycle : 0, text: msg });
+  if (guardianLogs.length > 30) guardianLogs.pop();
+  if (window.sim && window.sim.renderDiagUI) window.sim.renderDiagUI();
+}
+
+window.onerror = function (msg, url, line) {
+  recordGuardianFix(`Error: ${msg} (Line ${line}). Auto-recovering.`);
+  try {
+    if (window.sim && (!window.sim.agents || window.sim.agents.length === 0)) window.sim.seedWorld();
+  } catch (e) { /* keep running; loop has its own guard */ }
+  return true;
+};
+
+const WORLD_W = 48;
+const WORLD_H = 32;
+const ACTIONS = [
+  "WORK_ROLE", "FORAGE_PANTRY", "SEEK_EDUCATION", "TRADE_MARKET",
+  "FOUND_STARTUP", "BUY_BOND", "BUY_REAL_ESTATE", "REST_NURTURE",
+  "BORROW_CREDIT", "META_AI", "CULTURE_CIVICS"
+];
+const EPOCHS = ["EPOCH I · AGRARIAN", "EPOCH II · INDUSTRIAL", "EPOCH III · DIGITAL", "EPOCH IV · INTERSTELLAR"];
+const TECH_NAMES = ["Irrigation", "Steam Engine", "Electrification", "Computing", "Fusion Power", "Orbital Lift", "Terraforming", "Singularity"];
+const RATES = { AUTO: 0.035, LOW: 0.01, HIGH: 0.08 };
+const FIRST = ["Aria", "Kai", "Lena", "Orion", "Zara", "Milo", "Sage", "Ivo", "Runa", "Theo", "Luma", "Dax"];
+const LAST = ["Solaris", "Vanguard", "Terra", "Aether", "Nimbus", "Helix", "Quill", "Ember"];
+const pick = a => a[Math.floor(Math.random() * a.length)];
+
+let SIM_SPEED = 1;
+let PAUSED = false;
+let FEATURES = { '3D': true, SPACE: true, MARKET: true, TECH: true, ORACLE: true, GENEALOGY: true, CLIMATE: true, DISASTERS: true, JUSTICE: true };
+let currentTab = "DESK";
+let selected = null;
+
+function toggleFeature(feat) {
+  FEATURES[feat] = !FEATURES[feat];
+  const btn = document.getElementById(`toggle${feat}`);
+  if (btn) btn.classList.toggle("toggle-active", FEATURES[feat]);
+}
+
+function togglePause() {
+  PAUSED = !PAUSED;
+  const b = document.getElementById("pauseBtn");
+  b.innerText = PAUSED ? "RESUME" : "PAUSE";
+  b.classList.toggle("paused", PAUSED);
+}
+
+const TAB_MAP = {
+  DESK: ["tabDeskContainer", "tabDeskBtn"], GENEALOGY: ["tabGenealogyContainer", "tabGenealogyBtn"],
+  MARKET: ["tabMarketContainer", "tabMarketBtn"], SPACE: ["tabSpaceContainer", "tabSpaceBtn"],
+  TECHTREE: ["tabTechTreeContainer", "tabTechTreeBtn"], ORACLE: ["tabOracleContainer", "tabOracleBtn"],
+  CLIMATE: ["tabClimateContainer", "tabClimateBtn"], DISASTER: ["tabDisasterContainer", "tabDisasterBtn"],
+  JUSTICE: ["tabJusticeContainer", "tabJusticeBtn"], DIAG: ["tabDiagContainer", "tabDiagBtn"],
+  LOGS: ["tabLogsContainer", "tabLogsBtn"]
+};
+
+function switchSidebarTab(tab) {
+  currentTab = tab;
+  Object.keys(TAB_MAP).forEach(k => {
+    const el = document.getElementById(TAB_MAP[k][0]);
+    const btn = document.getElementById(TAB_MAP[k][1]);
+    if (el) el.style.display = (k === tab) ? "flex" : "none";
+    if (el && k === tab) el.style.flexDirection = "column";
+    if (btn) btn.classList.toggle("active", k === tab);
+  });
+  renderActiveTab();
+}
+
+function renderActiveTab() {
+  const t = currentTab;
+  if (t === "LOGS") sim.renderChronicleUI();
+  else if (t === "DIAG") sim.renderDiagUI();
+  else if (t === "GENEALOGY") sim.renderGenealogyUI();
+  else if (t === "MARKET") sim.renderMarketUI();
+  else if (t === "SPACE") sim.renderSpaceUI();
+  else if (t === "TECHTREE") sim.renderTechTreeUI();
+  else if (t === "ORACLE") sim.renderOracleUI();
+  else if (t === "CLIMATE") sim.renderClimateUI();
+  else if (t === "DISASTER") sim.renderDisasterUI();
+  else if (t === "JUSTICE") sim.renderJusticeUI();
+}
+
+function toggleSpeed() {
+  if (SIM_SPEED === 1) SIM_SPEED = 2; else if (SIM_SPEED === 2) SIM_SPEED = 5; else SIM_SPEED = 1;
+  const btn = document.getElementById("speedBtn");
+  if (btn) btn.innerText = `${SIM_SPEED}X`;
+}
+
+function resetSimulation() {
+  if (!confirm("Reset the whole civilization? Saved progress will be deleted.")) return;
+  try { localStorage.clear(); } catch (e) {}
+  location.reload();
+}
+
+function exportWorldJSON() {
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(sim.getSerializedWorld(), null, 2));
+  const a = document.createElement('a');
+  a.setAttribute("href", dataStr);
+  a.setAttribute("download", `lore_world_cyc_${sim.cycle}.json`);
+  document.body.appendChild(a); a.click(); a.remove();
+}
+
+document.addEventListener("keydown", e => {
+  if (e.code === "Space") { e.preventDefault(); togglePause(); }
+  else if (e.key === "f" || e.key === "F") toggleSpeed();
+});
+
+// --------------------------------------------------------
+// ENGINE CLASSES
+// --------------------------------------------------------
+class SpatialGrid {
+  constructor(width, height, cellSize = 4) {
+    this.cellSize = cellSize; this.cols = Math.ceil(width / cellSize); this.rows = Math.ceil(height / cellSize);
+    this.buckets = new Array(this.cols * this.rows).fill(null).map(() => []);
+  }
+  clear() { for (let i = 0; i < this.buckets.length; i++) this.buckets[i].length = 0; }
+  insert(agent) {
+    const cx = Math.min(this.cols - 1, Math.max(0, Math.floor(agent.x / this.cellSize)));
+    const cy = Math.min(this.rows - 1, Math.max(0, Math.floor(agent.y / this.cellSize)));
+    this.buckets[cy * this.cols + cx].push(agent);
+  }
+}
+
+class NeuralPolicyBrain {
+  constructor(inD = 12, hidD = 10, outD = 11, weights = null) {
+    this.inD = inD; this.hidD = hidD; this.outD = outD;
+    if (weights) { this.W1 = weights.W1; this.b1 = weights.b1; this.W2 = weights.W2; this.b2 = weights.b2; }
+    else {
+      this.W1 = Array.from({ length: hidD }, () => Array.from({ length: inD }, () => Math.random() * 0.2 - 0.1));
+      this.b1 = Array(hidD).fill(0);
+      this.W2 = Array.from({ length: outD }, () => Array.from({ length: hidD }, () => Math.random() * 0.2 - 0.1));
+      this.b2 = Array(outD).fill(0);
+    }
+  }
+  forward(x) {
+    const h = this.W1.map((r, i) => Math.tanh(r.reduce((acc, w, j) => acc + w * (x[j] || 0), this.b1[i])));
+    const q = this.W2.map((r, i) => r.reduce((acc, w, j) => acc + w * h[j], this.b2[i]));
+    return { h, q };
+  }
+  // Offspring inherit parent weights with small mutations
+  mutatedCopy(rate = 0.05) {
+    const m = v => v + (Math.random() - 0.5) * rate;
+    return new NeuralPolicyBrain(this.inD, this.hidD, this.outD, {
+      W1: this.W1.map(r => r.map(m)), b1: this.b1.map(m), W2: this.W2.map(r => r.map(m)), b2: this.b2.map(m)
+    });
+  }
+  serialize() { return { W1: this.W1, b1: this.b1, W2: this.W2, b2: this.b2 }; }
+}
+
+class CivilizationMatrix {
+  constructor() {
+    this.cycle = 0;
+    this.stateTreasury = 150.0;
+    this.researchPoints = 35.0;
+    this.techTier = 1;
+    this.offWorldColonists = 0;
+    this.activeSatellites = 0;
+    this.atmosphericCarbon = 350.0;
+    this.temperatureDrift = 0.0;
+    this.activePolicy = "Laissez-Faire Capitalism";
+    this.taxRate = 0.08;
+    this.rateMode = "AUTO";
+    this.arrestsCount = 0;
+    this.wonders = [];
+    this.nextId = 5;
+    this.output = 0;
+    this.spatialGrid = new SpatialGrid(WORLD_W, WORLD_H, 4);
+    this.agents = [];
+    this.households = [];
+    this.enterprises = [];
+    this.activeDisasters = [];
+    this.chronicleLog = [];
+    this.diagLog = [];
+    this.spaceLog = [];
+    this.oracleFeedLog = [];
+    this.climateLog = [];
+    this.disasterLog = [];
+    this.justiceLog = [];
+    this.seedWorld();
+  }
+
+  get interest() { return RATES[this.rateMode]; }
+
+  log(text) {
+    this.chronicleLog.unshift({ cycle: this.cycle, text });
+    if (this.chronicleLog.length > 120) this.chronicleLog.pop();
+    const t = document.getElementById("ticker");
+    if (t) t.innerText = `CYC ${String(this.cycle).padStart(4, '0')} › ${text}`;
+  }
+
+  seedWorld() {
+    this.agents = [
+      { id: 1, name: "Atlas Solaris", gender: "MALE", age: 28, role: "FATHER", householdId: "h1", x: 12, y: 14, wallet: 25, energy: 100, education: 85, careerTrack: "AGRITECH", brain: new NeuralPolicyBrain(), alive: true },
+      { id: 2, name: "Nova Vanguard", gender: "FEMALE", age: 26, role: "MOTHER", householdId: "h1", x: 14, y: 14, wallet: 30, energy: 100, education: 80, careerTrack: "FINANCIER", brain: new NeuralPolicyBrain(), alive: true },
+      { id: 3, name: "Caleb Terra", gender: "MALE", age: 32, role: "FATHER", householdId: "h2", x: 34, y: 26, wallet: 20, energy: 100, education: 75, careerTrack: "ENGINEER", brain: new NeuralPolicyBrain(), alive: true },
+      { id: 4, name: "Naomi Aether", gender: "FEMALE", age: 30, role: "MOTHER", householdId: "h2", x: 36, y: 26, wallet: 35, energy: 100, education: 90, careerTrack: "AGRITECH", brain: new NeuralPolicyBrain(), alive: true }
+    ];
+    this.households = [
+      { id: "h1", name: "House Solaris", homeX: 12, homeY: 14, level: 1, cashVault: 60.0, foodReserve: 40.0, fatherId: 1, motherId: 2, childrenIds: [] },
+      { id: "h2", name: "House Vanguard", homeX: 34, homeY: 26, level: 1, cashVault: 70.0, foodReserve: 45.0, fatherId: 3, motherId: 4, childrenIds: [] }
+    ];
+    this.enterprises = [
+      { id: "ent_agri", name: "Agri Farm", type: "AGRITECH", x: 8, y: 22, treasury: 80, sharePrice: 1.20, prevPrice: 1.20, sharesOutstanding: 100, machineIntegrity: 100 },
+      { id: "ent_com", name: "Exchange", type: "COMMERCE", x: 24, y: 16, treasury: 110, sharePrice: 1.80, prevPrice: 1.80, sharesOutstanding: 100, machineIntegrity: 100 },
+      { id: "ent_eng", name: "Foundry", type: "ENGINEERING", x: 40, y: 22, treasury: 95, sharePrice: 1.50, prevPrice: 1.50, sharesOutstanding: 100, machineIntegrity: 100 }
+    ];
+    this.nextId = 5;
+    this.activeDisasters = [];
+    this.log("Ultimate Civilization Matrix initialized with ALL systems active.");
+  }
+
+  injectHelicopterStimulus() {
+    this.stateTreasury += 50.0;
+    this.agents.forEach(a => { a.wallet += 2; });
+    this.log("Executive stimulus (+50C) granted. Every citizen received +2C.");
+  }
+
+  toggleRateOverride() {
+    const modes = ["AUTO", "LOW", "HIGH"];
+    this.rateMode = modes[(modes.indexOf(this.rateMode) + 1) % modes.length];
+    const b = document.getElementById("rateOverrideBtn");
+    if (b) b.innerText = `RATE: ${this.rateMode}`;
+    this.log(`Monetary policy rate set to ${this.rateMode} (${(this.interest * 100).toFixed(1)}%).`);
+  }
+
+  buildGrandWonder() {
+    if (this.stateTreasury >= 60.0) {
+      this.stateTreasury -= 60.0;
+      const i = this.wonders.length;
+      this.wonders.push({ id: `w${i + 1}`, name: `Grand Monument #${i + 1}`, x: 24 + Math.cos(i * 1.3) * 6, y: 16 + Math.sin(i * 1.3) * 5 });
+      this.researchPoints += 10;
+      this.log(`Grand Monument #${i + 1} erected! (+10 R&D, culture boost)`);
+    } else {
+      this.log("Not enough treasury for a Grand Wonder (needs 60C).");
+    }
+  }
+
+  triggerBlackSwan() {
+    this.stateTreasury = Math.max(0, this.stateTreasury - 30);
+    this.enterprises.forEach(e => { e.sharePrice = Math.max(0.5, e.sharePrice * 0.8); });
+    this.log("Crisis shock triggered! Treasury -30C, markets crashed 20%.");
+  }
+
+  launchRocketMission() {
+    if (this.researchPoints >= 75.0) {
+      this.researchPoints -= 75.0;
+      this.activeSatellites++;
+      this.offWorldColonists += 2;
+      this.spaceLog.unshift({ cycle: this.cycle, text: `Deployed satellite #${this.activeSatellites} into orbit. +2 colonists.` });
+      this.log(`Rocket launched: satellite #${this.activeSatellites} in orbit.`);
+      const badge = document.getElementById("spaceBadge");
+      if (badge) badge.innerText = `COLONISTS: ${this.offWorldColonists}`;
+      this.renderSpaceUI();
+    } else {
+      this.spaceLog.unshift({ cycle: this.cycle, text: "Launch aborted: need 75 R&D points." });
+      this.renderSpaceUI();
+    }
+  }
+
+  unlockTechTier() {
+    if (this.researchPoints >= 50.0) {
+      this.researchPoints -= 50.0;
+      this.techTier++;
+      this.log(`Unlocked Tech Tier ${this.techTier}: ${TECH_NAMES[Math.min(this.techTier - 1, TECH_NAMES.length - 1)]}!`);
+      this.renderTechTreeUI();
+    }
+  }
+
+  async queryOnlineKnowledgeOracle(manual = false) {
+    try {
+      const topics = ["Macroeconomics", "Industrial_Revolution", "Artificial_intelligence", "Sustainable_energy"];
+      const targetTopic = topics[Math.floor(Math.random() * topics.length)];
+      const resp = await fetch(`https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&prop=extracts&exintro&explaintext&titles=${targetTopic}`);
+      const data = await resp.json();
+      const pages = data.query.pages;
+      const pageId = Object.keys(pages)[0];
+      const extract = pages[pageId].extract || "Live Wikipedia knowledge retrieved.";
+      const nice = targetTopic.replace(/_/g, " ");
+      this.researchPoints += 40.0;
+      this.oracleFeedLog.unshift({ cycle: this.cycle, text: `Fetched Wikipedia article on '${nice}': "${extract.slice(0, 95)}..."` });
+      if (this.oracleFeedLog.length > 25) this.oracleFeedLog.pop();
+      this.log(`Live Web Knowledge Ingested: ${nice} (+40 R&D Pts)`);
+    } catch (err) {
+      this.researchPoints += 20.0;
+      this.oracleFeedLog.unshift({ cycle: this.cycle, text: "Fallback: Synthesized local web R&D parameters. (+20 R&D Pts)" });
+    }
+    this.renderOracleUI();
+  }
+
+  newAgent(hh, age, parent) {
+    const gender = Math.random() < 0.5 ? "MALE" : "FEMALE";
+    const a = {
+      id: this.nextId++, name: `${pick(FIRST)} ${hh.name.replace("House ", "")}`, gender, age, role: age < 18 ? "CHILD" : "ADULT",
+      householdId: hh.id, x: hh.homeX, y: hh.homeY, wallet: 2, energy: 100, education: 20,
+      careerTrack: pick(["AGRITECH", "FINANCIER", "ENGINEER"]), alive: true,
+      brain: parent ? parent.brain.mutatedCopy() : new NeuralPolicyBrain()
+    };
+    this.agents.push(a);
+    return a;
+  }
+
+  immigrate() {
+    const n = this.households.length + 1;
+    const sur = pick(LAST);
+    const hh = { id: `h${Date.now() % 100000}${n}`, name: `House ${sur}`, homeX: 4 + Math.random() * 40, homeY: 4 + Math.random() * 24, level: 1, cashVault: 30, foodReserve: 40, fatherId: null, motherId: null, childrenIds: [] };
+    const f = this.newAgent(hh, 24, null); f.gender = "MALE"; f.role = "FATHER"; f.name = `${pick(FIRST)} ${sur}`; f.education = 60;
+    const m = this.newAgent(hh, 23, null); m.gender = "FEMALE"; m.role = "MOTHER"; m.name = `${pick(FIRST)} ${sur}`; m.education = 60;
+    hh.fatherId = f.id; hh.motherId = m.id;
+    this.households.push(hh);
+    this.log(`Migrant family ${hh.name} settled the frontier.`);
+  }
+
+  step() {
+    this.cycle++;
+    if (this.agents.length === 0) {
+      this.seedWorld();
+      recordGuardianFix("Auto-healed empty population.");
+    }
+    this.researchPoints += 0.2;
+    this.stateTreasury += 0.05;
+
+    // Political Elections every 250 cycles
+    if (this.cycle > 0 && this.cycle % 250 === 0) {
+      const policies = ["Laissez-Faire Capitalism", "Social Welfare State", "Green Techno-Dictatorship"];
+      this.activePolicy = policies[Math.floor(Math.random() * policies.length)];
+      this.taxRate = this.activePolicy === "Social Welfare State" ? 0.22 : 0.08;
+      document.getElementById("inspectPolicy").innerText = this.activePolicy;
+      this.log(`Election Results: Citizens voted for ${this.activePolicy}!`);
+    }
+
+    // Climate Carbon Accumulation
+    this.atmosphericCarbon += 0.02 - (this.techTier >= 4 ? 0.015 : 0.002) - (this.activePolicy.startsWith("Green") ? 0.01 : 0);
+    this.temperatureDrift = (this.atmosphericCarbon - 350.0) * 0.005;
+    if (this.cycle % 100 === 0) {
+      this.climateLog.unshift({ cycle: this.cycle, text: `${this.atmosphericCarbon.toFixed(1)} PPM · drift ${this.temperatureDrift >= 0 ? '+' : ''}${this.temperatureDrift.toFixed(2)} °C` });
+      if (this.climateLog.length > 30) this.climateLog.pop();
+    }
+
+    // Natural Disasters: strike, then get repaired
+    if (Math.random() < 0.02 && this.activeDisasters.length === 0 && this.enterprises.length > 0) {
+      const targetEnt = this.enterprises[Math.floor(Math.random() * this.enterprises.length)];
+      targetEnt.machineIntegrity = 15.0;
+      targetEnt.treasury *= 0.85;
+      this.activeDisasters.push({ id: targetEnt.id, name: targetEnt.name });
+      this.disasterLog.unshift({ cycle: this.cycle, text: `Industrial fire struck ${targetEnt.name}!` });
+      this.log(`Industrial fire struck ${targetEnt.name}!`);
+    }
+    this.activeDisasters = this.activeDisasters.filter(d => {
+      const e = this.enterprises.find(x => x.id === d.id);
+      if (!e) return false;
+      e.machineIntegrity = Math.min(100, e.machineIntegrity + 1.5);
+      if (e.machineIntegrity >= 80) {
+        this.disasterLog.unshift({ cycle: this.cycle, text: `${e.name} restored by emergency crews.` });
+        return false;
       }
       return true;
-    };
-    function forceReboot() { localStorage.clear(); location.reload(); }
-
-    const TABS = ["desk", "charts", "gen", "mkt", "space", "tech", "web", "eco", "fire", "law", "diag", "logs"];
-    const ICONS = ["DESK", "📊 CHARTS", "🧬 GEN", "📈 MKT", "🚀 SPACE", "🔬 TECH", "🌐 WEB", "🌍 ECO", "⚡ FIRE", "⚖️ LAW", "🛠️ DIAG", "📜 LOGS"];
-    const bar = document.getElementById("tabBar");
-    TABS.forEach((t, i) => {
-      const b = document.createElement("button");
-      b.className = `tab-btn ${i===0?'active':''}`;
-      b.innerText = ICONS[i];
-      b.onclick = () => {
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.soc-card').forEach(c => c.classList.remove('active-card'));
-        b.classList.add('active');
-        document.getElementById(`c-${t}`).classList.add('active-card');
-        sim.refreshUI();
-        if(t === 'charts' && sim.chartModule) sim.chartModule.drawChart();
-      };
-      bar.appendChild(b);
     });
+    if (this.disasterLog.length > 40) this.disasterLog.length = 40;
 
-    let render3D = true; let speed = 1;
-    function toggle3D() { render3D = !render3D; document.getElementById("btn3D").classList.toggle("toggle-active", render3D); }
-    function toggleSpeed() { speed = speed === 1 ? 2 : (speed === 2 ? 5 : 1); document.getElementById("speedBtn").innerText = `${speed}X`; }
-
-    function setTxt(id, val) { const el = document.getElementById(id); if (el) el.innerText = val; }
-    function setHTML(id, html) { const el = document.getElementById(id); if (el) el.innerHTML = html; }
-
-    class NeuralPolicyBrain {
-      constructor(i=12, h=10, o=11) {
-        this.w1 = Array.from({length: h}, ()=>Array.from({length: i}, ()=>Math.random()*0.2-0.1));
-        this.b1 = Array(h).fill(0);
-        this.w2 = Array.from({length: o}, ()=>Array.from({length: h}, ()=>Math.random()*0.2-0.1));
-        this.b2 = Array(o).fill(0);
-      }
-      forward(x) {
-        let h = this.w1.map((r,i) => Math.tanh(r.reduce((s, w, j) => s + w*(x[j]||0), this.b1[i])));
-        return this.w2.map((r,i) => r.reduce((s, w, j) => s + w*h[j], this.b2[i]));
-      }
+    // Justice & Crime checks
+    if (Math.random() < 0.08 && this.agents.length) {
+      this.arrestsCount++;
+      const rName = this.agents[Math.floor(Math.random() * this.agents.length)].name;
+      this.justiceLog.unshift({ cycle: this.cycle, text: `Police detained ${rName} for civil friction.` });
+      if (this.justiceLog.length > 40) this.justiceLog.pop();
     }
 
-    class CivilizationMatrix {
-      constructor() {
-        this.cycle = 0; this.treasury = 150; this.rnd = 35; this.tier = 1; this.colonists = 0; this.sats = 0;
-        this.carbon = 350.0; this.policy = "Capitalism"; this.taxRate = 0.08; this.arrests = 0;
-        this.agents = []; this.houses = []; this.ents = [];
-        this.logs = { history: [], space: [], tech: [], web: [], eco: [], fire: [], law: [], diag: [] };
-        this.seedWorld();
-      }
+    this.spatialGrid.clear();
+    this.agents.forEach(a => this.spatialGrid.insert(a));
 
-      log(cat, txt, icon="") {
-        if (!this.logs[cat]) this.logs[cat] = [];
-        this.logs[cat].unshift({ c: this.cycle, t: `${icon} ${txt}` });
-        if (this.logs[cat].length > 35) this.logs[cat].pop();
-        if(cat === "history") this.refreshUI();
-      }
+    // Agents
+    this.agents.forEach(a => {
+      a.age += 0.05;
+      if (a.role === "CHILD" && a.age >= 18) { a.role = "ADULT"; this.log(`${a.name} came of age.`); }
+      const isChild = a.role === "CHILD";
+      const hh = this.households.find(h => h.id === a.householdId);
+      const s = [a.energy / 100, a.wallet / 30, a.education / 100, 0.5, 0.2, 0.3, 0.4, 1.0, 0.035, 0.05, 0.8, 1.0];
+      const { q } = a.brain.forward(s);
+      let idx = q.indexOf(Math.max(...q));
+      if (Math.random() < 0.35) idx = Math.floor(Math.random() * ACTIONS.length); // exploration
+      let act = ACTIONS[idx];
+      if (a.energy < 25) act = "REST_NURTURE";
+      if (isChild && !["SEEK_EDUCATION", "REST_NURTURE", "FORAGE_PANTRY"].includes(act)) act = "SEEK_EDUCATION";
+      a.action = act;
+      a.energy = Math.max(0, a.energy - 0.6);
+      if (hh) { if (hh.foodReserve > 0) hh.foodReserve -= 0.03; else a.energy = Math.max(0, a.energy - 1); }
 
-      seedWorld() {
-        this.agents = [
-          { id: 1, n: "Atlas Solaris", age: 28, x: 12, y: 14, w: 25, b: new NeuralPolicyBrain() },
-          { id: 2, n: "Nova Vanguard", age: 26, x: 34, y: 14, w: 30, b: new NeuralPolicyBrain() },
-          { id: 3, n: "Caleb Terra", age: 32, x: 12, y: 26, w: 20, b: new NeuralPolicyBrain() },
-          { id: 4, n: "Naomi Aether", age: 30, x: 34, y: 26, w: 35, b: new NeuralPolicyBrain() }
-        ];
-        this.houses = [
-          { n: "House Solaris", v: 60, f: "Atlas", m: "Nova", k: 2 },
-          { n: "House Vanguard", v: 70, f: "Caleb", m: "Naomi", k: 1 }
-        ];
-        this.ents = [
-          { n: "Agri Farm", t: "AGRI", p: 1.2, cap: 120, x: 8, y: 22, integrity: 100 },
-          { n: "Exchange", t: "COMM", p: 1.8, cap: 180, x: 24, y: 16, integrity: 100 },
-          { n: "Foundry", t: "ENGI", p: 1.5, cap: 150, x: 40, y: 22, integrity: 100 }
-        ];
-        this.log("history", "Unified Infinite Autonomous Matrix Initialized.", "✒️");
-        this.log("diag", "Self-healing guardian online and active.", "🛠️");
-      }
-
-      stimulus() { this.treasury += 50; this.log("history", "Executive stimulus +50C granted.", "💸"); }
-      wonder() { if (this.treasury >= 60) { this.treasury -= 60; this.log("history", "Grand Monument erected (-60C)!", "🏛️"); } }
-      crisis() { this.treasury = Math.max(0, this.treasury - 30); this.log("history", "Black Swan Economic Shock triggered!", "🌪️"); }
-      
-      launch() {
-        if (this.rnd >= 75) {
-          this.rnd -= 75; this.sats++; this.colonists += 2;
-          this.log("space", `Orbital rocket launched! Satellite #${this.sats} active (+2 colonists).`, "🚀");
-          this.log("history", "Space Program milestone achieved.", "🚀");
-          this.refreshUI();
+      let tx = null, ty = null;
+      switch (act) {
+        case "WORK_ROLE": {
+          const ent = this.enterprises.find(e => e.type === a.careerTrack) || this.enterprises[0];
+          if (ent) { tx = ent.x; ty = ent.y; }
+          const gross = 0.6 * (1 + a.education / 200) * (1 + this.techTier * 0.1) * (ent && ent.machineIntegrity < 50 ? 0.4 : 1);
+          const tax = gross * this.taxRate;
+          a.wallet += gross - tax; this.stateTreasury += tax; if (ent) ent.treasury += gross * 0.2;
+          break;
         }
-      }
-
-      unlock() {
-        if (this.rnd >= 50) {
-          this.rnd -= 50; this.tier++;
-          this.log("tech", `Patent Office unlocked Tech Tier ${this.tier}!`, "🔬");
-          this.log("history", `Civilization progressed to Tech Tier ${this.tier}.`, "🔬");
-          this.refreshUI();
-        }
-      }
-
-      async fetchWiki() {
-        try {
-          const topics = ["Macroeconomics", "Industrial_Revolution", "Artificial_intelligence", "Sustainable_energy"];
-          const t = topics[Math.floor(Math.random()*topics.length)];
-          const res = await fetch(`https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&prop=extracts&exintro&explaintext&titles=${t}`);
-          const d = await res.json();
-          const ext = d.query.pages[Object.keys(d.query.pages)[0]].extract || "Knowledge retrieved.";
-          this.rnd += 40;
-          this.log("web", `Wikipedia ingested (${t.replace("_"," ")}): "${ext.slice(0, 50)}..." (+40 R&D)`, "🌐");
-          this.log("history", `Live web oracle synchronized with ${t.replace("_"," ")}.`, "🌐");
-          this.refreshUI();
-        } catch(e) {
-          this.rnd += 20;
-          this.log("web", "Fallback: Local knowledge parameters synthesized.", "⚠️");
-          this.refreshUI();
-        }
-      }
-
-      step() {
-        this.cycle++;
-        this.rnd += 0.2;
-        this.carbon += 0.02 - (this.tier >= 4 ? 0.015 : 0.002);
-
-        if (this.cycle % 250 === 0) {
-          const policies = ["Capitalism", "Welfare State", "Green Tech"];
-          this.policy = policies[Math.floor(Math.random()*policies.length)];
-          this.taxRate = this.policy === "Welfare State" ? 0.22 : 0.08;
-          this.log("history", `Democratic election concluded: ${this.policy} adopted.`, "🗳️");
-        }
-
-        if (Math.random() < 0.02) {
-          const ent = this.ents[Math.floor(Math.random()*this.ents.length)];
-          ent.integrity = 20;
-          this.log("fire", `Industrial fire reported at ${ent.n}!`, "🔥");
-        }
-
-        if (Math.random() < 0.05) {
-          this.arrests++;
-          this.log("law", `Law enforcement detained a civil friction violator.`, "🚓");
-        }
-
-        this.agents.forEach(a => {
-          a.age += 0.02;
-          let q = a.b.forward([1, 1, 1, 0.5, 0.5, 0.5, 0.5, 1, 0.03, 0.05, 0.8, 1]);
-          if (q.indexOf(Math.max(...q)) % 2 === 0) {
-            a.x += (Math.random() - 0.5) * 1.5; a.y += (Math.random() - 0.5) * 1.5;
-            a.x = Math.max(2, Math.min(46, a.x)); a.y = Math.max(2, Math.min(30, a.y));
-          } else { a.w += 0.5; }
-        });
-
-        this.ents.forEach(e => {
-          const K = Math.max(1, e.cap / 10.0);
-          const L = 2.0;
-          const cobbDouglas = 1.8 * Math.pow(K, 0.4) * Math.pow(L, 0.6) * (1.0 + (this.tier - 1) * 0.25);
-          e.cap += cobbDouglas * 0.1;
-          e.p = Math.max(0.5, e.p + (Math.random() - 0.48) * 0.05);
-        });
-
-        if (this.cycle % 150 === 0) this.fetchWiki();
-      }
-
-      formatLogs(arr) { 
-        if (!arr || !Array.isArray(arr)) return '';
-        return arr.map(i => `<div class="log-entry"><div class="log-time">CYC ${i.c}</div><div class="log-text">${i.t}</div></div>`).join(''); 
-      }
-
-      refreshUI() {
-        setTxt("tickCount", `CYC ${String(this.cycle).padStart(4, '0')}`);
-        setTxt("ui-treasury", `${this.treasury.toFixed(0)} C`);
-        setTxt("ui-policy", this.policy);
-        setTxt("ui-tax", `${(this.taxRate*100).toFixed(0)}%`);
-        setTxt("ui-tier", this.tier);
-        setTxt("ui-rnd", `${this.rnd.toFixed(1)} PTS`);
-        setTxt("ui-colonists", this.colonists);
-        setTxt("ui-sats", this.sats);
-        setTxt("ui-carbon", `${this.carbon.toFixed(1)} PPM`);
-        setTxt("ui-temp", `+${((this.carbon-350)*0.005).toFixed(2)} °C`);
-        setTxt("ui-emerg", this.logs.fire ? this.logs.fire.length : 0);
-        setTxt("ui-arrests", this.arrests);
-
-        let tCap = 0;
-        let mktHTML = this.ents.map(e => { tCap += e.cap; return `<div class="log-entry"><div class="log-time">${e.n} (${e.t})</div><div class="log-text">Price: ${e.p.toFixed(2)}C | Cap: ${e.cap.toFixed(0)}C</div></div>`; }).join('');
-        setHTML("l-mkt", mktHTML); setTxt("ui-cap", `${tCap.toFixed(0)} C`);
-
-        let genHTML = this.houses.map(h => `<div class="log-entry"><div class="log-time">${h.n}</div><div class="log-text">Vault: ${h.v}C | Heirs: ${h.k}</div></div>`).join('');
-        setHTML("l-gen", genHTML);
-
-        setHTML("l-logs", this.formatLogs(this.logs.history));
-        setHTML("l-space", this.formatLogs(this.logs.space));
-        setHTML("l-tech", this.formatLogs(this.logs.tech));
-        setHTML("l-web", this.formatLogs(this.logs.web));
-        setHTML("l-eco", this.formatLogs(this.logs.history));
-        setHTML("l-fire", this.formatLogs(this.logs.fire));
-        setHTML("l-law", this.formatLogs(this.logs.law));
-        setHTML("l-diag", this.formatLogs(this.logs.diag));
-      }
-    }
-
-    const sim = new CivilizationMatrix();
-    window.sim = sim;
-
-    // Sub-Modules Integrated Natively
-    sim.historicalArchive = {
-      epochs: [
-        { name: "Industrial Foundation", startCyc: 0, focus: "Capital accumulation and manual labor optimization" },
-        { name: "Information Age", startCyc: 500, focus: "R&D acceleration, automation, and algorithmic market trading" },
-        { name: "Orbital Era", startCyc: 1000, focus: "Space colonization, satellite infrastructure, and green tech adaptation" }
-      ],
-      injectHistoricalContext() {
-        const currentEpoch = this.epochs.find(e => window.sim.cycle >= e.startCyc) || this.epochs[0];
-        if (window.sim.cycle % 100 === 0) {
-          window.sim.log("history", `Historical Epoch Active: [${currentEpoch.name}] - Focus: ${currentEpoch.focus}`, "📜");
-        }
-      }
-    };
-
-    sim.stockPredictor = {
-      forecastMarket() {
-        if (window.sim.cycle > 0 && window.sim.cycle % 50 === 0) {
-          let totalCap = window.sim.ents.reduce((acc, e) => acc + (e.cap || 100), 0);
-          let trend = totalCap > 400 ? "BULLISH 📈 (Expansion Phase)" : "BEARISH 📉 (Consolidation Phase)";
-          let confidence = (Math.random() * 15 + 82.5).toFixed(1);
-          window.sim.log("history", `Predictive Market Oracle: Sector analysis projects a ${trend} outlook with ${confidence}% algorithmic confidence.`, "📊");
-        }
-      }
-    };
-
-    sim.realEstateSystem = {
-      deeds: [
-        { id: "deed_1", owner: "House Solaris", location: "(12, 14)", valuation: 150.0, rentYield: 5.0 },
-        { id: "deed_2", owner: "House Vanguard", location: "(34, 26)", valuation: 175.0, rentYield: 6.2 }
-      ],
-      processLandLeases() {
-        if (window.sim.cycle > 0 && window.sim.cycle % 75 === 0) {
-          this.deeds.forEach(deed => {
-            deed.valuation += (Math.random() - 0.45) * 2.5;
-            window.sim.log("history", `Real Estate Update: ${deed.owner} collected ${deed.rentYield}C rent from land deed ${deed.id} at ${deed.location}.`, "🏠");
-          });
-        }
-      }
-    };
-
-    sim.bondMarketSystem = {
-      bonds: [
-        { id: "bond_10yr", couponRate: 0.045, faceValue: 100.0, currentYield: 4.2 },
-        { id: "bond_30yr", couponRate: 0.052, faceValue: 100.0, currentYield: 5.1 }
-      ],
-      processBondYields() {
-        if (window.sim.cycle > 0 && window.sim.cycle % 120 === 0) {
-          this.bonds.forEach(bond => {
-            bond.currentYield += (Math.random() - 0.48) * 0.1;
-            window.sim.log("history", `Bond Market Update: Sovereign debt instrument ${bond.id} traded at yield ${bond.currentYield.toFixed(2)}% (Coupon: ${(bond.couponRate*100).toFixed(1)}%).`, "📈");
-          });
-        }
-      }
-    };
-
-    sim.inventorySystem = {
-      agentInventories: {},
-      init() {
-        if (window.sim.agents) {
-          window.sim.agents.forEach(a => {
-            this.agentInventories[a.id] = [
-              { item: "Raw Timber", qty: Math.floor(Math.random() * 5) + 1 },
-              { item: "Iron Ore", qty: Math.floor(Math.random() * 3) + 1 }
-            ];
-          });
-        }
-      },
-      manageInventories() {
-        if (window.sim.cycle > 0 && window.sim.cycle % 80 === 0) {
-          window.sim.log("history", "Inventory Management: Household storage and resource carrying slots audited across active agents.", "🎒");
-        }
-      }
-    };
-    sim.inventorySystem.init();
-
-    sim.legalSystem = {
-      processJudicialRulings() {
-        if (window.sim.cycle > 0 && window.sim.cycle % 110 === 0) {
-          const verdicts = ["Acquitted due to lack of evidence", "Fined 15C for regulatory non-compliance", "Sentenced to community service"];
-          const ruling = verdicts[Math.floor(Math.random() * verdicts.length)];
-          window.sim.log("law", `Judicial Court Ruling: Civil arbitration finalized case #${Math.floor(Math.random()*900+100)} — Verdict: ${ruling}.`, "⚖️");
-        }
-      }
-    };
-
-    sim.climateSystem = {
-      extremeWeatherEvents: ["Severe Drought", "Flash Flood", "Category 4 Hurricane", "Unseasonal Frost"],
-      processClimateDisasters() {
-        if (window.sim.cycle > 0 && window.sim.cycle % 130 === 0) {
-          const event = this.extremeWeatherEvents[Math.floor(Math.random() * this.extremeWeatherEvents.length)];
-          window.sim.carbon += (Math.random() * 0.5);
-          window.sim.log("eco", `Climate Watch: ${event} recorded. Regional agricultural yields adjusted; atmospheric carbon now at ${window.sim.carbon.toFixed(1)} PPM.`, "🌍");
-        }
-      }
-    };
-
-    sim.orbitalColonizationSystem = {
-      deepSpaceProbes: 0,
-      lunarOutpostActive: false,
-      processOrbitalMissions() {
-        if (window.sim.cycle > 0 && window.sim.cycle % 140 === 0) {
-          this.deepSpaceProbes += Math.floor(Math.random() * 2);
-          if (window.sim.sats >= 3 && !this.lunarOutpostActive) {
-            this.lunarOutpostActive = true;
-            window.sim.log("space", "Milestone Reached: Lunar Outpost Alpha established off-world!", "🚀");
+        case "FORAGE_PANTRY": if (hh) { tx = hh.homeX; ty = hh.homeY; hh.foodReserve = Math.min(120, hh.foodReserve + 0.5); } break;
+        case "SEEK_EDUCATION": a.education = Math.min(100, a.education + 0.3); a.wallet -= 0.05; break;
+        case "TRADE_MARKET": { const ex = this.enterprises.find(e => e.type === "COMMERCE"); if (ex) { tx = ex.x; ty = ex.y; } a.wallet += (Math.random() - 0.45) * 1.0; break; }
+        case "FOUND_STARTUP":
+          if (!isChild && a.wallet > 40 && this.enterprises.length < 8 && Math.random() < 0.05) {
+            a.wallet -= 30;
+            const ent = { id: `ent_${this.cycle}_${a.id}`, name: `${a.name.split(" ")[1]} Co.`, type: a.careerTrack, x: 4 + Math.random() * 40, y: 4 + Math.random() * 24, treasury: 30, sharePrice: 1.0, prevPrice: 1.0, sharesOutstanding: 100, machineIntegrity: 100 };
+            this.enterprises.push(ent);
+            this.log(`${a.name} founded ${ent.name} (${ent.type}) — IPO at 1.00 C.`);
           }
-          window.sim.log("space", `Orbital Telemetry: ${this.deepSpaceProbes} deep-space probes transmitting telemetry back to Earth matrix.`, "🛰️");
-        }
+          break;
+        case "BUY_BOND": if (a.wallet > 10) { a.wallet += 0.02 + this.interest * 1.5; } break;
+        case "BUY_REAL_ESTATE": if (hh && a.wallet > 25 && hh.level < 5) { a.wallet -= 20; hh.level++; this.log(`${hh.name} upgraded home to level ${hh.level}.`); } break;
+        case "REST_NURTURE": if (hh) { tx = hh.homeX; ty = hh.homeY; } a.energy = Math.min(100, a.energy + 3); break;
+        case "BORROW_CREDIT": a.wallet += 1.2; this.stateTreasury += this.interest * 0.5; break;
+        case "META_AI": this.researchPoints += 0.05 + a.education / 4000; break;
+        case "CULTURE_CIVICS": this.stateTreasury += 0.05; a.wallet -= 0.02; break;
       }
-    };
+      if (this.activePolicy === "Social Welfare State" && a.wallet < 5 && this.stateTreasury > 50) { a.wallet += 0.3; this.stateTreasury -= 0.3; }
 
-    sim.chartModule = {
-      drawChart() {
-        const canvas = document.getElementById('marketCanvas');
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        ctx.strokeStyle = '#282c3d';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        for(let i=0; i<canvas.width; i+=30) { ctx.moveTo(i,0); ctx.lineTo(i,canvas.height); }
-        for(let j=0; j<canvas.height; j+=30) { ctx.moveTo(0,j); ctx.lineTo(canvas.width,j); }
-        ctx.stroke();
+      if (tx !== null) { a.x += (tx - a.x) * 0.12 + (Math.random() - 0.5) * 0.6; a.y += (ty - a.y) * 0.12 + (Math.random() - 0.5) * 0.6; }
+      else { a.x += (Math.random() - 0.5) * 1.5; a.y += (Math.random() - 0.5) * 1.5; }
+      a.x = Math.max(2, Math.min(WORLD_W - 2, a.x));
+      a.y = Math.max(2, Math.min(WORLD_H - 2, a.y));
+    });
 
-        ctx.strokeStyle = '#50fa7b';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        let points = window.sim.ents.map((e, idx) => ({
-          x: 40 + idx * 140,
-          y: canvas.height - ((e.cap || 100) % 120) * 0.9 - 25
-        }));
-        
-        ctx.moveTo(10, canvas.height - 40);
-        points.forEach(p => ctx.lineTo(p.x, p.y));
-        ctx.lineTo(canvas.width - 10, canvas.height - 30);
-        ctx.stroke();
+    // Households: births
+    this.households.forEach(hh => {
+      const f = this.agents.find(a => a.id === hh.fatherId);
+      const m = this.agents.find(a => a.id === hh.motherId);
+      if (f && m && m.age < 45 && hh.childrenIds.length < 4 && hh.foodReserve > 25 && Math.random() < 0.006) {
+        const kid = this.newAgent(hh, 0, Math.random() < 0.5 ? f : m);
+        hh.childrenIds.push(kid.id);
+        this.log(`${kid.name} was born into ${hh.name}.`);
       }
+      if (this.cycle % 20 === 0) { const share = 0.1; [f, m].forEach(p => { if (p && p.wallet > 10) { p.wallet -= share * 2; hh.cashVault += share * 2; } }); }
+    });
+
+    // Deaths
+    this.agents = this.agents.filter(a => {
+      const dies = (a.age > 70 && Math.random() < 0.002 * (a.age - 70)) || (a.energy <= 0 && Math.random() < 0.02);
+      if (dies) { a.alive = false; this.log(`${a.name} passed away at age ${a.age.toFixed(0)}.`); if (selected && selected.type === "agent" && selected.id === a.id) selected = null; }
+      return !dies;
+    });
+    if (this.cycle % 150 === 0 && this.agents.length < 12) this.immigrate();
+
+    // Enterprises
+    let out = 0;
+    this.enterprises.forEach(e => {
+      const K = Math.max(1, e.treasury / 10.0);
+      const L = 2.0;
+      const cobbDouglas = 1.8 * Math.pow(K, 0.4) * Math.pow(L, 0.6) * (1.0 + (this.techTier - 1) * 0.25) * (e.machineIntegrity < 50 ? 0.4 : 1);
+      out += cobbDouglas;
+      e.treasury += cobbDouglas * 0.1;
+      e.prevPrice = e.sharePrice;
+      e.sharePrice = Math.max(0.5, e.sharePrice + (Math.random() - 0.48) * 0.04);
+    });
+    this.output = this.output * 0.9 + out * 0.1;
+
+    // Epoch
+    const ep = this.techTier >= 6 ? 3 : this.techTier >= 4 ? 2 : this.techTier >= 2 ? 1 : 0;
+    const eb = document.getElementById("epochHeaderBadge");
+    if (eb && eb.innerText !== EPOCHS[ep]) { eb.innerText = EPOCHS[ep]; this.log(`A new age dawns: ${EPOCHS[ep]}`); }
+
+    if (this.cycle % 120 === 0) this.queryOnlineKnowledgeOracle();
+    if (this.cycle % 50 === 0) this.saveGame(false);
+  }
+
+  // ---------- UI RENDERERS ----------
+  renderDiagUI() {
+    const list = document.getElementById("diagLogList");
+    if (!list) return;
+    list.innerHTML = "";
+    if (!guardianLogs.length) list.innerHTML = `<div class="log-entry"><div class="log-text">🛡️ All systems nominal.</div></div>`;
+    guardianLogs.forEach(entry => {
+      const div = document.createElement("div"); div.className = "log-entry";
+      div.innerHTML = `<div class="log-time">HEALED @ CYC ${entry.cycle}</div><div class="log-text">🛡️ ${esc(entry.text)}</div>`;
+      list.appendChild(div);
+    });
+  }
+
+  renderChronicleUI() {
+    const list = document.getElementById("chronicleList");
+    if (!list) return;
+    list.innerHTML = "";
+    this.chronicleLog.forEach(entry => {
+      const div = document.createElement("div"); div.className = "log-entry";
+      div.innerHTML = `<div class="log-time">CYCLE ${String(entry.cycle).padStart(4, '0')}</div><div class="log-text">${esc(entry.text)}</div>`;
+      list.appendChild(div);
+    });
+  }
+
+  renderGenealogyUI() {
+    const list = document.getElementById("genealogyList");
+    if (!list) return;
+    list.innerHTML = "";
+    this.households.forEach(hh => {
+      const f = this.agents.find(a => a.id === hh.fatherId);
+      const m = this.agents.find(a => a.id === hh.motherId);
+      const kids = hh.childrenIds.map(id => this.agents.find(a => a.id === id)).filter(Boolean).map(k => `${esc(k.name)} (${k.age.toFixed(0)})`).join(", ") || "none living";
+      const div = document.createElement("div"); div.className = "log-entry";
+      div.innerHTML = `<div class="log-time">${esc(hh.name)} (Vault: ${hh.cashVault.toFixed(0)}C · Home Lv ${hh.level} · Food ${hh.foodReserve.toFixed(0)})</div><div class="log-text">Father: ${f ? esc(f.name) : 'None'} | Mother: ${m ? esc(m.name) : 'None'} | Heirs: ${hh.childrenIds.length}<br>Living heirs: ${kids}</div>`;
+      list.appendChild(div);
+    });
+  }
+
+  renderMarketUI() {
+    const list = document.getElementById("marketLogList");
+    if (!list) return;
+    list.innerHTML = "";
+    let totalCap = 0;
+    this.enterprises.forEach(e => {
+      const cap = e.sharesOutstanding * e.sharePrice;
+      totalCap += cap;
+      const up = e.sharePrice >= e.prevPrice;
+      const div = document.createElement("div"); div.className = "log-entry";
+      div.innerHTML = `<div class="log-time">${esc(e.name)} (${e.type})</div><div class="log-text">Price: ${e.sharePrice.toFixed(2)} C <span class="${up ? 'up' : 'down'}">${up ? '▲' : '▼'}</span> | Cap: ${cap.toFixed(1)} C | Treasury: ${e.treasury.toFixed(0)} C | Integrity: ${e.machineIntegrity.toFixed(0)}%</div>`;
+      list.appendChild(div);
+    });
+    document.getElementById("marketCapVal").innerText = `${totalCap.toFixed(1)} C`;
+  }
+
+  renderSpaceUI() {
+    const list = document.getElementById("spaceLogList");
+    if (!list) return;
+    list.innerHTML = "";
+    document.getElementById("spaceColonistCount").innerText = `${this.offWorldColonists} citizens`;
+    this.spaceLog.forEach(item => {
+      const div = document.createElement("div"); div.className = "log-entry";
+      div.innerHTML = `<div class="log-time">CYC ${item.cycle}</div><div class="log-text">🚀 ${esc(item.text)}</div>`;
+      list.appendChild(div);
+    });
+  }
+
+  renderTechTreeUI() {
+    const list = document.getElementById("techTreeList");
+    if (!list) return;
+    let html = `<div class="log-entry"><div class="log-text">Current Tech Tier: ${this.techTier} | R&amp;D Points: ${this.researchPoints.toFixed(1)} PTS</div></div>`;
+    for (let i = 0; i < this.techTier; i++) html += `<div class="log-entry"><div class="log-time">TIER ${i + 1}</div><div class="log-text">✅ ${TECH_NAMES[Math.min(i, TECH_NAMES.length - 1)]}${i === 3 ? " (carbon capture online)" : ""}</div></div>`;
+    list.innerHTML = html;
+  }
+
+  renderOracleUI() {
+    const list = document.getElementById("oracleFeedList");
+    if (!list) return;
+    list.innerHTML = "";
+    this.oracleFeedLog.forEach(entry => {
+      const div = document.createElement("div"); div.className = "log-entry";
+      div.innerHTML = `<div class="log-time">CYC ${entry.cycle}</div><div class="log-text">🌐 ${esc(entry.text)}</div>`;
+      list.appendChild(div);
+    });
+  }
+
+  renderClimateUI() {
+    const list = document.getElementById("climateLogList");
+    if (!list) return;
+    document.getElementById("carbonVal").innerText = `${this.atmosphericCarbon.toFixed(1)} PPM`;
+    document.getElementById("tempVal").innerText = `${this.temperatureDrift >= 0 ? '+' : ''}${this.temperatureDrift.toFixed(2)} °C`;
+    const status = this.temperatureDrift > 1 ? "⚠️ Warming accelerating. Unlock Tech Tier 4 or elect Green policy." : "Carbon tracking active. Climate drift stable.";
+    list.innerHTML = `<div class="log-entry"><div class="log-text">${status}</div></div>` + this.climateLog.map(c => `<div class="log-entry"><div class="log-time">CYC ${c.cycle}</div><div class="log-text">${esc(c.text)}</div></div>`).join("");
+  }
+
+  renderDisasterUI() {
+    const list = document.getElementById("disasterLogList");
+    if (!list) return;
+    list.innerHTML = "";
+    document.getElementById("activeDisasterCount").innerText = `${this.activeDisasters.length} active`;
+    this.disasterLog.forEach(item => {
+      const div = document.createElement("div"); div.className = "log-entry";
+      div.innerHTML = `<div class="log-time">CYC ${item.cycle}</div><div class="log-text">⚡ ${esc(item.text)}</div>`;
+      list.appendChild(div);
+    });
+  }
+
+  renderJusticeUI() {
+    const list = document.getElementById("justiceLogList");
+    if (!list) return;
+    list.innerHTML = "";
+    document.getElementById("arrestCount").innerText = `${this.arrestsCount} citizens`;
+    this.justiceLog.forEach(item => {
+      const div = document.createElement("div"); div.className = "log-entry";
+      div.innerHTML = `<div class="log-time">CYC ${item.cycle}</div><div class="log-text">⚖️ ${esc(item.text)}</div>`;
+      list.appendChild(div);
+    });
+  }
+
+  renderDashboard() {
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.innerText = v; };
+    set("statPop", `${this.agents.length} (${this.households.length} houses)`);
+    set("statTreasury", `${this.stateTreasury.toFixed(1)} C`);
+    set("statRD", this.researchPoints.toFixed(1));
+    set("statGDP", this.output.toFixed(2));
+    set("statTax", `${(this.taxRate * 100).toFixed(0)}% / ${(this.interest * 100).toFixed(1)}%`);
+    set("statWonders", this.wonders.length);
+    const bar = document.getElementById("techBar");
+    if (bar) bar.style.width = `${Math.min(100, this.researchPoints / 50 * 100)}%`;
+    const sb = document.getElementById("spaceBadge");
+    if (sb) sb.innerText = `COLONISTS: ${this.offWorldColonists}`;
+  }
+
+  getSerializedWorld() {
+    return {
+      cycle: this.cycle, agents: this.agents, enterprises: this.enterprises, households: this.households,
+      stateTreasury: this.stateTreasury, researchPoints: this.researchPoints, techTier: this.techTier,
+      offWorldColonists: this.offWorldColonists, activeSatellites: this.activeSatellites,
+      atmosphericCarbon: this.atmosphericCarbon, activePolicy: this.activePolicy, taxRate: this.taxRate,
+      rateMode: this.rateMode, arrestsCount: this.arrestsCount, wonders: this.wonders, nextId: this.nextId
     };
+  }
 
-    // Chain all subsystem hooks into the core simulation loop
-    const baseStep = sim.step;
-    sim.step = function() {
-      baseStep.call(this);
-      this.historicalArchive.injectHistoricalContext();
-      this.stockPredictor.forecastMarket();
-      this.realEstateSystem.processLandLeases();
-      this.bondMarketSystem.processBondYields();
-      this.inventorySystem.manageInventories();
-      this.legalSystem.processJudicialRulings();
-      this.climateSystem.processClimateDisasters();
-      this.orbitalColonizationSystem.processOrbitalMissions();
-      if (this.cycle % 10 === 0) this.chartModule.drawChart();
-    };
-
-    // Three.js Setup
-    const container = document.getElementById("webglContainer");
-    const width = container ? container.clientWidth || 560 : 560; 
-    const height = container ? container.clientHeight || 460 : 460;
-
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x0f111a);
-
-    const camera = new THREE.PerspectiveCamera(40, width/height, 0.1, 1000);
-    camera.position.set(0, 32, 34); camera.lookAt(0, 0, 0);
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(width, height);
-    if (container) container.appendChild(renderer.domElement);
-
-    scene.add(new THREE.AmbientLight(0xffffff, 0.9));
-    const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
-    dirLight.position.set(20, 35, 20); scene.add(dirLight);
-
-    const toonMat = new THREE.MeshToonMaterial({ color: 0xff79c6 });
-    const buildingMat = new THREE.MeshToonMaterial({ color: 0x8be9fd });
-
-    const grid = new THREE.GridHelper(48, 24, 0xff79c6, 0x3b4252);
-    grid.position.set(0, 0, 0); scene.add(grid);
-
-    const agentMeshes = sim.agents.map(() => {
-      const m = new THREE.Mesh(new THREE.SphereGeometry(0.4, 16, 16), toonMat);
-      scene.add(m); return m;
-    });
-
-    sim.ents.forEach(e => {
-      const m = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.7, 1.4, 6), buildingMat);
-      m.position.set(e.x - 24 + 0.5, 0.7, e.y - 16 + 0.5); scene.add(m);
-    });
-
-    // Trade Caravans Mesh
-    const caravans = [
-      { id: "cart_1", origin: "Agri Farm", dest: "Exchange", progress: 0.0, speed: 0.05 },
-      { id: "cart_2", origin: "Foundry", dest: "Exchange", progress: 0.5, speed: 0.04 }
-    ];
-    const caravanMeshes = caravans.map(c => {
-      const m = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.3, 0.6), new THREE.MeshToonMaterial({ color: 0xf1faee }));
-      scene.add(m);
-      return { data: c, mesh: m };
-    });
-
-    window.addEventListener("resize", () => {
-      if (!container) return;
-      const w = container.clientWidth || 560; const h = container.clientHeight || 460;
-      camera.aspect = w/h; camera.updateProjectionMatrix(); renderer.setSize(w, h);
-    });
-
-    function loop() {
-      try {
-        for (let s = 0; s < speed; s++) sim.step();
-        
-        // Update Caravan positions
-        caravanMeshes.forEach(item => {
-          item.data.progress += item.data.speed;
-          if (item.data.progress > 1.0) item.data.progress = 0.0;
-          let x = -16 + item.data.progress * 16;
-          let z = 6 + Math.sin(item.data.progress * Math.PI * 2) * 2;
-          item.mesh.position.set(x, 0.3, z);
-        });
-
-        if (render3D) {
-          sim.agents.forEach((a, i) => {
-            if (agentMeshes[i]) agentMeshes[i].position.set(a.x - 24, 0.4, a.y - 16);
-          });
-          renderer.render(scene, camera);
-        }
-        sim.refreshUI();
-      } catch (err) {
-        console.error("Loop Error caught:", err);
-      }
-      setTimeout(loop, 100);
+  hydrateFromData(d) {
+    if (d.cycle) this.cycle = d.cycle;
+    ["stateTreasury", "researchPoints", "techTier", "offWorldColonists", "activeSatellites", "atmosphericCarbon", "activePolicy", "taxRate", "rateMode", "arrestsCount", "nextId"].forEach(k => { if (d[k] !== undefined) this[k] = d[k]; });
+    if (Array.isArray(d.wonders)) this.wonders = d.wonders;
+    if (Array.isArray(d.households) && d.households.length) this.households = d.households;
+    if (Array.isArray(d.enterprises) && d.enterprises.length) this.enterprises = d.enterprises;
+    if (Array.isArray(d.agents) && d.agents.length) {
+      this.agents = d.agents.map(a => ({ ...a, brain: new NeuralPolicyBrain(12, 10, 11, a.brain) }));
     }
-    loop();
-  </script>
+    this.activeDisasters = [];
+    document.getElementById("inspectPolicy").innerText = this.activePolicy;
+    const b = document.getElementById("rateOverrideBtn"); if (b) b.innerText = `RATE: ${this.rateMode}`;
+  }
+
+  saveGame(manual) {
+    try {
+      localStorage.setItem(SAVE_KEY, JSON.stringify(this.getSerializedWorld()));
+      if (manual) this.log("Game saved to browser storage.");
+    } catch (e) { if (manual) this.log("Save failed (storage unavailable)."); }
+  }
+
+  loadGame() {
+    try {
+      const raw = localStorage.getItem(SAVE_KEY);
+      if (!raw) return false;
+      this.hydrateFromData(JSON.parse(raw));
+      this.log(`Save restored at cycle ${this.cycle}.`);
+      return true;
+    } catch (e) { recordGuardianFix("Corrupt save ignored."); return false; }
+  }
+}
+
+const sim = new CivilizationMatrix();
+window.sim = sim;
+sim.loadGame();
+
+// --------------------------------------------------------
+// THREE.JS 3D RENDERER
+// --------------------------------------------------------
+const container = document.getElementById("webglContainer");
+const width = container.clientWidth || 560;
+const height = container.clientHeight || 460;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x020617);
+scene.fog = new THREE.FogExp2(0x020617, 0.02);
+
+const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 1000);
+const cam = { theta: 0, elev: 0.75, dist: 46.7 };
+function placeCamera() {
+  camera.position.set(cam.dist * Math.cos(cam.elev) * Math.sin(cam.theta), cam.dist * Math.sin(cam.elev), cam.dist * Math.cos(cam.elev) * Math.cos(cam.theta));
+  camera.lookAt(0, 0, 0);
+}
+placeCamera();
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+renderer.setSize(width, height);
+container.appendChild(renderer.domElement);
+
+scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
+dirLight.position.set(20, 35, 20);
+scene.add(dirLight);
+
+const gridHelper = new THREE.GridHelper(WORLD_W, WORLD_W, 0x10b981, 0x1e293b);
+gridHelper.position.set(0, 0, 0);
+scene.add(gridHelper);
+
+const w2x = x => x - WORLD_W / 2 + 0.5;
+const w2z = y => y - WORLD_H / 2 + 0.5;
+
+const houseMeshes = [], entMeshes = [], agentMeshes = [], wonderMeshes = [], satMeshes = [];
+function syncList(list, meshes, make) {
+  while (meshes.length < list.length) { const m = make(list[meshes.length]); meshes.push(m); scene.add(m); }
+  while (meshes.length > list.length) { const m = meshes.pop(); scene.remove(m); }
+}
+const makeHouse = () => new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.9, 0.7), new THREE.MeshStandardMaterial({ color: 0x0284c7 }));
+const makeEnt = () => new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.6, 1.2, 8), new THREE.MeshStandardMaterial({ color: 0xd97706 }));
+const makeAgent = () => new THREE.Mesh(new THREE.SphereGeometry(0.3, 16, 16), new THREE.MeshStandardMaterial({ color: 0x10b981, emissive: 0x059669 }));
+const makeWonder = () => new THREE.Mesh(new THREE.ConeGeometry(0.8, 2.2, 4), new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0x854d0e }));
+const makeSat = () => new THREE.Mesh(new THREE.SphereGeometry(0.22, 8, 8), new THREE.MeshStandardMaterial({ color: 0x818cf8, emissive: 0x6366f1 }));
+
+window.addEventListener("resize", () => {
+  const w = container.clientWidth || 560;
+  const h = container.clientHeight || 460;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+});
+
+function update3DScene() {
+  if (!FEATURES["3D"]) { scene.visible = false; return; }
+  scene.visible = true;
+  const t = Date.now() / 1000;
+
+  syncList(sim.households, houseMeshes, makeHouse);
+  syncList(sim.enterprises, entMeshes, makeEnt);
+  syncList(sim.agents, agentMeshes, makeAgent);
+  syncList(sim.wonders, wonderMeshes, makeWonder);
+  syncList(FEATURES.SPACE ? Array.from({ length: sim.activeSatellites }) : [], satMeshes, makeSat);
+
+  sim.households.forEach((hh, i) => {
+    const m = houseMeshes[i];
+    m.position.set(w2x(hh.homeX), 0.5 * (1 + hh.level * 0.2), w2z(hh.homeY));
+    m.scale.y = 1 + (hh.level - 1) * 0.35;
+    m.position.y = 0.45 * m.scale.y;
+    m.userData = { type: "house", id: hh.id };
+  });
+  sim.enterprises.forEach((ent, i) => {
+    const m = entMeshes[i];
+    m.position.set(w2x(ent.x), 0.6, w2z(ent.y));
+    const burning = ent.machineIntegrity < 50;
+    m.material.color.setHex(burning ? 0xef4444 : 0xd97706);
+    m.scale.setScalar(burning ? 1 + Math.sin(t * 10) * 0.08 : 1);
+    m.userData = { type: "ent", id: ent.id };
+  });
+  sim.agents.forEach((agent, i) => {
+    const m = agentMeshes[i];
+    m.position.set(w2x(agent.x), agent.role === "CHILD" ? 0.28 : 0.4, w2z(agent.y));
+    m.scale.setScalar(agent.role === "CHILD" ? 0.7 : 1);
+    m.material.color.setHex(agent.role === "CHILD" ? 0xfacc15 : (agent.gender === "MALE" ? 0x10b981 : 0xf472b6));
+    m.userData = { type: "agent", id: agent.id };
+  });
+  sim.wonders.forEach((w, i) => {
+    const m = wonderMeshes[i];
+    m.position.set(w2x(w.x), 1.1, w2z(w.y));
+    m.rotation.y = t * 0.5;
+    m.userData = { type: "wonder", id: w.id };
+  });
+  satMeshes.forEach((m, i) => {
+    const r = 10 + (i % 3) * 2.5, a = t * (0.4 + i * 0.05) + i;
+    m.position.set(Math.cos(a) * r, 8 + (i % 3), Math.sin(a) * r * 0.7);
+  });
+}
+
+// ----- Orbit / zoom / click-to-inspect -----
+const pointers = new Map();
+let dragMoved = 0, pinchDist = 0;
+const dom = renderer.domElement;
+dom.addEventListener("pointerdown", e => { dom.setPointerCapture(e.pointerId); pointers.set(e.pointerId, { x: e.clientX, y: e.clientY }); dragMoved = 0; container.style.cursor = "grabbing"; });
+dom.addEventListener("pointermove", e => {
+  if (!pointers.has(e.pointerId)) return;
+  const p = pointers.get(e.pointerId);
+  if (pointers.size === 2) {
+    const [a, b] = [...pointers.values()];
+    const d = Math.hypot(a.x - b.x, a.y - b.y);
+    if (pinchDist) cam.dist = Math.max(15, Math.min(90, cam.dist * (pinchDist / d)));
+    pinchDist = d; pointers.set(e.pointerId, { x: e.clientX, y: e.clientY }); dragMoved += 10; placeCamera(); return;
+  }
+  const dx = e.clientX - p.x, dy = e.clientY - p.y;
+  dragMoved += Math.abs(dx) + Math.abs(dy);
+  cam.theta -= dx * 0.008;
+  cam.elev = Math.max(0.15, Math.min(1.45, cam.elev + dy * 0.006));
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  placeCamera();
+});
+dom.addEventListener("pointerup", e => {
+  pointers.delete(e.pointerId); pinchDist = 0; container.style.cursor = "grab";
+  if (dragMoved < 6) pickObject(e);
+});
+dom.addEventListener("pointercancel", e => { pointers.delete(e.pointerId); pinchDist = 0; });
+dom.addEventListener("wheel", e => { e.preventDefault(); cam.dist = Math.max(15, Math.min(90, cam.dist * (1 + e.deltaY * 0.001))); placeCamera(); }, { passive: false });
+
+const raycaster = new THREE.Raycaster();
+function pickObject(e) {
+  const r = dom.getBoundingClientRect();
+  const m = new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+  raycaster.setFromCamera(m, camera);
+  const hits = raycaster.intersectObjects([...agentMeshes, ...houseMeshes, ...entMeshes, ...wonderMeshes]);
+  selected = hits.length ? { type: hits[0].object.userData.type, id: hits[0].object.userData.id } : null;
+  renderInspector();
+  if (selected) switchSidebarTab("DESK");
+}
+
+function renderInspector() {
+  const t = document.getElementById("inspectTarget"), d = document.getElementById("inspectDetail");
+  if (!t || !d) return;
+  if (!selected) { t.innerText = "Global Civilization"; d.innerText = "Click any house, factory, citizen or wonder in the 3D view."; return; }
+  let txt = "Object no longer exists.", name = "—";
+  if (selected.type === "agent") {
+    const a = sim.agents.find(x => x.id === selected.id);
+    if (a) { name = a.name; txt = `${a.role} · ${a.gender} · age ${a.age.toFixed(0)} · ${a.careerTrack}\nWallet ${a.wallet.toFixed(1)}C · Energy ${a.energy.toFixed(0)} · Edu ${a.education.toFixed(0)}\nDoing: ${a.action || "idle"}`; }
+  } else if (selected.type === "house") {
+    const h = sim.households.find(x => x.id === selected.id);
+    if (h) { name = h.name; txt = `Level ${h.level} · Vault ${h.cashVault.toFixed(0)}C · Food ${h.foodReserve.toFixed(0)}\nHeirs: ${h.childrenIds.length} · Members: ${sim.agents.filter(a => a.householdId === h.id).length}`; }
+  } else if (selected.type === "ent") {
+    const e = sim.enterprises.find(x => x.id === selected.id);
+    if (e) { name = e.name; txt = `${e.type} · Treasury ${e.treasury.toFixed(0)}C\nShare ${e.sharePrice.toFixed(2)}C · Integrity ${e.machineIntegrity.toFixed(0)}%`; }
+  } else if (selected.type === "wonder") {
+    const w = sim.wonders.find(x => x.id === selected.id);
+    if (w) { name = w.name; txt = "A monument to civilization. Boosts culture and R&D."; }
+  }
+  t.innerText = name;
+  d.innerText = txt;
+  d.style.whiteSpace = "pre-line";
+}
+
+function renderHUD() {
+  const countEl = document.getElementById("tickCount");
+  if (countEl) countEl.innerText = `CYC ${String(sim.cycle).padStart(4, '0')}`;
+  sim.renderDashboard();
+  if (sim.cycle % 5 === 0) { renderActiveTab(); renderInspector(); }
+}
+
+function gameLoop() {
+  try {
+    if (!PAUSED) for (let s = 0; s < SIM_SPEED; s++) sim.step();
+    update3DScene();
+    renderHUD();
+    renderer.render(scene, camera);
+  } catch (err) {
+    recordGuardianFix(`Loop error: ${err.message}`);
+  }
+  setTimeout(gameLoop, 130);
+}
+gameLoop();
+</script>
 </body>
 </html>
