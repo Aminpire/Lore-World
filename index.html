@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Autonomous Neural AI Ecosystem</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace; }
+    body { background: #0b0f19; color: #cbd5e1; display: flex; flex-direction: column; min-height: 100vh; padding: 12px; }
+    header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid #1e293b; margin-bottom: 12px; }
+    h1 { font-size: 1rem; font-weight: 700; color: #f8fafc; }
+    .badge { background: #1e293b; color: #38bdf8; padding: 4px 8px; border-radius: 9999px; font-size: 0.7rem; border: 1px solid #334155; }
+    .layout { display: flex; flex-direction: column; gap: 12px; }
+    .canvas-container { background: #020617; border: 1px solid #1e293b; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    canvas { display: block; width: 100%; height: auto; max-height: 380px; }
+    .sidebar { display: flex; flex-direction: column; gap: 10px; }
+    .card { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 10px 12px; }
+    .card h3 { font-size: 0.7rem; text-transform: uppercase; color: #64748b; margin-bottom: 6px; }
+    .stat-row { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 0.8rem; }
+    .stat-val { font-weight: 600; color: #f8fafc; }
+    .legend { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; font-size: 0.7rem; }
+    .legend-item { display: flex; align-items: center; gap: 4px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .forager { background: #22c55e; }
+    .trader { background: #38bdf8; }
+    .engineer { background: #eab308; }
+    .node { background: #a855f7; }
+    #priceCanvas { width: 100%; height: 50px; background: #020617; border-radius: 4px; border: 1px solid #1e293b; margin-top: 6px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>AI WORLD SIMULATION</h1>
+    <span class="badge" id="tickBadge">TICK: 00000</span>
+  </header>
+
+  <div class="layout">
+    <div class="canvas-container">
+      <canvas id="worldCanvas" width="680" height="440"></canvas>
+    </div>
+
+    <div class="sidebar">
+      <div class="card">
+        <h3>Demographics & Genetics</h3>
+        <div class="stat-row"><span>Alive Agents:</span><span class="stat-val" id="aliveCount">0</span></div>
+        <div class="stat-row"><span>Max Generation:</span><span class="stat-val" id="maxGen">G0</span></div>
+        <div class="stat-row"><span>Births / Deaths:</span><span class="stat-val" id="birthDeath">0 / 0</span></div>
+        <div class="legend">
+          <div class="legend-item"><span class="dot forager"></span>Forager</div>
+          <div class="legend-item"><span class="dot trader"></span>Trader</div>
+          <div class="legend-item"><span class="dot engineer"></span>Engineer</div>
+          <div class="legend-item"><span class="dot node"></span>Energy Node</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Market Dynamics</h3>
+        <div class="stat-row"><span>Energy Price:</span><span class="stat-val" id="marketPrice">0.500 T/J</span></div>
+        <canvas id="priceCanvas" width="300" height="50"></canvas>
+      </div>
+
+      <div class="card">
+        <h3>Dynasty Telemetry</h3>
+        <div class="stat-row"><span>Elder Node:</span><span class="stat-val" id="elderNode">-</span></div>
+        <div class="stat-row"><span>Top Capitalist:</span><span class="stat-val" id="richNode">-</span></div>
+        <div class="stat-row"><span>Dynasty Balance:</span><span class="stat-val" id="richBalance">0.0 T</span></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const GRID_W = 34;
+    const GRID_H = 22;
+    const ACTIONS = ["HARVEST", "REPRODUCE", "BUY_ENERGY", "SELL_ENERGY", "INVENT"];
+
+    class NeuralPolicy {
+      constructor(inDim = 7, hidDim = 8, outDim = 5, weights = null) {
+        this.inDim = inDim; this.hidDim = hidDim; this.outDim = outDim; this.lr = 0.05;
+        if (weights) {
+          this.W1 = weights.W1; this.b1 = weights.b1; this.W2 = weights.W2; this.b2 = weights.b2;
+        } else {
+          const lim1 = Math.sqrt(6.0 / (inDim + hidDim));
+          this.W1 = Array.from({ length: hidDim }, () => Array.from({ length: inDim }, () => (Math.random() * 2 - 1) * lim1));
+          this.b1 = Array(hidDim).fill(0);
+          const lim2 = Math.sqrt(6.0 / (hidDim + outDim));
+          this.W2 = Array.from({ length: outDim }, () => Array.from({ length: hidDim }, () => (Math.random() * 2 - 1) * lim2));
+          this.b2 = Array(outDim).fill(0);
+        }
+      }
+
+      forward(x) {
+        const h = this.W1.map((row, i) => {
+          let sum = this.b1[i];
+          for (let j = 0; j < this.inDim; j++) sum += row[j] * x[j];
+          return Math.tanh(sum);
+        });
+        const q = this.W2.map((row, i) => {
+          let sum = this.b2[i];
+          for (let j = 0; j < this.hidDim; j++) sum += row[j] * h[j];
+          return sum;
+        });
+        return { h, q };
+      }
+
+      train(x, h, action, target, pred) {
+        let err = Math.max(-2.0, Math.min(2.0, target - pred));
+        const dOut = Array(this.outDim).fill(0);
+        dOut[action] = -err;
+        const dH = Array(this.hidDim).fill(0);
+        for (let i = 0; i < this.outDim; i++) {
+          if (dOut[i] !== 0) {
+            for (let j = 0; j < this.hidDim; j++) {
+              this.W2[i][j] -= this.lr * dOut[i] * h[j];
+              dH[j] += dOut[i] * this.W2[i][j];
+            }
+            this.b2[i] -= this.lr * dOut[i];
+          }
+        }
+        const dZ = dH.map((val, j) => val * (1.0 - h[j] * h[j]));
+        for (let i = 0; i < this.hidDim; i++) {
+          for (let j = 0; j < this.inDim; j++) {
+            this.W1[i][j] -= this.lr * dZ[i] * x[j];
+          }
+          this.b1[i] -= this.lr * dZ[i];
+        }
+      }
+
+      recombine(partnerPolicy) {
+        const child = new NeuralPolicy(this.inDim, this.hidDim, this.outDim);
+        for (let i = 0; i < this.hidDim; i++) {
+          for (let j = 0; j < this.inDim; j++) {
+            let w = Math.random() > 0.5 ? this.W1[i][j] : partnerPolicy.W1[i][j];
+            if (Math.random() < 0.08) w += (Math.random() * 0.1 - 0.05);
+            child.W1[i][j] = w;
+          }
+          child.b1[i] = Math.random() > 0.5 ? this.b1[i] : partnerPolicy.b1[i];
+        }
+        for (let i = 0; i < this.outDim; i++) {
+          for (let j = 0; j < this.hidDim; j++) {
+            let w = Math.random() > 0.5 ? this.W2[i][j] : partnerPolicy.W2[i][j];
+            if (Math.random() < 0.08) w += (Math.random() * 0.1 - 0.05);
+            child.W2[i][j] = w;
+          }
+          child.b2[i] = Math.random() > 0.5 ? this.b2[i] : partnerPolicy.b2[i];
+        }
+        return child;
+      }
+    }
+
+    class Agent {
+      constructor(id, name, gen, archetype, x, y, energy, tokens, maxAge, policy = null) {
+        this.id = id; this.name = name; this.generation = gen; this.archetype = archetype;
+        this.x = x; this.y = y; this.energy = energy; this.tokens = tokens;
+        this.maxAge = maxAge; this.age = 0; this.alive = true; this.toolTier = 1.0;
+        this.childrenIds = []; this.policy = policy || new NeuralPolicy();
+        this.lastS = null; this.lastH = null; this.lastA = null; this.lastQ = 0.0;
+      }
+
+      getState(dist, cap, partner, px) {
+        return [
+          Math.min(2.0, this.energy / 100.0),
+          Math.min(2.0, this.tokens / 30.0),
+          Math.min(1.0, dist / 30.0),
+          Math.min(1.0, cap / 200.0),
+          partner ? 1.0 : 0.0,
+          Math.min(2.0, px / 1.0),
+          Math.min(1.0, this.age / this.maxAge)
+        ];
+      }
+
+      selectAction(s, eps = 0.08) {
+        const { h, q } = this.policy.forward(s);
+        this.lastS = s; this.lastH = h;
+        let a = (Math.random() < eps) ? Math.floor(Math.random() * ACTIONS.length) : q.indexOf(Math.max(...q));
+        this.lastA = a; this.lastQ = q[a];
+        return a;
+      }
+
+      learn(nextS, reward) {
+        if (!this.lastS) return;
+        const target = !this.alive ? reward : reward + 0.90 * Math.max(...this.policy.forward(nextS).q);
+        this.policy.train(this.lastS, this.lastH, this.lastA, target, this.lastQ);
+      }
+    }
+
+    class WorldSimulation {
+      constructor() {
+        this.tick = 0; this.agents = new Map(); this.nodes = new Map();
+        this.marketPrice = 0.50; this.priceHistory = [0.50];
+        this.totalBirths = 0; this.totalDeaths = 0;
+
+        for (let i = 0; i < 18; i++) {
+          this.nodes.set(`${Math.floor(Math.random() * GRID_W)},${Math.floor(Math.random() * GRID_H)}`, 80 + Math.random() * 100);
+        }
+
+        const archetypes = ["FORAGER", "TRADER", "ENGINEER"];
+        for (let i = 0; i < 15; i++) {
+          const arch = archetypes[i % 3];
+          const aid = `founder_${i}`;
+          this.agents.set(aid, new Agent(
+            aid, `${arch.slice(0,3)}-${i}`, 0, arch,
+            Math.floor(Math.random() * GRID_W), Math.floor(Math.random() * GRID_H),
+            80 + Math.random() * 40, arch === "TRADER" ? 25 : 10,
+            100 + Math.floor(Math.random() * 50)
+          ));
+        }
+      }
+
+      getNearestNode(x, y) {
+        let bestKey = null, minDist = 999, cap = 0;
+        for (const [key, capacity] of this.nodes.entries()) {
+          if (capacity > 5) {
+            const [nx, ny] = key.split(",").map(Number);
+            const dist = Math.hypot(nx - x, ny - y);
+            if (dist < minDist) { minDist = dist; bestKey = [nx, ny]; cap = capacity; }
+          }
+        }
+        return { pos: bestKey, dist: minDist, cap };
+      }
+
+      step() {
+        this.tick++;
+        const newborns = [];
+        for (const [key, cap] of this.nodes.entries()) {
+          this.nodes.set(key, Math.min(200.0, cap + 1.8));
+        }
+
+        const alive = Array.from(this.agents.values()).filter(a => a.alive);
+        const popCount = alive.length;
+
+        if (popCount < 5) {
+          const arch = ["FORAGER", "TRADER", "ENGINEER"][Math.floor(Math.random() * 3)];
+          this.totalBirths++;
+          const nid = `nomad_${this.totalBirths}`;
+          this.agents.set(nid, new Agent(
+            nid, `Nomad-${this.totalBirths}`, 0, arch,
+            Math.floor(Math.random() * GRID_W), Math.floor(Math.random() * GRID_H),
+            90, 10, 110
+          ));
+        }
+
+        const reproTax = 40.0 + popCount * 0.7;
+
+        for (const agent of alive) {
+          agent.age++;
+          const eBefore = agent.energy;
+          const tBefore = agent.tokens;
+          agent.energy -= (1.3 + (agent.age / agent.maxAge) * 1.5);
+
+          if (agent.energy <= 0 || agent.age >= agent.maxAge) {
+            agent.alive = false;
+            this.totalDeaths++;
+            const livingChildren = agent.childrenIds.map(id => this.agents.get(id)).filter(c => c && c.alive);
+            if (livingChildren.length > 0) {
+              const share = (agent.tokens * 0.85) / livingChildren.length;
+              livingChildren.forEach(c => { c.tokens += share; c.toolTier = Math.max(c.toolTier, agent.toolTier); });
+            }
+            agent.tokens = 0;
+            agent.learn(agent.lastS || Array(7).fill(0), -20.0);
+            continue;
+          }
+
+          const { pos: nodePos, dist, cap } = this.getNearestNode(agent.x, agent.y);
+          const partners = alive.filter(o => o.id !== agent.id && Math.hypot(o.x - agent.x, o.y - agent.y) <= 1.5 && o.energy >= reproTax);
+
+          const s = agent.getState(dist, cap, partners.length > 0, this.marketPrice);
+          const actIdx = agent.selectAction(s);
+          const act = ACTIONS[actIdx];
+          let reproduced = false;
+
+          if (act === "HARVEST" && nodePos) {
+            agent.x += nodePos[0] > agent.x ? 1 : (nodePos[0] < agent.x ? -1 : 0);
+            agent.y += nodePos[1] > agent.y ? 1 : (nodePos[1] < agent.y ? -1 : 0);
+            agent.x = Math.max(0, Math.min(GRID_W - 1, agent.x));
+            agent.y = Math.max(0, Math.min(GRID_H - 1, agent.y));
+
+            const nKey = `${nodePos[0]},${nodePos[1]}`;
+            if (agent.x === nodePos[0] && agent.y === nodePos[1] && this.nodes.has(nKey)) {
+              const gain = Math.min(this.nodes.get(nKey), 16.0 * agent.toolTier);
+              this.nodes.set(nKey, this.nodes.get(nKey) - gain);
+              agent.energy += gain;
+            }
+          } else if (act === "REPRODUCE" && partners.length > 0 && agent.energy >= reproTax) {
+            const partner = partners[Math.floor(Math.random() * partners.length)];
+            if (partner.energy >= reproTax) {
+              agent.energy -= reproTax;
+              partner.energy -= reproTax;
+              this.totalBirths++;
+              const gen = Math.max(agent.generation, partner.generation) + 1;
+              const childPolicy = agent.policy.recombine(partner.policy);
+              const childArch = Math.random() > 0.5 ? agent.archetype : partner.archetype;
+              const child = new Agent(
+                `c_${this.totalBirths}`, `G${gen}#${this.totalBirths}`, gen, childArch,
+                agent.x, agent.y, 75, 5, 100 + Math.floor(Math.random() * 40), childPolicy
+              );
+              child.toolTier = Math.max(agent.toolTier, partner.toolTier);
+              agent.childrenIds.push(child.id);
+              partner.childrenIds.push(child.id);
+              newborns.push(child);
+              reproduced = true;
+            }
+          } else if (act === "BUY_ENERGY" && agent.tokens >= 2.0) {
+            agent.tokens -= 2.0;
+            agent.energy += (2.0 / this.marketPrice);
+            this.marketPrice = Math.min(2.5, this.marketPrice * 1.02);
+          } else if (act === "SELL_ENERGY" && agent.energy >= 60.0) {
+            agent.energy -= 12.0;
+            agent.tokens += (12.0 * this.marketPrice * 0.85);
+            this.marketPrice = Math.max(0.15, this.marketPrice * 0.98);
+          } else if (act === "INVENT" && agent.energy > 40 && agent.toolTier < 3.0) {
+            agent.energy -= 15.0;
+            agent.toolTier += 0.15;
+            agent.tokens += 1.0;
+          }
+
+          const reward = ((agent.energy - eBefore) * 0.1) + ((agent.tokens - tBefore) * 0.3) + (reproduced ? 15.0 : 0.0);
+          const nextTarget = this.getNearestNode(agent.x, agent.y);
+          const nextS = agent.getState(nextTarget.dist, nextTarget.cap, partners.length > 0, this.marketPrice);
+          agent.learn(nextS, reward);
+        }
+
+        newborns.forEach(nb => this.agents.set(nb.id, nb));
+        this.priceHistory.push(this.marketPrice);
+        if (this.priceHistory.length > 60) this.priceHistory.shift();
+      }
+    }
+
+    const sim = new WorldSimulation();
+    const canvas = document.getElementById("worldCanvas");
+    const ctx = canvas.getContext("2d");
+    const pCanvas = document.getElementById("priceCanvas");
+    const pCtx = pCanvas.getContext("2d");
+
+    function render() {
+      sim.step();
+      ctx.fillStyle = "#020617";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const cellW = canvas.width / GRID_W;
+      const cellH = canvas.height / GRID_H;
+
+      for (const [key, cap] of sim.nodes.entries()) {
+        if (cap > 10) {
+          const [nx, ny] = key.split(",").map(Number);
+          ctx.fillStyle = `rgba(168, 85, 247, ${Math.min(1.0, cap / 150.0) * 0.6})`;
+          ctx.beginPath();
+          ctx.arc((nx + 0.5) * cellW, (ny + 0.5) * cellH, cellW * 0.45, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      const alive = Array.from(sim.agents.values()).filter(a => a.alive);
+      alive.forEach(agent => {
+        ctx.fillStyle = agent.archetype === "FORAGER" ? "#22c55e" : (agent.archetype === "TRADER" ? "#38bdf8" : "#eab308");
+        ctx.beginPath();
+        ctx.arc((agent.x + 0.5) * cellW, (agent.y + 0.5) * cellH, cellW * 0.35, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      document.getElementById("tickBadge").innerText = `TICK: ${String(sim.tick).padStart(5, '0')}`;
+      document.getElementById("aliveCount").innerText = alive.length;
+      document.getElementById("maxGen").innerText = `G${Math.max(0, ...alive.map(a => a.generation))}`;
+      document.getElementById("birthDeath").innerText = `${sim.totalBirths} / ${sim.totalDeaths}`;
+      document.getElementById("marketPrice").innerText = `${sim.marketPrice.toFixed(3)} T/J`;
+
+      if (alive.length > 0) {
+        const elder = alive.reduce((p, c) => c.age > p.age ? c : p, alive[0]);
+        const rich = alive.reduce((p, c) => c.tokens > p.tokens ? c : p, alive[0]);
+        document.getElementById("elderNode").innerText = `${elder.name} (${elder.archetype[0]})`;
+        document.getElementById("richNode").innerText = rich.name;
+        document.getElementById("richBalance").innerText = `${rich.tokens.toFixed(1)} T`;
+      }
+
+      pCtx.fillStyle = "#020617";
+      pCtx.fillRect(0, 0, pCanvas.width, pCanvas.height);
+      pCtx.strokeStyle = "#38bdf8";
+      pCtx.lineWidth = 1.5;
+      pCtx.beginPath();
+      const minP = Math.min(...sim.priceHistory);
+      const maxP = Math.max(...sim.priceHistory);
+      const range = (maxP - minP) || 1;
+      sim.priceHistory.forEach((p, idx) => {
+        const x = (idx / (sim.priceHistory.length - 1)) * pCanvas.width;
+        const y = pCanvas.height - ((p - minP) / range) * (pCanvas.height - 8) - 4;
+        if (idx === 0) pCtx.moveTo(x, y);
+        else pCtx.lineTo(x, y);
+      });
+      pCtx.stroke();
+
+      setTimeout(render, 120);
+    }
+
+    render();
+  </script>
+</body>
+</html>
