@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Lore World - 3D Civilization Matrix</title>
+  <title>Lore World - Ultimate Autonomous Civilization Matrix</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Fira+Code:wght@500;700&display=swap');
 
@@ -56,8 +56,7 @@
       border-radius: 5px;
     }
     .epoch-badge { color: #f59e0b; border-color: #d97706; background: #78350f22; }
-    .season-badge { color: #10b981; border-color: #059669; background: #064e3b22; }
-    .oracle-badge { color: #c084fc; border-color: #9333ea; background: #581c8722; }
+    .space-badge { color: #818cf8; border-color: #6366f1; background: #312e8122; }
 
     .ctrl-btn {
       background: #1e293b;
@@ -126,7 +125,7 @@
       border: none;
       color: #64748b;
       font-family: 'Orbitron', monospace;
-      font-size: 0.40rem;
+      font-size: 0.32rem;
       font-weight: 700;
       cursor: pointer;
       border-radius: 4px;
@@ -200,23 +199,6 @@
       font-size: 11px;
     }
 
-    .pro-con-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      margin-top: 4px;
-    }
-
-    .pro-box { background: #064e3b22; border: 1px solid #059669; border-radius: 6px; padding: 6px; }
-    .con-box { background: #88133722; border: 1px solid #f43f5e; border-radius: 6px; padding: 6px; }
-
-    .box-title { font-family: 'Orbitron', monospace; font-size: 0.55rem; font-weight: 800; margin-bottom: 3px; }
-    .pro-box .box-title { color: #34d399; }
-    .con-box .box-title { color: #fb7185; }
-
-    .box-content { font-size: 11px; color: #cbd5e1; font-weight: 600; line-height: 1.3; }
-    .eli5-box { background: #1e1b4b33; border: 1px solid #6366f1; border-radius: 6px; padding: 8px; font-size: 11.5px; color: #e0e7ff; line-height: 1.4; }
-
     .log-container {
       max-height: 400px;
       overflow-y: auto;
@@ -248,16 +230,12 @@
     </div>
     <div class="badge-bar">
       <button class="ctrl-btn toggle-active" id="toggle3D" onclick="toggleFeature('3D')">3D</button>
-      <button class="ctrl-btn toggle-active" id="toggleTrade" onclick="toggleFeature('TRADE')">TRADE</button>
-      <button class="ctrl-btn toggle-active" id="toggleOracle" onclick="toggleFeature('ORACLE')">ORACLE</button>
+      <button class="ctrl-btn toggle-active" id="toggleSpace" onclick="toggleFeature('SPACE')">SPACE</button>
       <button class="ctrl-btn" id="speedBtn" onclick="toggleSpeed()">1X</button>
       <button class="ctrl-btn" onclick="exportWorldJSON()">EXP</button>
-      <button class="ctrl-btn" onclick="document.getElementById('importFileInput').click()">IMP</button>
-      <input type="file" id="importFileInput" style="display:none" onchange="importWorldJSON(event)" accept=".json" />
       <button class="ctrl-btn" onclick="resetSimulation()">RESET</button>
       <span class="hud-badge epoch-badge" id="epochHeaderBadge">EPOCH I</span>
-      <span class="hud-badge season-badge" id="seasonBadge">SPRING</span>
-      <span class="hud-badge oracle-badge" id="oracleBadge">WEB: LIVE</span>
+      <span class="hud-badge space-badge" id="spaceBadge">COLONISTS: 0</span>
       <span class="hud-badge" id="tickCount">CYC 0000</span>
     </div>
   </header>
@@ -270,12 +248,10 @@
     <div class="hud-sidebar">
       <div class="tab-bar">
         <button class="tab-btn active" id="tabDeskBtn" onclick="switchSidebarTab('DESK')">DESK</button>
-        <button class="tab-btn" id="tabOracleFeedBtn" onclick="switchSidebarTab('ORACLEFEED')">🌐 WEB</button>
+        <button class="tab-btn" id="tabSpaceBtn" onclick="switchSidebarTab('SPACE')">🚀 SPACE</button>
+        <button class="tab-btn" id="tabTechTreeBtn" onclick="switchSidebarTab('TECHTREE')">🔬 TECH</button>
         <button class="tab-btn" id="tabDiagBtn" onclick="switchSidebarTab('DIAG')">🛠️ DIAG</button>
         <button class="tab-btn" id="tabHofBtn" onclick="switchSidebarTab('HOF')">🏆 HOF</button>
-        <button class="tab-btn" id="tabEli5Btn" onclick="switchSidebarTab('ELI5')">🧒 ELI5</button>
-        <button class="tab-btn" id="tabUtilityBtn" onclick="switchSidebarTab('UTILITY')">💡 USE</button>
-        <button class="tab-btn" id="tabProsConsBtn" onclick="switchSidebarTab('PROSCONS')">⚖️ P/C</button>
         <button class="tab-btn" id="tabLogsBtn" onclick="switchSidebarTab('LOGS')">📜 LOGS</button>
       </div>
 
@@ -295,35 +271,46 @@
           <h2>3D INSPECTOR <span>🔍 CLICK 3D OBJECTS</span></h2>
           <div class="stat-row"><span>Target:</span><span class="stat-num" id="inspectTarget">Global Civilization</span></div>
           <div class="stat-row"><span>Vitals:</span><span class="stat-num" id="inspectDetail">Click any 3D house</span></div>
-          <div class="stat-row"><span>Action:</span><span class="stat-num" id="inspectAction">--</span></div>
+          <div class="stat-row"><span>Space Station Level:</span><span class="stat-num" id="inspectStation">Alpha Station (Tier 1)</span></div>
         </div>
       </div>
 
-      <!-- TAB 2: WEB FEED -->
-      <div id="tabOracleFeedContainer" style="display: none;">
-        <div class="soc-card" style="border-left: 3px solid #c084fc;">
-          <h2>LIVE WEB ORACLE FEED <span>🌐 WIKIPEDIA</span></h2>
+      <!-- TAB 2: SPACE PROGRAM -->
+      <div id="tabSpaceContainer" style="display: none;">
+        <div class="soc-card" style="border-left: 3px solid #6366f1;">
+          <h2>ORBITAL SPACE PROGRAM <span>🚀 COLONIZATION</span></h2>
           <div style="margin-bottom: 6px;">
-            <button class="exec-btn" onclick="sim.queryOnlineKnowledgeOracle(true)">FETCH LIVE WEB KNOWLEDGE</button>
+            <button class="exec-btn" onclick="sim.launchRocketMission()">LAUNCH ORBITAL ROCKET (75 PTS)</button>
           </div>
-          <div class="log-container" id="oracleFeedList">
-            <div class="log-entry"><div class="log-text">Awaiting live web queries...</div></div>
+          <div class="stat-row"><span>Off-World Colonists:</span><span class="stat-num" id="spaceColonistCount">0 citizens</span></div>
+          <div class="stat-row"><span>Active Satellites:</span><span class="stat-num" id="satelliteCount">0 units</span></div>
+          <div class="log-container" id="spaceLogList">
+            <div class="log-entry"><div class="log-text">Space program standby. Awaiting R&D threshold.</div></div>
           </div>
         </div>
       </div>
 
-      <!-- TAB 3: DIAGNOSTICS -->
+      <!-- TAB 3: TECH TREE -->
+      <div id="tabTechTreeContainer" style="display: none;">
+        <div class="soc-card" style="border-left: 3px solid #38bdf8;">
+          <h2>PATENT & RESEARCH OFFICE <span>🔬 R&D</span></h2>
+          <div style="margin-bottom: 6px;">
+            <button class="exec-btn" onclick="sim.unlockTechTier()">UNLOCK NEXT TECH TIER (50 PTS)</button>
+          </div>
+          <div class="log-container" id="techTreeList"></div>
+        </div>
+      </div>
+
+      <!-- TAB 4: DIAGNOSTICS -->
       <div id="tabDiagContainer" style="display: none;">
         <div class="soc-card" style="border-left: 3px solid #10b981;">
           <h2>SELF-HEALING GUARDIAN <span>🛠️ DIAG</span></h2>
           <div class="stat-row"><span>Auto-Fixes Executed:</span><span class="stat-num" id="autoFixCount">0 fixes</span></div>
-          <div class="log-container" id="diagLogList">
-            <div class="log-entry"><div class="log-text">Guardian active and monitoring execution...</div></div>
-          </div>
+          <div class="log-container" id="diagLogList"></div>
         </div>
       </div>
 
-      <!-- TAB 4: HOF -->
+      <!-- TAB 5: HOF -->
       <div id="tabHofContainer" style="display: none;">
         <div class="soc-card" style="border-left: 3px solid #f59e0b;">
           <h2>HALL OF FAME <span>🏆 MILESTONES</span></h2>
@@ -331,40 +318,7 @@
         </div>
       </div>
 
-      <!-- TAB 5: ELI5 -->
-      <div id="tabEli5Container" style="display: none;">
-        <div class="soc-card" style="border-left: 3px solid #6366f1;">
-          <h2>WHAT IS HAPPENING? <span>🧒 ELI5 MODE</span></h2>
-          <div class="eli5-box">
-            A fully functioning digital ant farm! Little computer people farm food, build houses, trade goods, and query real Wikipedia articles live from the internet.
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 6: UTILITY -->
-      <div id="tabUtilityContainer" style="display: none;">
-        <div class="soc-card" style="border-left: 3px solid #10b981;">
-          <h2>SIMULATION UTILITY <span>💡 WHY USE THIS</span></h2>
-          <div class="eli5-box">
-            <strong>1. Real Web Learning:</strong> Ingests live Wikipedia data.<br/><br/>
-            <strong>2. Functional Roles:</strong> Every citizen action computes real economic math.<br/><br/>
-            <strong>3. Self-Healing:</strong> Automatically resolves deadlocks.
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 7: PROS & CONS -->
-      <div id="tabProsConsContainer" style="display: none;">
-        <div class="soc-card" style="border-left: 3px solid #38bdf8;">
-          <h2>LIVE PROS & CONS <span>⚖️ IMPACT FEED</span></h2>
-          <div class="pro-con-container">
-            <div class="pro-box"><div class="box-title">🟢 PROS</div><div class="box-content" id="liveProsText">Live web learning active.</div></div>
-            <div class="con-box"><div class="box-title">🔴 CONS</div><div class="box-content" id="liveConsText">Seasonal crop variance.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 8: LOGS -->
+      <!-- TAB 6: LOGS -->
       <div id="tabLogsContainer" style="display: none;">
         <div class="soc-card" style="border-left: 3px solid #06b6d4;">
           <h2>WORLD CHRONICLE <span>📜 LOGS</span></h2>
@@ -377,16 +331,13 @@
   <script>
     const WORLD_W = 48;
     const WORLD_H = 32;
-    const VIEW_TILES_X = 24;
-    const VIEW_TILES_Y = 16;
-    const TILE_SIZE = 24;
 
     const INITIAL_EPOCHS = [
-      { level: 1, name: "Primitive Agrarian", threshold: 0, powerType: "Biomass", icon: "🌾", yieldMulti: 1.0 },
-      { level: 2, name: "Merchant Metallurgy", threshold: 180, powerType: "Water Wheels", icon: "⚒️", yieldMulti: 1.25 },
-      { level: 3, name: "Industrial Steam", threshold: 480, powerType: "Coal Steam", icon: "🏭", yieldMulti: 1.6 },
-      { level: 4, name: "Digital Silicon", threshold: 950, powerType: "Electrical Grid", icon: "⚡", yieldMulti: 2.1 },
-      { level: 5, name: "Synthetic Horizon", threshold: 1650, powerType: "Clean Fusion", icon: "🔮", yieldMulti: 2.7 }
+      { level: 1, name: "Primitive Agrarian", threshold: 0, yieldMulti: 1.0 },
+      { level: 2, name: "Merchant Metallurgy", threshold: 180, yieldMulti: 1.25 },
+      { level: 3, name: "Industrial Steam", threshold: 480, yieldMulti: 1.6 },
+      { level: 4, name: "Digital Silicon", threshold: 950, yieldMulti: 2.1 },
+      { level: 5, name: "Synthetic Horizon", threshold: 1650, yieldMulti: 2.7 }
     ];
 
     const ACTIONS = [
@@ -396,7 +347,7 @@
     ];
 
     let SIM_SPEED = 1;
-    let FEATURES = { 3D: true, TRADE: true, ORACLE: true };
+    let FEATURES = { 3D: true, SPACE: true };
 
     function toggleFeature(feat) {
       FEATURES[feat] = !FEATURES[feat];
@@ -405,8 +356,8 @@
     }
 
     function switchSidebarTab(tab) {
-      const tabs = ["tabDeskContainer", "tabOracleFeedContainer", "tabDiagContainer", "tabHofContainer", "tabEli5Container", "tabUtilityContainer", "tabProsConsContainer", "tabLogsContainer"];
-      const btnIds = ["tabDeskBtn", "tabOracleFeedBtn", "tabDiagBtn", "tabHofBtn", "tabEli5Btn", "tabUtilityBtn", "tabProsConsBtn", "tabLogsBtn"];
+      const tabs = ["tabDeskContainer", "tabSpaceContainer", "tabTechTreeContainer", "tabDiagContainer", "tabHofContainer", "tabLogsContainer"];
+      const btnIds = ["tabDeskBtn", "tabSpaceBtn", "tabTechTreeBtn", "tabDiagBtn", "tabHofBtn", "tabLogsBtn"];
       tabs.forEach((id, idx) => {
         const el = document.getElementById(id);
         const btn = document.getElementById(btnIds[idx]);
@@ -415,8 +366,9 @@
       });
       if (tab === "LOGS") sim.renderChronicleUI();
       else if (tab === "HOF") sim.renderHofUI();
-      else if (tab === "ORACLEFEED") sim.renderOracleFeedUI();
       else if (tab === "DIAG") sim.renderDiagUI();
+      else if (tab === "TECHTREE") sim.renderTechTreeUI();
+      else if (tab === "SPACE") sim.renderSpaceUI();
     }
 
     function toggleSpeed() {
@@ -425,7 +377,7 @@
     }
 
     function resetSimulation() {
-      localStorage.removeItem("lore_world_state_operational_v5");
+      localStorage.removeItem("lore_world_state_master_final");
       location.reload();
     }
 
@@ -564,11 +516,11 @@
         this.isIPO = isIPO; this.maxPositions = 6; this.currentWorkers = 0;
         this.machineIntegrity = 100.0; this.pollutionOutput = type === "ENGINEERING" ? 1.5 : 0.4;
       }
-      runAgileSprint(workforceEfficiency, engineersCount, sentiment, interestRate, epochMulti, powerRatio, availableTools, seasonMulti) {
+      runAgileSprint(workforceEfficiency, engineersCount, sentiment, interestRate, epochMulti, powerRatio, availableTools) {
         this.machineIntegrity = Math.min(100, Math.max(25, this.machineIntegrity - 0.5 + engineersCount * 0.45));
         const reliabilityPenalty = this.machineIntegrity < 50 ? 0.6 : 1.0;
         if (this.treasury > 120.0 && this.maxPositions < 16) { this.maxPositions++; this.treasury -= 20.0; }
-        let toolMulti = this.type === "AGRITECH" ? Math.max(0.4, Math.min(1.0, availableTools / 10.0)) * seasonMulti : 1.0;
+        let toolMulti = this.type === "AGRITECH" ? Math.max(0.4, Math.min(1.0, availableTools / 10.0)) : 1.0;
         const K = Math.max(1, this.treasury / 10.0);
         const L = Math.max(1, Math.min(this.maxPositions, this.currentWorkers) * (1 + workforceEfficiency));
         const cobbDouglas = 1.8 * Math.pow(K, 0.4) * Math.pow(L, 0.6) * epochMulti * powerRatio * toolMulti;
@@ -605,11 +557,6 @@
           if (ent) val += shares * ent.sharePrice;
         }
         return Math.max(0, val);
-      }
-      applyMaintenanceSink() {
-        const upkeep = 0.2 * this.level + (this.realEstateDeeds * 0.4);
-        if (this.cashVault >= upkeep) { this.cashVault -= upkeep; return upkeep; }
-        else { this.level = Math.max(1, this.level - 1); return 0; }
       }
     }
 
@@ -674,8 +621,16 @@
         this.chronicleLog = [];
         this.hallOfFame = [];
         this.diagLog = [];
-        this.oracleFeedLog = [];
+        this.spaceLog = [];
         this.autoFixCount = 0;
+
+        this.offWorldColonists = 0;
+        this.activeSatellites = 0;
+        this.spaceStationTier = 1;
+
+        this.researchPoints = 0;
+        this.techTier = 1;
+        this.unlockedTechnologies = ["Standard Agrarian Framework"];
 
         this.camX = 0; this.camY = 0;
         this.societalHappiness = 85.0;
@@ -684,23 +639,14 @@
         this.gridPowerRatio = 1.0;
 
         this.price = 1.00;
-        this.priceLog = [1.00];
-        this.predictedPriceLog = [1.00];
-        this.equityIndex = 100.00;
-        this.equityLog = [100.00];
         this.stateTreasury = 120.0;
         this.toolsInventory = 35.0;
         this.selectedEntity = null;
 
-        this.caravans = [
-          { x: 8, y: 22, targetX: 24, targetY: 16, carrying: "Food" },
-          { x: 40, y: 22, targetX: 24, targetY: 16, carrying: "Tools" }
-        ];
-
         this.initWorldGrid();
         if (!this.loadState() || this.agents.size === 0) {
           this.seedInitialDynasties();
-          this.recordDiag("System Initialized. Self-Healing Guardian active.");
+          this.recordDiag("Space Program Engine active.");
         }
       }
 
@@ -720,15 +666,67 @@
         list.innerHTML = "";
         const autoFixEl = document.getElementById("autoFixCount");
         if (autoFixEl) autoFixEl.innerText = `${this.autoFixCount} fixes`;
-        if (this.diagLog.length === 0) {
-          list.innerHTML = `<div class="log-entry"><div class="log-text">No errors detected. System is running smoothly.</div></div>`;
-          return;
-        }
         this.diagLog.forEach(entry => {
           const div = document.createElement("div"); div.className = "log-entry";
           div.innerHTML = `<div class="log-time">HEALED @ CYC ${entry.cycle}</div><div class="log-text">🛠️ ${entry.text}</div>`;
           list.appendChild(div);
         });
+      }
+
+      renderSpaceUI() {
+        const list = document.getElementById("spaceLogList");
+        if (!list) return;
+        list.innerHTML = "";
+        document.getElementById("spaceColonistCount").innerText = `${this.offWorldColonists} citizens`;
+        document.getElementById("satelliteCount").innerText = `${this.activeSatellites} units`;
+        if (this.spaceLog.length === 0) {
+          list.innerHTML = `<div class="log-entry"><div class="log-text">Space program standby. Awaiting R&D threshold.</div></div>`;
+          return;
+        }
+        this.spaceLog.forEach(item => {
+          const div = document.createElement("div"); div.className = "log-entry";
+          div.innerHTML = `<div class="log-time">CYC ${item.cycle}</div><div class="log-text">🚀 ${item.text}</div>`;
+          list.appendChild(div);
+        });
+      }
+
+      launchRocketMission() {
+        if (this.researchPoints >= 75.0) {
+          this.researchPoints -= 75.0;
+          this.activeSatellites++;
+          this.offWorldColonists += 2;
+          this.spaceStationTier = Math.floor(this.activeSatellites / 2) + 1;
+          this.spaceLog.unshift({ cycle: this.cycle, text: `Successful orbital launch! Deployed satellite #${this.activeSatellites}.` });
+          this.recordChronicle(`🚀 SPACE PROGRAM: Orbital mission successful! (+2 colonists in orbit)`, "epoch");
+          const badge = document.getElementById("spaceBadge");
+          if (badge) badge.innerText = `COLONISTS: ${this.offWorldColonists}`;
+          this.renderSpaceUI();
+        }
+      }
+
+      renderTechTreeUI() {
+        const list = document.getElementById("techTreeList");
+        if (!list) return;
+        list.innerHTML = "";
+        const badge = document.getElementById("techBadge");
+        if (badge) badge.innerText = `R&D: ${this.researchPoints.toFixed(0)} PTS`;
+        this.unlockedTechnologies.forEach(tech => {
+          const div = document.createElement("div"); div.className = "log-entry";
+          div.innerHTML = `<div class="log-time">RESEARCHED</div><div class="log-text">🔬 ${tech}</div>`;
+          list.appendChild(div);
+        });
+      }
+
+      unlockTechTier() {
+        if (this.researchPoints >= 50.0) {
+          this.researchPoints -= 50.0;
+          this.techTier++;
+          const techs = ["Steam Power & Foundry Automation", "Electrical Grid & Digital Silicon", "Clean Fusion & Synthetic Horizon"];
+          const newTech = techs[Math.min(this.techTier - 2, techs.length - 1)] || "Advanced Quantum Computing";
+          this.unlockedTechnologies.push(newTech);
+          this.recordChronicle(`🔬 PATENT OFFICE: Unlocked ${newTech}!`, "epoch");
+          this.renderTechTreeUI();
+        }
       }
 
       awardAchievement(title) {
@@ -746,21 +744,6 @@
         this.hallOfFame.forEach(item => {
           const div = document.createElement("div"); div.className = "log-entry";
           div.innerHTML = `<div class="log-time">CYC ${item.cycle}</div><div class="log-text">🏆 ${item.title}</div>`;
-          list.appendChild(div);
-        });
-      }
-
-      renderOracleFeedUI() {
-        const list = document.getElementById("oracleFeedList");
-        if (!list) return;
-        list.innerHTML = "";
-        if (this.oracleFeedLog.length === 0) {
-          list.innerHTML = `<div class="log-entry"><div class="log-text">Click 'Fetch Live Web Knowledge' to query Wikipedia.</div></div>`;
-          return;
-        }
-        this.oracleFeedLog.forEach(entry => {
-          const div = document.createElement("div"); div.className = "log-entry";
-          div.innerHTML = `<div class="log-time">CYC ${entry.cycle}</div><div class="log-text">🌐 ${entry.text}</div>`;
           list.appendChild(div);
         });
       }
@@ -832,78 +815,29 @@
         });
       }
 
-      getSeason() {
-        const seasonIdx = Math.floor((this.cycle / 100) % 4);
-        const seasons = ["SPRING", "SUMMER", "AUTUMN", "WINTER"];
-        const badges = ["🌱 SPRING", "☀️ SUMMER", "🍁 AUTUMN", "❄️ WINTER"];
-        const badgeEl = document.getElementById("seasonBadge");
-        if (badgeEl) badgeEl.innerText = badges[seasonIdx];
-        return { name: seasons[seasonIdx], yieldMulti: seasonIdx === 3 ? 0.6 : (seasonIdx === 1 ? 1.2 : 1.0) };
-      }
-
-      async queryOnlineKnowledgeOracle(manual = false) {
-        if (!FEATURES.ORACLE && !manual) return;
-        try {
-          const topics = ["Macroeconomics", "Industrial_Revolution", "Artificial_intelligence", "Sustainable_energy", "Keynesian_economics"];
-          const targetTopic = topics[Math.floor(Math.random() * topics.length)];
-          const resp = await fetch(`https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&prop=extracts&exintro&explaintext&titles=${targetTopic}`);
-          const data = await resp.json();
-          const pages = data.query.pages;
-          const pageId = Object.keys(pages)[0];
-          const extract = pages[pageId].extract || "Live web knowledge retrieved.";
-          
-          this.researchPoints += 45.0;
-          const msg = `Fetched live Wikipedia article on '${targetTopic.replace("_"," ")}': "${extract.slice(0, 110)}..."`;
-          this.oracleFeedLog.unshift({ cycle: this.cycle, text: msg });
-          if (this.oracleFeedLog.length > 30) this.oracleFeedLog.pop();
-          this.recordChronicle(`Live Web Knowledge Ingested: ${targetTopic.replace("_"," ")} (+45 Research Pts)`, "epoch");
-          
-          const oracleContainer = document.getElementById("tabOracleFeedContainer");
-          if (oracleContainer && oracleContainer.style.display !== "none") this.renderOracleFeedUI();
-        } catch (err) {
-          this.researchPoints += 25.0;
-          const msg = "Live fetch fallback: Synthesized local web cache.";
-          this.oracleFeedLog.unshift({ cycle: this.cycle, text: msg });
-          this.recordChronicle("Web Oracle synthesized local R&D parameter.", "epoch");
-        }
-      }
-
       step() {
         try {
           this.cycle++;
-          const season = this.getSeason();
           const alive = Array.from(this.agents.values()).filter(a => a.alive);
-          const newborns = [];
 
           if (alive.length === 0) {
             this.seedInitialDynasties();
-            this.recordDiag("Auto-healed population collapse by respawning pioneer dynasties.");
+            this.recordDiag("Auto-healed population collapse.");
           }
           if (this.stateTreasury < 5.0) {
             this.stateTreasury += 50.0;
-            this.recordDiag("Auto-healed state treasury deficit by injecting liquidity.");
+            this.recordDiag("Auto-healed state treasury deficit.");
           }
 
           if (this.cycle === 150) this.awardAchievement("Resilient Society: 150 Cycles");
           if (alive.length >= 15) this.awardAchievement("Metropolis: 15+ Citizens");
-
-          if (FEATURES.TRADE) {
-            this.caravans.forEach(c => {
-              const dx = c.targetX > c.x ? 1 : (c.targetX < c.x ? -1 : 0);
-              const dy = c.targetY > c.y ? 1 : (c.targetY < c.y ? -1 : 0);
-              c.x += dx; c.y += dy;
-              if (c.x === c.targetX && c.y === c.targetY) {
-                c.targetX = c.targetX === 24 ? 8 : 24;
-                c.targetY = c.targetY === 16 ? 22 : 16;
-              }
-            });
-          }
+          if (this.offWorldColonists >= 10) this.awardAchievement("Interstellar: 10+ Space Colonists");
 
           this.spatialGrid.clear();
           alive.forEach(a => this.spatialGrid.insert(a));
 
           let totalVal = 0; let totalFoodYield = 0;
-          const curEpoch = INITIAL_EPOCHS[this.currentEpochIdx];
+          const curEpoch = INITIAL_EPOCHS[this.techTier - 1] || INITIAL_EPOCHS[4];
 
           this.enterprises.forEach(ent => {
             const neighbors = this.spatialGrid.queryNeighbors(ent.x, ent.y, 3.0);
@@ -912,29 +846,24 @@
             const engineers = workers.filter(w => w.careerTrack === "ENGINEER").length;
             const meanEd = workers.reduce((acc, w) => acc + (w.education / 100), 0);
 
-            const { velocity, dividendPerShare, pollution } = ent.runAgileSprint(
-              meanEd, engineers, 0.1, this.centralBank.baseRate, curEpoch.yieldMulti, this.gridPowerRatio, this.toolsInventory, season.yieldMulti
+            const { velocity, dividendPerShare } = ent.runAgileSprint(
+              meanEd, engineers, 0.1, this.centralBank.baseRate, curEpoch.yieldMulti, 1.0, this.toolsInventory, 1.0
             );
-            totalVal += ent.sharePrice * ent.sharesOutstanding;
-
-            if (ent.type === "ENGINEERING") this.toolsInventory = Math.min(80.0, this.toolsInventory + velocity * 0.8);
-            else if (ent.type === "AGRITECH") { this.toolsInventory = Math.max(0.0, this.toolsInventory - 0.4); totalFoodYield += velocity * 4.0; }
+            totalVal += ent.sharesOutstanding * ent.sharePrice;
+            if (ent.type === "AGRITECH") totalFoodYield += velocity * 4.0;
           });
 
           const deceasedAgentIds = [];
           for (const citizen of alive) {
             citizen.age += 0.5;
-            if (citizen.emoteTimer > 0) citizen.emoteTimer--;
-
             const hh = this.households.get(citizen.householdId);
-            const eStart = citizen.energy; const wStart = citizen.wallet;
             citizen.energy -= (1.0 + (citizen.age / 90.0) * 1.5);
 
             if (hh && hh.foodReserve > 0.4) { hh.foodReserve -= 0.4; citizen.energy = Math.min(100, citizen.energy + 2.5); }
-            else if (this.stateTreasury >= 2.0 && citizen.energy < 25) { this.stateTreasury -= 2.0; citizen.energy += 16.0; citizen.setEmote("🛡️"); }
+            else if (this.stateTreasury >= 2.0 && citizen.energy < 25) { this.stateTreasury -= 2.0; citizen.energy += 16.0; }
 
             if (citizen.energy <= 0 || citizen.age >= 82) {
-              citizen.alive = false; this.totalDeaths++; deceasedAgentIds.push(citizen.id);
+              citizen.alive = false; deceasedAgentIds.push(citizen.id);
               if (hh) {
                 hh.cashVault += citizen.wallet;
                 if (citizen.role === "FATHER") hh.fatherId = null; if (citizen.role === "MOTHER") hh.motherId = null;
@@ -949,7 +878,6 @@
                   hh.childrenIds = hh.childrenIds.filter(id => id !== primaryHeir.id);
                 }
               }
-              citizen.learn(citizen.lastS || Array(12).fill(0), -20, new Array(ACTIONS.length).fill(true));
               continue;
             }
 
@@ -976,10 +904,7 @@
                 job.currentWorkers++;
                 if (hh && (citizen.role === "FATHER" || citizen.role === "MOTHER")) hh.cashVault += 4.0;
                 else citizen.wallet += 4.0;
-                citizen.setEmote("💼");
               }
-            } else if (action === "FORAGE_PANTRY") {
-              citizen.setEmote("🌾"); if (hh) hh.foodReserve += 4.0;
             } else if (action === "SEEK_EDUCATION") {
               const dx = school.x > citizen.x ? 1 : (school.x < citizen.x ? -1 : 0);
               const dy = school.y > citizen.y ? 1 : (school.y < citizen.y ? -1 : 0);
@@ -988,43 +913,30 @@
               if (Math.hypot(school.x - citizen.x, school.y - citizen.y) <= 1.8) {
                 citizen.education = Math.min(100, citizen.education + 5);
                 this.researchPoints += 2.0;
-                citizen.setEmote("📖");
               }
             }
-
-            const reward = ((citizen.energy - eStart) * 0.1) + ((citizen.wallet - wStart) * 0.3) + 0.1;
-            citizen.learn(s, reward, mask);
+            citizen.learn(s, 0.1, mask);
           }
 
           deceasedAgentIds.forEach(id => this.agents.delete(id));
-          if (this.cycle % 150 === 0 && FEATURES.ORACLE) this.queryOnlineKnowledgeOracle();
         } catch (err) {
-          console.error("Simulation step error:", err);
-          this.recordDiag(`Caught runtime error and auto-recovered: ${err.message}`);
+          console.error("Simulation error:", err);
+          this.recordDiag(`Auto-recovered error: ${err.message}`);
         }
       }
 
       getSerializedWorld() {
         return {
-          cycle: this.cycle, nextEntityId: this.nextEntityId, currentEpochIdx: this.currentEpochIdx,
-          researchPoints: this.researchPoints, chronicleLog: this.chronicleLog, hallOfFame: this.hallOfFame, diagLog: this.diagLog,
+          cycle: this.cycle, nextEntityId: this.nextEntityId, researchPoints: this.researchPoints,
+          techTier: this.techTier, offWorldColonists: this.offWorldColonists, activeSatellites: this.activeSatellites,
+          chronicleLog: this.chronicleLog, hallOfFame: this.hallOfFame, diagLog: this.diagLog, spaceLog: this.spaceLog,
           households: Array.from(this.households.values()).map(h => ({
             id: h.id, name: h.name, homeX: h.homeX, homeY: h.homeY, level: h.level,
-            cashVault: h.cashVault, debtBalance: h.debtBalance, foodReserve: h.foodReserve,
-            bondsHeld: h.bondsHeld, realEstateDeeds: h.realEstateDeeds, isRenting: h.isRenting,
-            landlordHouseholdId: h.landlordHouseholdId, equityShares: Array.from(h.equityShares.entries()),
-            fatherId: h.fatherId, motherId: h.motherId, childrenIds: h.childrenIds
-          })),
-          enterprises: this.enterprises.map(e => ({
-            id: e.id, name: e.name, type: e.type, x: e.x, y: e.y,
-            treasury: e.treasury, sharePrice: e.sharePrice, isIPO: e.isIPO,
-            maxPositions: e.maxPositions, machineIntegrity: e.machineIntegrity
+            cashVault: h.cashVault, foodReserve: h.foodReserve, fatherId: h.fatherId, motherId: h.motherId, childrenIds: h.childrenIds
           })),
           agents: Array.from(this.agents.values()).filter(a => a.alive).map(a => ({
             id: a.id, name: a.name, gender: a.gender, age: a.age, householdId: a.householdId,
-            careerTrack: a.careerTrack, x: a.x, y: a.y, energy: a.energy, wallet: a.wallet,
-            education: a.education, degreeLevel: a.degreeLevel, metaAITier: a.metaAITier, role: a.role,
-            weights: a.brain.serialize()
+            careerTrack: a.careerTrack, x: a.x, y: a.y, energy: a.energy, wallet: a.wallet, role: a.role, weights: a.brain.serialize()
           }))
         };
       }
@@ -1032,40 +944,33 @@
       hydrateFromData(data) {
         this.cycle = data.cycle || 0; this.nextEntityId = data.nextEntityId || 1;
         this.researchPoints = data.researchPoints || 0;
+        this.techTier = data.techTier || 1;
+        this.offWorldColonists = data.offWorldColonists || 0;
+        this.activeSatellites = data.activeSatellites || 0;
         if (data.chronicleLog) this.chronicleLog = data.chronicleLog;
         if (data.hallOfFame) this.hallOfFame = data.hallOfFame;
         if (data.diagLog) this.diagLog = data.diagLog;
+        if (data.spaceLog) this.spaceLog = data.spaceLog;
         this.households.clear();
         (data.households || []).forEach(h => {
           const hh = new Household(h.id, h.name, h.homeX, h.homeY);
-          hh.level = h.level || 1; hh.cashVault = h.cashVault; hh.debtBalance = h.debtBalance || 0.0;
-          hh.foodReserve = h.foodReserve; hh.bondsHeld = h.bondsHeld || []; hh.realEstateDeeds = h.realEstateDeeds || 0;
-          hh.isRenting = h.isRenting || false; hh.landlordHouseholdId = h.landlordHouseholdId || null;
+          hh.level = h.level || 1; hh.cashVault = h.cashVault; hh.foodReserve = h.foodReserve;
           hh.fatherId = h.fatherId; hh.motherId = h.motherId; hh.childrenIds = h.childrenIds || [];
-          if (h.equityShares) hh.equityShares = new Map(h.equityShares);
           this.households.set(h.id, hh);
-        });
-        this.enterprises = (data.enterprises || []).map(e => {
-          const ent = new Enterprise(e.id, e.name, e.type, e.x, e.y, e.isIPO);
-          ent.treasury = e.treasury; ent.sharePrice = e.sharePrice; ent.maxPositions = e.maxPositions || 6; ent.machineIntegrity = e.machineIntegrity;
-          return ent;
         });
         this.agents.clear();
         (data.agents || []).forEach(a => {
           const brain = new NeuralPolicyBrain(12, 10, 11, a.weights);
           const ag = new HumanAgent(a.id, a.name, a.gender, a.age, a.householdId, a.careerTrack, a.x, a.y, brain);
-          ag.energy = a.energy; ag.wallet = a.wallet; ag.education = a.education; ag.degreeLevel = a.degreeLevel; ag.metaAITier = a.metaAITier; ag.role = a.role;
+          ag.energy = a.energy; ag.wallet = a.wallet; ag.role = a.role;
           this.agents.set(a.id, ag);
         });
       }
 
-      saveState() {
-        try { localStorage.setItem("lore_world_state_operational_v5", JSON.stringify(this.getSerializedWorld())); } catch (e) {}
-      }
-
+      saveState() { try { localStorage.setItem("lore_world_state_space_v1", JSON.stringify(this.getSerializedWorld())); } catch (e) {} }
       loadState() {
         try {
-          const raw = localStorage.getItem("lore_world_state_operational_v5");
+          const raw = localStorage.getItem("lore_world_state_space_v1");
           if (!raw) return false;
           this.hydrateFromData(JSON.parse(raw));
           return true;
@@ -1074,7 +979,7 @@
     }
 
     // --------------------------------------------------------
-    // THREE.JS RENDERER & INTERACTIVE 3D
+    // THREE.JS RENDERER WITH EXPLICIT SIZING
     // --------------------------------------------------------
     const sim = new TotalCivilizationMatrix();
     const container = document.getElementById("webglContainer");
@@ -1083,12 +988,12 @@
     scene.background = new THREE.Color(0x020617);
     scene.fog = new THREE.FogExp2(0x020617, 0.02);
 
-    const camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight || 1.5, 0.1, 1000);
     camera.position.set(0, 32, 34);
     camera.lookAt(0, 0, 0);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setSize(container.clientWidth || 560, container.clientHeight || 440);
     container.appendChild(renderer.domElement);
 
     scene.add(new THREE.AmbientLight(0xffffff, 0.65));
@@ -1112,7 +1017,6 @@
     const agentMeshes = new Map();
     const houseMeshes = new Map();
     const entMeshes = new Map();
-    const caravanMeshes = [];
 
     const houseGeo = new THREE.BoxGeometry(0.7, 0.9, 0.7);
     const houseMat = new THREE.MeshStandardMaterial({ color: 0x0284c7 });
@@ -1120,14 +1024,6 @@
     const entMat = new THREE.MeshStandardMaterial({ color: 0xd97706 });
     const agentGeo = new THREE.SphereGeometry(0.22, 12, 12);
     const agentMat = new THREE.MeshStandardMaterial({ color: 0x10b981 });
-    const caravanGeo = new THREE.BoxGeometry(0.5, 0.4, 0.8);
-    const caravanMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b });
-
-    sim.caravans.forEach(() => {
-      const mesh = new THREE.Mesh(caravanGeo, caravanMat);
-      scene.add(mesh);
-      caravanMeshes.push(mesh);
-    });
 
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
@@ -1146,7 +1042,6 @@
             if (hh) {
               document.getElementById("inspectTarget").innerText = `${hh.name} (Tier ${hh.level})`;
               document.getElementById("inspectDetail").innerText = `Vault: ${hh.cashVault.toFixed(0)}C | Food: ${hh.foodReserve.toFixed(0)}`;
-              document.getElementById("inspectAction").innerText = `Deeds: ${hh.realEstateDeeds}`;
             }
             break;
           }
@@ -1178,10 +1073,6 @@
         mesh.position.set(ent.x - WORLD_W / 2 + 0.5, 0.7, ent.y - WORLD_H / 2 + 0.5);
       });
 
-      sim.caravans.forEach((c, idx) => {
-        if (caravanMeshes[idx]) caravanMeshes[idx].position.set(c.x - WORLD_W / 2 + 0.5, 0.3, c.y - WORLD_H / 2 + 0.5);
-      });
-
       const aliveIds = new Set();
       sim.agents.forEach((agent, aId) => {
         if (!agent.alive) return;
@@ -1196,14 +1087,11 @@
       });
     }
 
-    const cCanvas = document.getElementById("commodityCanvas"); const cCtx = cCanvas.getContext("2d");
-    const eCanvas = document.getElementById("equityCanvas"); const eCtx = eCanvas.getContext("2d");
-
     function renderHUD() {
-      document.getElementById("tickCount").innerText = `CYC ${String(sim.cycle).padStart(4, '0')}`;
-      const alive = Array.from(sim.agents.values()).filter(a => a.alive);
-      document.getElementById("liveProsText").innerText = sim.societalHappiness > 70 ? "🟢 High morale (" + sim.societalHappiness.toFixed(0) + "%)." : "🟢 Scaling output.";
-      document.getElementById("liveConsText").innerText = sim.price > 1.8 ? "🔴 Inflation active." : "🔴 Normal variance.";
+      const countEl = document.getElementById("tickCount");
+      if (countEl) countEl.innerText = `CYC ${String(sim.cycle).padStart(4, '0')}`;
+      const badge = document.getElementById("spaceBadge");
+      if (badge) badge.innerText = `COLONISTS: ${sim.offWorldColonists}`;
     }
 
     function gameLoop() {
