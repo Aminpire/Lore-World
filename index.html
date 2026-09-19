@@ -3,901 +3,166 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Lore World - Ultimate Autonomous Civilization Matrix</title>
+  <title>Lore World - Phase 1 Foundation</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Fira+Code:wght@500;700&display=swap');
-
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Outfit:wght@700;900&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: #060913;
-      color: #94a3b8;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 13px;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      padding: 6px;
-      user-select: none;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 12px;
-      background: #0f172a;
-      border: 1px solid #1e293b;
-      border-left: 4px solid #38bdf8;
-      border-radius: 8px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-      margin-bottom: 6px;
-    }
-
-    .brand-title {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.78rem;
-      font-weight: 800;
-      color: #38bdf8;
-      letter-spacing: 1px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
+    body { background: #0f111a; color: #f1f5f9; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; min-height: 100vh; display: flex; flex-direction: column; padding: 6px; user-select: none; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: #1e2230; border: 2px solid #3b4252; border-left: 6px solid #ff79c6; border-radius: 8px; box-shadow: 0 4px 0 #000; margin-bottom: 6px; }
+    .brand-title { font-family: 'Outfit', sans-serif; font-size: 0.85rem; font-weight: 900; color: #ff79c6; letter-spacing: 1px; text-transform: uppercase; }
     .badge-bar { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
-    .hud-badge {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.5rem;
-      font-weight: 700;
-      background: #1e293b;
-      color: #38bdf8;
-      padding: 3px 5px;
-      border: 1px solid #334155;
-      border-radius: 5px;
-    }
-    .epoch-badge { color: #f59e0b; border-color: #d97706; background: #78350f22; }
-    .space-badge { color: #818cf8; border-color: #6366f1; background: #312e8122; }
-
-    .ctrl-btn {
-      background: #1e293b;
-      color: #f8fafc;
-      border: 1px solid #334155;
-      border-radius: 5px;
-      padding: 3px 6px;
-      font-family: 'Orbitron', monospace;
-      font-size: 0.52rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-    .ctrl-btn:hover { background: #334155; }
-    .ctrl-btn:active { background: #0284c7; color: #fff; }
-    .toggle-active { background: #059669 !important; border-color: #34d399 !important; color: #fff !important; }
-
-    .main-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    @media (min-width: 1024px) {
-      .main-grid {
-        display: grid;
-        grid-template-columns: 1fr 410px;
-      }
-    }
-
-    .viewport-box {
-      background: #020617;
-      border: 1px solid #1e293b;
-      border-radius: 8px;
-      position: relative;
-      overflow: hidden;
-      width: 100%;
-      height: 460px;
-      box-shadow: inset 0 0 30px #000;
-    }
-
+    .hud-badge { font-family: 'Outfit', sans-serif; font-size: 0.55rem; font-weight: 700; background: #282c3d; color: #8be9fd; padding: 3px 6px; border: 2px solid #44475a; border-radius: 4px; }
+    .ctrl-btn { background: #282c3d; color: #f8fafc; border: 2px solid #44475a; border-radius: 5px; padding: 3px 7px; font-family: 'Outfit', sans-serif; font-size: 0.55rem; font-weight: 700; cursor: pointer; transition: all 0.1s ease; box-shadow: 0 2px 0 #000; }
+    .ctrl-btn:hover { background: #44475a; }
+    .ctrl-btn:active { transform: translateY(2px); box-shadow: none; }
+    .toggle-active { background: #50fa7b !important; border-color: #2e8b57 !important; color: #000 !important; }
+    .main-grid { display: flex; flex-direction: column; gap: 6px; }
+    @media (min-width: 1024px) { .main-grid { display: grid; grid-template-columns: 1fr 410px; } }
+    .viewport-box { background: #090a0f; border: 2px solid #3b4252; border-radius: 8px; position: relative; overflow: hidden; width: 100%; height: 460px; box-shadow: inset 0 0 20px #000; }
     #webglContainer { width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: block; }
     #webglContainer canvas { width: 100% !important; height: 100% !important; display: block; }
-
-    .hud-sidebar {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      max-height: 88vh;
-      overflow-y: auto;
-      padding-right: 2px;
-    }
-
-    .tab-bar {
-      display: flex;
-      gap: 2px;
-      background: #0b1329;
-      padding: 3px;
-      border: 1px solid #1e293b;
-      border-radius: 6px;
-    }
-
-    .tab-btn {
-      flex: 1;
-      padding: 4px 1px;
-      background: transparent;
-      border: none;
-      color: #64748b;
-      font-family: 'Orbitron', monospace;
-      font-size: 0.28rem;
-      font-weight: 700;
-      cursor: pointer;
-      border-radius: 4px;
-      text-align: center;
-    }
-    .tab-btn.active {
-      background: #1e293b;
-      color: #38bdf8;
-      border: 1px solid #334155;
-    }
-
-    .soc-card {
-      background: #0f172a;
-      border: 1px solid #1e293b;
-      border-radius: 8px;
-      padding: 8px 10px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    }
-
-    .soc-card h2 {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.62rem;
-      font-weight: 800;
-      color: #f8fafc;
-      margin-bottom: 6px;
-      letter-spacing: 0.5px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #1e293b;
-      padding-bottom: 4px;
-    }
-
-    .exec-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4px;
-      margin-top: 4px;
-    }
-
-    .exec-btn {
-      background: #1e293b;
-      border: 1px solid #334155;
-      color: #38bdf8;
-      font-family: 'Orbitron', monospace;
-      font-size: 0.56rem;
-      font-weight: 700;
-      padding: 5px 6px;
-      border-radius: 5px;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.15s ease;
-    }
-    .exec-btn:hover { background: #334155; border-color: #38bdf8; }
-    .exec-danger { border-color: #f43f5e55; color: #f43f5e; background: #88133722; }
-    .exec-danger:hover { background: #e11d48; color: #fff; border-color: #f43f5e; }
-
-    .stat-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 3px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .stat-num {
-      color: #38bdf8;
-      font-weight: 700;
-      font-family: 'Orbitron', monospace;
-      font-size: 11px;
-    }
-
-    .log-container {
-      max-height: 380px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      padding: 4px;
-    }
-
-    .log-entry {
-      background: #020617;
-      border: 1px solid #1e293b;
-      border-left: 3px solid #38bdf8;
-      border-radius: 5px;
-      padding: 6px 8px;
-      font-size: 11px;
-    }
-    .log-time { font-family: 'Orbitron', monospace; font-size: 9px; font-weight: 700; color: #64748b; margin-bottom: 2px; }
-    .log-text { color: #cbd5e1; font-weight: 600; }
+    .hud-sidebar { display: flex; flex-direction: column; gap: 6px; max-height: 88vh; overflow-y: auto; padding-right: 2px; }
+    .tab-bar { display: flex; flex-wrap: wrap; gap: 2px; background: #161822; padding: 3px; border: 2px solid #3b4252; border-radius: 6px; }
+    .tab-btn { flex: 1 1 30%; padding: 4px 1px; background: transparent; border: none; color: #6272a4; font-family: 'Outfit', sans-serif; font-size: 0.35rem; font-weight: 700; cursor: pointer; border-radius: 3px; text-align: center; }
+    .tab-btn.active { background: #282c3d; color: #ff79c6; border: 1px solid #6272a4; }
+    .soc-card { background: #181b25; border: 2px solid #3b4252; border-radius: 8px; padding: 8px 10px; box-shadow: 0 3px 0 #000; display: none; }
+    .soc-card.active-card { display: block; }
+    .soc-card h2 { font-family: 'Outfit', sans-serif; font-size: 0.65rem; font-weight: 900; color: #f8fafc; margin-bottom: 6px; letter-spacing: 0.5px; border-bottom: 2px solid #282c3d; padding-bottom: 4px; text-transform: uppercase; }
+    .stat-row { display: flex; justify-content: space-between; margin-bottom: 3px; font-size: 12px; font-weight: 700; }
+    .stat-num { color: #50fa7b; font-weight: 900; font-family: 'Outfit', sans-serif; font-size: 11px; }
+    .log-container { max-height: 330px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; padding: 4px; }
+    .log-entry { background: #0f111a; border: 2px solid #282c3d; border-left: 4px solid #ff79c6; border-radius: 5px; padding: 6px 8px; font-size: 11px; }
+    .log-time { font-family: 'Outfit', sans-serif; font-size: 9px; font-weight: 700; color: #6272a4; margin-bottom: 2px; }
+    .log-text { color: #f8fafc; font-weight: 600; }
   </style>
-  <!-- Three.js CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
   <header>
-    <div class="brand-title">
-      <span>🌐</span> LORE WORLD 3D
-    </div>
+    <div class="brand-title"><span>✒️</span> LORE WORLD (PHASE 1)</div>
     <div class="badge-bar">
-      <button class="ctrl-btn toggle-active" id="toggle3D" onclick="toggleFeature('3D')">3D</button>
-      <button class="ctrl-btn toggle-active" id="toggleSpace" onclick="toggleFeature('SPACE')">SPACE</button>
-      <button class="ctrl-btn" id="speedBtn" onclick="toggleSpeed()">1X</button>
-      <button class="ctrl-btn" onclick="exportWorldJSON()">EXP</button>
-      <button class="ctrl-btn" onclick="resetSimulation()">RESET</button>
-      <span class="hud-badge epoch-badge" id="epochHeaderBadge">EPOCH I</span>
-      <span class="hud-badge space-badge" id="spaceBadge">COLONISTS: 0</span>
+      <button class="ctrl-btn toggle-active" id="btn3D" onclick="toggle3D()">TOON 3D</button>
       <span class="hud-badge" id="tickCount">CYC 0000</span>
     </div>
   </header>
 
   <div class="main-grid">
-    <div class="viewport-box">
-      <div id="webglContainer"></div>
-    </div>
+    <div class="viewport-box"><div id="webglContainer"></div></div>
 
     <div class="hud-sidebar">
-      <div class="tab-bar">
-        <button class="tab-btn active" id="tabDeskBtn" onclick="switchSidebarTab('DESK')">DESK</button>
-        <button class="tab-btn" id="tabGenealogyBtn" onclick="switchSidebarTab('GENEALOGY')">🧬 GEN</button>
-        <button class="tab-btn" id="tabMarketBtn" onclick="switchSidebarTab('MARKET')">📈 MKT</button>
-        <button class="tab-btn" id="tabSpaceBtn" onclick="switchSidebarTab('SPACE')">🚀 SPACE</button>
-        <button class="tab-btn" id="tabTechTreeBtn" onclick="switchSidebarTab('TECHTREE')">🔬 TECH</button>
-        <button class="tab-btn" id="tabOracleBtn" onclick="switchSidebarTab('ORACLE')">🌐 WEB</button>
-        <button class="tab-btn" id="tabClimateBtn" onclick="switchSidebarTab('CLIMATE')">🌍 ECO</button>
-        <button class="tab-btn" id="tabDisasterBtn" onclick="switchSidebarTab('DISASTER')">⚡ FIRE</button>
-        <button class="tab-btn" id="tabJusticeBtn" onclick="switchSidebarTab('JUSTICE')">⚖️ LAW</button>
-        <button class="tab-btn" id="tabDiagBtn" onclick="switchSidebarTab('DIAG')">🛠️ DIAG</button>
-        <button class="tab-btn" id="tabLogsBtn" onclick="switchSidebarTab('LOGS')">📜 LOGS</button>
+      <div class="tab-bar" id="tabBar"></div>
+      
+      <!-- STATUS -->
+      <div id="c-status" class="soc-card active-card" style="border-left: 4px solid #ffb86c;">
+        <h2>SYSTEM STATUS <span>🛡️ GUARDIAN</span></h2>
+        <div class="stat-row"><span>Environment:</span><span class="stat-num">Stable Phase 1</span></div>
+        <div class="stat-row"><span>Auto-Fixes:</span><span class="stat-num" id="ui-fixes">0</span></div>
       </div>
 
-      <!-- TAB 1: DESK -->
-      <div id="tabDeskContainer" style="display: flex; flex-direction: column; gap: 6px;">
-        <div class="soc-card" style="border-left: 3px solid #f59e0b;">
-          <h2>EXECUTIVE POLICY DESK <span>⚡ GOD MODE</span></h2>
-          <div class="exec-grid">
-            <button class="exec-btn" onclick="sim.injectHelicopterStimulus()">+50C STIMULUS</button>
-            <button class="exec-btn" onclick="sim.toggleRateOverride()" id="rateOverrideBtn">RATE: AUTO</button>
-            <button class="exec-btn" onclick="sim.buildGrandWonder()">WONDER (-60C)</button>
-            <button class="exec-btn exec-danger" onclick="sim.triggerBlackSwan()">CRISIS</button>
-          </div>
-        </div>
-
-        <div class="soc-card" style="border-left: 3px solid #10b981;">
-          <h2>3D INSPECTOR <span>🔍 CLICK OBJECTS</span></h2>
-          <div class="stat-row"><span>Target:</span><span class="stat-num" id="inspectTarget">Global Civilization</span></div>
-          <div class="stat-row"><span>Active Policy:</span><span class="stat-num" id="inspectPolicy">Capitalism</span></div>
-        </div>
-      </div>
-
-      <!-- TAB 2: GENEALOGY -->
-      <div id="tabGenealogyContainer" style="display: none;">
-        <div class="soc-card" style="border-left: 3px solid #38bdf8;">
-          <h2>DYNASTY GENEALOGY TREE <span>🧬 FAMILY</span></h2>
-          <div class="log-container" id="genealogyList"></div>
-        </div>
-      </div>
-
-      <!-- TAB 3: MARKET -->
-      <div id="tabMarketContainer" style="display: none;">
-        <div class="soc-card" style="border-left: 3px solid #34d399;">
-          <h2>PUBLIC STOCK EXCHANGE <span>📈 IPO TICKER</span></h2>
-          <div class="stat-row"><span>Market Cap Index:</span><span class="stat-num" id="marketCapVal">1,200.0 C</span></div>
-          <div class="log-container" id="marketLogList"></div>
-        </div>
-      </div>
-
-      <!-- TAB 4: SPACE -->
-      <div id="tabSpaceContainer" style="display: none;">
-        <div class="soc-card" style="border-left: 3px solid #6366f1;">
-          <h2>ORBITAL SPACE PROGRAM <span>🚀 COLONIZATION</span></h2>
-          <div style="margin-bottom: 6px;">
-            <button class="exec-btn" onclick="sim.launchRocketMission()">LAUNCH ROCKET (75 PTS)</button>
-          </div>
-          <div class="stat-row"><span>Colonists:</span><span class="stat-num" id="spaceColonistCount">0 citizens</span></div>
-          <div class="log-container" id="spaceLogList"></div>
-        </div>
-      </div>
-
-      <!-- TAB 5: TECH -->
-      <div id="tabTechTreeContainer" style="display: none;">
-        <div class="soc-card" style="border-left: 3px solid #38bdf8;">
-          <h2>PATENT OFFICE <span>🔬 R&D</span></h2>
-          <div style="margin-bottom: 6px;">
-            <button class="exec-btn" onclick="sim.unlockTechTier()">UNLOCK TECH (50 PTS)</button>
-          </div>
-          <div class="log-container" id="techTreeList"></div>
-        </div>
-      </div>
-
-      <!-- TAB 6: WEB ORACLE -->
-      <div id="tabOracleContainer" style="display: none;">
-        <div class="soc-card" style="border-left: 3px solid #c084fc;">
-          <h2>WIKIPEDIA WEB ORACLE <span>🌐 LIVE FEED</span></h2>
-          <div style="margin-bottom: 6px;">
-            <button class="exec-btn" onclick="sim.queryOnlineKnowledgeOracle(true)">FETCH WIKIPEDIA</button>
-          </div>
-          <div class="log-container" id="oracleFeedList"></div>
-        </div>
-      </div>
-
-      <!-- TAB 7: CLIMATE -->
-      <div id="tabClimateContainer" style="display: none;">
-        <div class="soc-card" style="border-left: 3px solid #34d399;">
-          <h2>PLANETARY CLIMATE <span>🌍 CARBON</span></h2>
-          <div class="stat-row"><span>Atmospheric Carbon:</span><span class="stat-num" id="carbonVal">350 PPM</span></div>
-          <div class="stat-row"><span>Temperature Drift:</span><span class="stat-num" id="tempVal">+0.0 °C</span></div>
-          <div class="log-container" id="climateLogList"></div>
-        </div>
-      </div>
-
-      <!-- TAB 8: DISASTER -->
-      <div id="tabDisasterContainer" style="display: none;">
-        <div class="soc-card" style="border-left: 3px solid #f43f5e;">
-          <h2>EMERGENCY MANAGEMENT <span>⚡ DISASTERS</span></h2>
-          <div class="stat-row"><span>Active Emergencies:</span><span class="stat-num" id="activeDisasterCount">0 active</span></div>
-          <div class="log-container" id="disasterLogList"></div>
-        </div>
-      </div>
-
-      <!-- TAB 9: JUSTICE -->
-      <div id="tabJusticeContainer" style="display: none;">
-        <div class="soc-card" style="border-left: 3px solid #f43f5e;">
-          <h2>DEPARTMENT OF JUSTICE <span>⚖️ LAW</span></h2>
-          <div class="stat-row"><span>Arrests Made:</span><span class="stat-num" id="arrestCount">0 citizens</span></div>
-          <div class="log-container" id="justiceLogList"></div>
-        </div>
-      </div>
-
-      <!-- TAB 10: DIAGNOSTICS -->
-      <div id="tabDiagContainer" style="display: none;">
-        <div class="soc-card" style="border-left: 3px solid #10b981;">
-          <h2>SELF-HEALING GUARDIAN <span>🛠️ DIAG</span></h2>
-          <div class="stat-row"><span>Auto-Fixes:</span><span class="stat-num" id="autoFixCount">0 fixes</span></div>
-          <div class="log-container" id="diagLogList"></div>
-        </div>
-      </div>
-
-      <!-- TAB 11: LOGS -->
-      <div id="tabLogsContainer" style="display: none;">
-        <div class="soc-card" style="border-left: 3px solid #06b6d4;">
-          <h2>WORLD CHRONICLE <span>📜 LOGS</span></h2>
-          <div class="log-container" id="chronicleList"></div>
-        </div>
+      <!-- LOGS -->
+      <div id="c-logs" class="soc-card" style="border-left: 4px solid #8be9fd;">
+        <h2>CHRONICLE <span>📜 LOGS</span></h2>
+        <div class="log-container" id="l-logs"></div>
       </div>
     </div>
   </div>
 
   <script>
     let totalFixes = 0;
-    const guardianLogs = [];
-
-    function recordGuardianFix(msg) {
+    window.onerror = function(msg) {
       totalFixes++;
-      const badge = document.getElementById("autoFixCount");
-      if (badge) badge.innerText = `${totalFixes} fixes`;
-      guardianLogs.unshift({ cycle: window.sim ? window.sim.cycle : 0, text: msg });
-      if (guardianLogs.length > 30) guardianLogs.pop();
-      const list = document.getElementById("diagLogList");
-      if (list) {
-        list.innerHTML = "";
-        guardianLogs.forEach(entry => {
-          const div = document.createElement("div"); div.className = "log-entry";
-          div.innerHTML = `<div class="log-time">HEALED @ CYC ${entry.cycle}</div><div class="log-text">🛡️ ${entry.text}</div>`;
-          list.appendChild(div);
-        });
-      }
-    }
-
-    window.onerror = function(msg, url, line) {
-      recordGuardianFix(`Error: ${msg} (Line ${line}). Auto-recovering.`);
-      try {
-        if (window.sim) window.sim.seedWorld();
-      } catch (e) {
-        location.reload();
-      }
+      const el = document.getElementById("ui-fixes");
+      if(el) el.innerText = totalFixes;
+      console.warn("Guardian Intercept:", msg);
       return true;
     };
 
-    const WORLD_W = 48;
-    const WORLD_H = 32;
+    const TABS = ["status", "logs"];
+    const ICONS = ["STATUS", "📜 LOGS"];
+    const bar = document.getElementById("tabBar");
+    TABS.forEach((t, i) => {
+      const b = document.createElement("button");
+      b.className = `tab-btn ${i===0?'active':''}`;
+      b.innerText = ICONS[i];
+      b.onclick = () => {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.soc-card').forEach(c => c.classList.remove('active-card'));
+        b.classList.add('active');
+        document.getElementById(`c-${t}`).classList.add('active-card');
+      };
+      bar.appendChild(b);
+    });
 
-    let SIM_SPEED = 1;
-    let FEATURES = { 3D: true, SPACE: true, MARKET: true, TECH: true, ORACLE: true, GENEALOGY: true, CLIMATE: true, DISASTERS: true, JUSTICE: true };
+    let render3D = true;
+    function toggle3D() { render3D = !render3D; document.getElementById("btn3D").classList.toggle("toggle-active", render3D); }
 
-    function toggleFeature(feat) {
-      FEATURES[feat] = !FEATURES[feat];
-      const btn = document.getElementById(`toggle${feat}`);
-      if (btn) btn.classList.toggle("toggle-active", FEATURES[feat]);
-    }
+    function setTxt(id, val) { const el = document.getElementById(id); if (el) el.innerText = val; }
+    function setHTML(id, html) { const el = document.getElementById(id); if (el) el.innerHTML = html; }
 
-    function switchSidebarTab(tab) {
-      const tabs = ["tabDeskContainer", "tabGenealogyContainer", "tabMarketContainer", "tabSpaceContainer", "tabTechTreeContainer", "tabOracleContainer", "tabClimateContainer", "tabDisasterContainer", "tabJusticeContainer", "tabDiagContainer", "tabLogsContainer"];
-      const btnIds = ["tabDeskBtn", "tabGenealogyBtn", "tabMarketBtn", "tabSpaceBtn", "tabTechTreeBtn", "tabOracleBtn", "tabClimateBtn", "tabDisasterBtn", "tabJusticeBtn", "tabDiagBtn", "tabLogsBtn"];
-      tabs.forEach((id, idx) => {
-        const el = document.getElementById(id);
-        const btn = document.getElementById(btnIds[idx]);
-        if (el) el.style.display = (idx === tabs.indexOf(`tab${tab.charAt(0) + tab.slice(1).toLowerCase()}Container`)) ? "flex" : "none";
-        if (btn) btn.classList.toggle("active", idx === tabs.indexOf(`tab${tab.charAt(0) + tab.slice(1).toLowerCase()}Container`));
-      });
-      if (tab === "LOGS" && window.sim) window.sim.renderChronicleUI();
-      else if (tab === "DIAG" && window.sim) window.sim.renderDiagUI();
-      else if (tab === "GENEALOGY" && window.sim) window.sim.renderGenealogyUI();
-      else if (tab === "MARKET" && window.sim) window.sim.renderMarketUI();
-      else if (tab === "SPACE" && window.sim) window.sim.renderSpaceUI();
-      else if (tab === "TECHTREE" && window.sim) window.sim.renderTechTreeUI();
-      else if (tab === "ORACLE" && window.sim) window.sim.renderOracleUI();
-      else if (tab === "CLIMATE" && window.sim) window.sim.renderClimateUI();
-      else if (tab === "DISASTER" && window.sim) window.sim.renderDisasterUI();
-      else if (tab === "JUSTICE" && window.sim) window.sim.renderJusticeUI();
-    }
-
-    function toggleSpeed() {
-      if (SIM_SPEED === 1) SIM_SPEED = 2; else if (SIM_SPEED === 2) SIM_SPEED = 5; else SIM_SPEED = 1;
-      const btn = document.getElementById("speedBtn");
-      if (btn) btn.innerText = `${SIM_SPEED}X`;
-    }
-
-    function resetSimulation() {
-      localStorage.clear();
-      location.reload();
-    }
-
-    function exportWorldJSON() {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(window.sim.getSerializedWorld(), null, 2));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `lore_world_cyc_${window.sim.cycle}.json`);
-      document.body.appendChild(downloadAnchor); downloadAnchor.click(); downloadAnchor.remove();
-    }
-
-    // --------------------------------------------------------
-    // ULTIMATE COMPREHENSIVE ENGINE CLASSES (NULL-SAFE)
-    // --------------------------------------------------------
-    class SpatialGrid {
-      constructor(width, height, cellSize = 4) {
-        this.cellSize = cellSize; this.cols = Math.ceil(width / cellSize); this.rows = Math.ceil(height / cellSize);
-        this.buckets = new Array(this.cols * this.rows).fill(null).map(() => []);
-      }
-      clear() { for (let i = 0; i < this.buckets.length; i++) this.buckets[i].length = 0; }
-      insert(agent) {
-        const cx = Math.min(this.cols - 1, Math.max(0, Math.floor(agent.x / this.cellSize)));
-        const cy = Math.min(this.rows - 1, Math.max(0, Math.floor(agent.y / this.cellSize)));
-        this.buckets[cy * this.cols + cx].push(agent);
-      }
-    }
-
-    class NeuralPolicyBrain {
-      constructor(inD = 12, hidD = 10, outD = 11, weights = null) {
-        this.inD = inD; this.hidD = hidD; this.outD = outD;
-        if (weights) { this.W1 = weights.W1; this.b1 = weights.b1; this.W2 = weights.W2; this.b2 = weights.b2; }
-        else {
-          this.W1 = Array.from({ length: hidD }, () => Array.from({ length: inD }, () => Math.random() * 0.2 - 0.1));
-          this.b1 = Array(hidD).fill(0);
-          this.W2 = Array.from({ length: outD }, () => Array.from({ length: hidD }, () => Math.random() * 0.2 - 0.1));
-          this.b2 = Array(outD).fill(0);
-        }
-      }
-      forward(x) {
-        const h = this.W1.map((r, i) => Math.tanh(r.reduce((acc, w, j) => acc + w * (x[j] || 0), this.b1[i])));
-        const q = this.W2.map((r, i) => r.reduce((acc, w, j) => acc + w * h[j], this.b2[i]));
-        return { h, q };
-      }
-      serialize() { return { W1: this.W1, b1: this.b1, W2: this.W2, b2: this.b2 }; }
-    }
-
-    class CivilizationMatrix {
+    class FoundationEngine {
       constructor() {
         this.cycle = 0;
-        this.stateTreasury = 150.0;
-        this.researchPoints = 35.0;
-        this.techTier = 1;
-        this.offWorldColonists = 0;
-        this.activeSatellites = 0;
-        this.atmosphericCarbon = 350.0;
-        this.temperatureDrift = 0.0;
-        this.activePolicy = "Laissez-Faire Capitalism";
-        this.taxRate = 0.08;
-        this.arrestsCount = 0;
-        this.spatialGrid = new SpatialGrid(WORLD_W, WORLD_H, 4);
-        this.agents = [];
-        this.households = [];
-        this.enterprises = [];
-        this.activeDisasters = [];
-        this.chronicleLog = [];
-        this.diagLog = [];
-        this.spaceLog = [];
-        this.oracleFeedLog = [];
-        this.climateLog = [];
-        this.disasterLog = [];
-        this.justiceLog = [];
-        this.seedWorld();
+        this.logs = [{ c: 0, t: "Phase 1 Foundation Architecture initialized successfully." }];
       }
-
-      seedWorld() {
-        this.agents = [
-          { id: 1, name: "Atlas Solaris", gender: "MALE", age: 28, role: "FATHER", householdId: "h1", x: 12, y: 14, wallet: 25, energy: 100, education: 85, careerTrack: "AGRITECH", brain: new NeuralPolicyBrain(), alive: true },
-          { id: 2, name: "Nova Vanguard", gender: "FEMALE", age: 26, role: "MOTHER", householdId: "h1", x: 14, y: 14, wallet: 30, energy: 100, education: 80, careerTrack: "FINANCIER", brain: new NeuralPolicyBrain(), alive: true },
-          { id: 3, name: "Caleb Terra", gender: "MALE", age: 32, role: "FATHER", householdId: "h2", x: 34, y: 26, wallet: 20, energy: 100, education: 75, careerTrack: "ENGINEER", brain: new NeuralPolicyBrain(), alive: true },
-          { id: 4, name: "Naomi Aether", gender: "FEMALE", age: 30, role: "MOTHER", householdId: "h2", x: 36, y: 26, wallet: 35, energy: 100, education: 90, careerTrack: "AGRITECH", brain: new NeuralPolicyBrain(), alive: true }
-        ];
-        this.households = [
-          { id: "h1", name: "House Solaris", homeX: 12, homeY: 14, level: 1, cashVault: 60.0, foodReserve: 40.0, fatherId: 1, motherId: 2, childrenIds: [] },
-          { id: "h2", name: "House Vanguard", homeX: 34, homeY: 26, level: 1, cashVault: 70.0, foodReserve: 45.0, fatherId: 3, motherId: 4, childrenIds: [] }
-        ];
-        this.enterprises = [
-          { id: "ent_agri", name: "Agri Farm", type: "AGRITECH", x: 8, y: 22, treasury: 80, sharePrice: 1.20, sharesOutstanding: 100, machineIntegrity: 100 },
-          { id: "ent_com", name: "Exchange", type: "COMMERCE", x: 24, y: 16, treasury: 110, sharePrice: 1.80, sharesOutstanding: 100, machineIntegrity: 100 },
-          { id: "ent_eng", name: "Foundry", type: "ENGINEERING", x: 40, y: 22, treasury: 95, sharePrice: 1.50, sharesOutstanding: 100, machineIntegrity: 100 }
-        ];
-        this.chronicleLog.unshift({ cycle: 0, text: "Ultimate Civilization Matrix initialized with ALL systems active." });
-      }
-
-      injectHelicopterStimulus() {
-        this.stateTreasury += 50.0;
-        this.chronicleLog.unshift({ cycle: this.cycle, text: "Executive stimulus (+50C) granted." });
-      }
-
-      toggleRateOverride() {
-        this.chronicleLog.unshift({ cycle: this.cycle, text: "Monetary policy rate toggled." });
-      }
-
-      buildGrandWonder() {
-        if (this.stateTreasury >= 60.0) {
-          this.stateTreasury -= 60.0;
-          this.chronicleLog.unshift({ cycle: this.cycle, text: "Grand Monument erected!" });
-        }
-      }
-
-      triggerBlackSwan() {
-        this.stateTreasury = Math.max(0, this.stateTreasury - 30);
-        this.chronicleLog.unshift({ cycle: this.cycle, text: "Crisis shock triggered!" });
-      }
-
-      launchRocketMission() {
-        if (this.researchPoints >= 75.0) {
-          this.researchPoints -= 75.0;
-          this.activeSatellites++;
-          this.offWorldColonists += 2;
-          this.spaceLog.unshift({ cycle: this.cycle, text: `Deployed satellite #${this.activeSatellites} into orbit.` });
-          const badge = document.getElementById("spaceBadge");
-          if (badge) badge.innerText = `COLONISTS: ${this.offWorldColonists}`;
-          this.renderSpaceUI();
-        }
-      }
-
-      unlockTechTier() {
-        if (this.researchPoints >= 50.0) {
-          this.researchPoints -= 50.0;
-          this.techTier++;
-          this.chronicleLog.unshift({ cycle: this.cycle, text: `Unlocked Tech Tier ${this.techTier}!` });
-          this.renderTechTreeUI();
-        }
-      }
-
-      async queryOnlineKnowledgeOracle(manual = false) {
-        try {
-          const topics = ["Macroeconomics", "Industrial_Revolution", "Artificial_intelligence", "Sustainable_energy"];
-          const targetTopic = topics[Math.floor(Math.random() * topics.length)];
-          const resp = await fetch(`https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&prop=extracts&exintro&explaintext&titles=${targetTopic}`);
-          const data = await resp.json();
-          const pages = data.query.pages;
-          const pageId = Object.keys(pages)[0];
-          const extract = pages[pageId].extract || "Live Wikipedia knowledge retrieved.";
-
-          this.researchPoints += 40.0;
-          const msg = `Fetched Wikipedia article on '${targetTopic.replace("_"," ")}': "${extract.slice(0, 95)}..."`;
-          this.oracleFeedLog.unshift({ cycle: this.cycle, text: msg });
-          if (this.oracleFeedLog.length > 25) this.oracleFeedLog.pop();
-          this.chronicleLog.unshift({ cycle: this.cycle, text: `Live Web Knowledge Ingested: ${targetTopic.replace("_"," ")} (+40 R&D Pts)` });
-          this.renderOracleUI();
-        } catch (err) {
-          this.researchPoints += 20.0;
-          this.oracleFeedLog.unshift({ cycle: this.cycle, text: "Fallback: Synthesized local web R&D parameters." });
-          this.renderOracleUI();
-        }
-      }
-
       step() {
         this.cycle++;
-        if (this.agents.length === 0) {
-          this.seedWorld();
-          recordGuardianFix("Auto-healed empty population.");
-        }
-        this.researchPoints += 0.2;
-
-        if (this.cycle > 0 && this.cycle % 250 === 0) {
-          const policies = ["Laissez-Faire Capitalism", "Social Welfare State", "Green Techno-Dictatorship"];
-          this.activePolicy = policies[Math.floor(Math.random() * policies.length)];
-          this.taxRate = this.activePolicy === "Social Welfare State" ? 0.22 : 0.08;
-          const polEl = document.getElementById("inspectPolicy");
-          if (polEl) polEl.innerText = this.activePolicy;
-          this.chronicleLog.unshift({ cycle: this.cycle, text: `Election Results: Citizens voted for ${this.activePolicy}!` });
-        }
-
-        this.atmosphericCarbon += 0.02 - (this.techTier >= 4 ? 0.015 : 0.002);
-        this.temperatureDrift = (this.atmosphericCarbon - 350.0) * 0.005;
-
-        if (Math.random() < 0.02 && this.activeDisasters.length === 0 && this.enterprises.length > 0) {
-          const targetEnt = this.enterprises[Math.floor(Math.random() * this.enterprises.length)];
-          targetEnt.machineIntegrity = 15.0;
-          this.activeDisasters.push({ id: targetEnt.id, name: targetEnt.name });
-          this.disasterLog.unshift({ cycle: this.cycle, text: `Industrial fire struck ${targetEnt.name}!` });
-          this.renderDisasterUI();
-        }
-
-        if (Math.random() < 0.08) {
-          this.arrestsCount++;
-          const rName = this.agents[Math.floor(Math.random() * this.agents.length)].name;
-          this.justiceLog.unshift({ cycle: this.cycle, text: `Police detained ${rName} for civil friction.` });
-          this.renderJusticeUI();
-        }
-
-        this.spatialGrid.clear();
-        this.agents.forEach(a => this.spatialGrid.insert(a));
-
-        this.agents.forEach(a => {
-          a.age += 0.05;
-          const s = [a.energy / 100, a.wallet / 30, a.education / 100, 0.5, 0.2, 0.3, 0.4, 1.0, 0.035, 0.05, 0.8, 1.0];
-          const { q } = a.brain.forward(s);
-          const bestAction = q.indexOf(Math.max(...q));
-
-          if (bestAction % 2 === 0) {
-            a.x += (Math.random() - 0.5) * 1.5;
-            a.y += (Math.random() - 0.5) * 1.5;
-          } else {
-            a.wallet += 0.5;
-          }
-          a.x = Math.max(2, Math.min(WORLD_W - 2, a.x));
-          a.y = Math.max(2, Math.min(WORLD_H - 2, a.y));
-        });
-
-        this.enterprises.forEach(e => {
-          const K = Math.max(1, e.treasury / 10.0);
-          const L = 2.0;
-          const cobbDouglas = 1.8 * Math.pow(K, 0.4) * Math.pow(L, 0.6) * (1.0 + (this.techTier - 1) * 0.25);
-          e.treasury += cobbDouglas * 0.1;
-          e.sharePrice = Math.max(0.5, e.sharePrice + (Math.random() - 0.48) * 0.04);
-        });
-
-        if (this.cycle % 120 === 0) {
-          this.queryOnlineKnowledgeOracle();
+        if(this.cycle % 20 === 0) {
+          this.logs.unshift({ c: this.cycle, t: `System running stable at cycle ${this.cycle}.` });
+          if(this.logs.length > 20) this.logs.pop();
         }
       }
-
-      renderDiagUI() {
-        const list = document.getElementById("diagLogList");
-        if (!list) return;
-        list.innerHTML = "";
-        guardianLogs.forEach(entry => {
-          const div = document.createElement("div"); div.className = "log-entry";
-          div.innerHTML = `<div class="log-time">HEALED @ CYC ${entry.cycle}</div><div class="log-text">🛡️ ${entry.text}</div>`;
-          list.appendChild(div);
-        });
+      refreshUI() {
+        setTxt("tickCount", `CYC ${String(this.cycle).padStart(4, '0')}`);
+        setHTML("l-logs", this.logs.map(i => `<div class="log-entry"><div class="log-time">CYC ${i.c}</div><div class="log-text">${i.t}</div></div>`).join(''));
       }
-
-      renderChronicleUI() {
-        const list = document.getElementById("chronicleList");
-        if (!list) return;
-        list.innerHTML = "";
-        this.chronicleLog.forEach(entry => {
-          const div = document.createElement("div"); div.className = "log-entry";
-          div.innerHTML = `<div class="log-time">CYCLE ${String(entry.cycle).padStart(4, '0')}</div><div class="log-text">${entry.text}</div>`;
-          list.appendChild(div);
-        });
-      }
-
-      renderGenealogyUI() {
-        const list = document.getElementById("genealogyList");
-        if (!list) return;
-        list.innerHTML = "";
-        this.households.forEach(hh => {
-          const f = this.agents.find(a => a.id === hh.fatherId);
-          const m = this.agents.find(a => a.id === hh.motherId);
-          const div = document.createElement("div"); div.className = "log-entry";
-          div.innerHTML = `<div class="log-time">${hh.name} (Vault: ${hh.cashVault.toFixed(0)}C)</div><div class="log-text">Father: ${f ? f.name : 'None'} | Mother: ${m ? m.name : 'None'} | Heirs: ${hh.childrenIds.length}</div>`;
-          list.appendChild(div);
-        });
-      }
-
-      renderMarketUI() {
-        const list = document.getElementById("marketLogList");
-        if (!list) return;
-        list.innerHTML = "";
-        let totalCap = 0;
-        this.enterprises.forEach(e => {
-          const cap = e.sharesOutstanding * e.sharePrice;
-          totalCap += cap;
-          const div = document.createElement("div"); div.className = "log-entry";
-          div.innerHTML = `<div class="log-time">${e.name} (${e.type})</div><div class="log-text">Price: ${e.sharePrice.toFixed(2)} C | Cap: ${cap.toFixed(1)} C</div>`;
-          list.appendChild(div);
-        });
-        const mCapEl = document.getElementById("marketCapVal");
-        if (mCapEl) mCapEl.innerText = `${totalCap.toFixed(1)} C`;
-      }
-
-      renderSpaceUI() {
-        const list = document.getElementById("spaceLogList");
-        if (!list) return;
-        list.innerHTML = "";
-        const cEl = document.getElementById("spaceColonistCount");
-        if (cEl) cEl.innerText = `${this.offWorldColonists} citizens`;
-        this.spaceLog.forEach(item => {
-          const div = document.createElement("div"); div.className = "log-entry";
-          div.innerHTML = `<div class="log-time">CYC ${item.cycle}</div><div class="log-text">🚀 ${item.text}</div>`;
-          list.appendChild(div);
-        });
-      }
-
-      renderTechTreeUI() {
-        const list = document.getElementById("techTreeList");
-        if (!list) return;
-        list.innerHTML = `<div class="log-entry"><div class="log-text">Current Tech Tier: ${this.techTier} | R&D Points: ${this.researchPoints.toFixed(1)} PTS</div></div>`;
-      }
-
-      renderOracleUI() {
-        const list = document.getElementById("oracleFeedList");
-        if (!list) return;
-        list.innerHTML = "";
-        this.oracleFeedLog.forEach(entry => {
-          const div = document.createElement("div"); div.className = "log-entry";
-          div.innerHTML = `<div class="log-time">CYC ${entry.cycle}</div><div class="log-text">🌐 ${entry.text}</div>`;
-          list.appendChild(div);
-        });
-      }
-
-      renderClimateUI() {
-        const list = document.getElementById("climateLogList");
-        if (!list) return;
-        const cVal = document.getElementById("carbonVal");
-        if (cVal) cVal.innerText = `${this.atmosphericCarbon.toFixed(1)} PPM`;
-        const tVal = document.getElementById("tempVal");
-        if (tVal) tVal.innerText = `+${this.temperatureDrift.toFixed(2)} °C`;
-        list.innerHTML = `<div class="log-entry"><div class="log-text">Carbon tracking active. Climate drift stable.</div></div>`;
-      }
-
-      renderDisasterUI() {
-        const list = document.getElementById("disasterLogList");
-        if (!list) return;
-        list.innerHTML = "";
-        const dCount = document.getElementById("activeDisasterCount");
-        if (dCount) dCount.innerText = `${this.activeDisasters.length} active`;
-        this.disasterLog.forEach(item => {
-          const div = document.createElement("div"); div.className = "log-entry";
-          div.innerHTML = `<div class="log-time">CYC ${item.cycle}</div><div class="log-text">⚡ ${item.text}</div>`;
-          list.appendChild(div);
-        });
-      }
-
-      renderJusticeUI() {
-        const list = document.getElementById("justiceLogList");
-        if (!list) return;
-        list.innerHTML = "";
-        const aCount = document.getElementById("arrestCount");
-        if (aCount) aCount.innerText = `${this.arrestsCount} citizens`;
-        this.justiceLog.forEach(item => {
-          const div = document.createElement("div"); div.className = "log-entry";
-          div.innerHTML = `<div class="log-time">CYC ${item.cycle}</div><div class="log-text">⚖️ ${item.text}</div>`;
-          list.appendChild(div);
-        });
-      }
-
-      getSerializedWorld() { return { cycle: this.cycle, agents: this.agents, enterprises: this.enterprises, households: this.households }; }
-      hydrateFromData(d) { if (d.cycle) this.cycle = d.cycle; }
     }
 
-    const sim = new CivilizationMatrix();
+    const sim = new FoundationEngine();
     window.sim = sim;
 
-    // --------------------------------------------------------
-    // THREE.JS 3D RENDERER (NULL-SAFE)
-    // --------------------------------------------------------
+    // Three.js Setup
     const container = document.getElementById("webglContainer");
-    const width = container ? container.clientWidth || 560 : 560;
-    const height = container ? container.clientHeight || 460 : 460;
-
+    const width = container.clientWidth || 560; const height = container.clientHeight || 460;
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x020617);
-    scene.fog = new THREE.FogExp2(0x020617, 0.025);
+    scene.background = new THREE.Color(0x0f111a);
 
-    const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 1000);
-    camera.position.set(0, 32, 34);
-    camera.lookAt(0, 0, 0);
+    const camera = new THREE.PerspectiveCamera(40, width/height, 0.1, 1000);
+    camera.position.set(0, 32, 34); camera.lookAt(0, 0, 0);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(width, height);
-    if (container) container.appendChild(renderer.domElement);
+    container.appendChild(renderer.domElement);
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.8));
-    const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
-    dirLight.position.set(20, 35, 20);
-    scene.add(dirLight);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+    dirLight.position.set(20, 35, 20); scene.add(dirLight);
 
-    // Grid Floor
-    const gridHelper = new THREE.GridHelper(WORLD_W, WORLD_W, 0x10b981, 0x1e293b);
-    gridHelper.position.set(0, 0, 0);
-    scene.add(gridHelper);
+    const grid = new THREE.GridHelper(48, 24, 0xff79c6, 0x3b4252);
+    grid.position.set(0, 0, 0); scene.add(grid);
 
-    // Household & Enterprise Meshes
-    const houseMeshes = [];
-    sim.households.forEach(hh => {
-      const mesh = new THREE.Mesh(
-        new THREE.BoxGeometry(0.7, 0.9, 0.7),
-        new THREE.MeshStandardMaterial({ color: 0x0284c7 })
-      );
-      mesh.position.set(hh.homeX - WORLD_W / 2 + 0.5, 0.5, hh.homeY - WORLD_H / 2 + 0.5);
-      scene.add(mesh);
-      houseMeshes.push(mesh);
-    });
-
-    const entMeshes = [];
-    sim.enterprises.forEach(ent => {
-      const mesh = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.5, 0.6, 1.2, 8),
-        new THREE.MeshStandardMaterial({ color: 0xd97706 })
-      );
-      mesh.position.set(ent.x - WORLD_W / 2 + 0.5, 0.6, ent.y - WORLD_H / 2 + 0.5);
-      scene.add(mesh);
-      entMeshes.push(mesh);
-    });
-
-    const agentMeshes = [];
-    sim.agents.forEach(() => {
-      const mesh = new THREE.Mesh(
-        new THREE.SphereGeometry(0.3, 16, 16),
-        new THREE.MeshStandardMaterial({ color: 0x10b981, emissive: 0x059669 })
-      );
-      scene.add(mesh);
-      agentMeshes.push(mesh);
-    });
+    const testMesh = new THREE.Mesh(
+      new THREE.BoxGeometry(2, 2, 2),
+      new THREE.MeshToonMaterial({ color: 0xff79c6 })
+    );
+    testMesh.position.set(0, 1, 0);
+    scene.add(testMesh);
 
     window.addEventListener("resize", () => {
-      if (!container) return;
-      const w = container.clientWidth || 560;
-      const h = container.clientHeight || 460;
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-      renderer.setSize(w, h);
+      const w = container.clientWidth || 560; const h = container.clientHeight || 460;
+      camera.aspect = w/h; camera.updateProjectionMatrix(); renderer.setSize(w, h);
     });
 
-    function update3DScene() {
-      if (!FEATURES["3D"]) { scene.visible = false; return; }
-      scene.visible = true;
-
-      sim.agents.forEach((agent, idx) => {
-        if (agentMeshes[idx]) {
-          agentMeshes[idx].position.set(agent.x - WORLD_W / 2 + 0.5, 0.4, agent.y - WORLD_H / 2 + 0.5);
-        }
-      });
-    }
-
-    function renderHUD() {
-      const countEl = document.getElementById("tickCount");
-      if (countEl) countEl.innerText = `CYC ${String(sim.cycle).padStart(4, '0')}`;
-    }
-
-    function gameLoop() {
-      try {
-        for (let s = 0; s < SIM_SPEED; s++) sim.step();
-        update3DScene();
-        renderHUD();
+    function loop() {
+      sim.step();
+      testMesh.rotation.y += 0.01;
+      if (render3D) {
         renderer.render(scene, camera);
-      } catch (err) {
-        recordGuardianFix(`Loop error: ${err.message}`);
       }
-      setTimeout(gameLoop, 130);
+      sim.refreshUI();
+      setTimeout(loop, 100);
     }
-    gameLoop();
+    loop();
   </script>
 </body>
 </html>
