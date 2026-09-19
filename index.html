@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Lore World - Fully Operational 3D Civilization Matrix</title>
+  <title>Lore World - 3D Civilization Matrix</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Fira+Code:wght@500;700&display=swap');
 
@@ -99,7 +99,7 @@
       box-shadow: inset 0 0 30px #000;
     }
 
-    #webglContainer { width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: block; }
+    #webglContainer { width: 100%; height: 100%; position: relative; display: block; }
 
     .hud-sidebar {
       display: flex;
@@ -401,15 +401,17 @@
     function toggleFeature(feat) {
       FEATURES[feat] = !FEATURES[feat];
       const btn = document.getElementById(`toggle${feat}`);
-      btn.classList.toggle("toggle-active", FEATURES[feat]);
+      if (btn) btn.classList.toggle("toggle-active", FEATURES[feat]);
     }
 
     function switchSidebarTab(tab) {
       const tabs = ["tabDeskContainer", "tabOracleFeedContainer", "tabDiagContainer", "tabHofContainer", "tabEli5Container", "tabUtilityContainer", "tabProsConsContainer", "tabLogsContainer"];
       const btnIds = ["tabDeskBtn", "tabOracleFeedBtn", "tabDiagBtn", "tabHofBtn", "tabEli5Btn", "tabUtilityBtn", "tabProsConsBtn", "tabLogsBtn"];
       tabs.forEach((id, idx) => {
-        document.getElementById(id).style.display = (idx === tabs.indexOf(`tab${tab.charAt(0) + tab.slice(1).toLowerCase()}Container`)) ? "flex" : "none";
-        document.getElementById(btnIds[idx]).classList.toggle("active", idx === tabs.indexOf(`tab${tab.charAt(0) + tab.slice(1).toLowerCase()}Container`));
+        const el = document.getElementById(id);
+        const btn = document.getElementById(btnIds[idx]);
+        if (el) el.style.display = (idx === tabs.indexOf(`tab${tab.charAt(0) + tab.slice(1).toLowerCase()}Container`)) ? "flex" : "none";
+        if (btn) btn.classList.toggle("active", idx === tabs.indexOf(`tab${tab.charAt(0) + tab.slice(1).toLowerCase()}Container`));
       });
       if (tab === "LOGS") sim.renderChronicleUI();
       else if (tab === "HOF") sim.renderHofUI();
@@ -423,7 +425,7 @@
     }
 
     function resetSimulation() {
-      localStorage.removeItem("lore_world_state_operational_v4");
+      localStorage.removeItem("lore_world_state_operational_v5");
       location.reload();
     }
 
@@ -716,7 +718,8 @@
         const list = document.getElementById("diagLogList");
         if (!list) return;
         list.innerHTML = "";
-        document.getElementById("autoFixCount").innerText = `${this.autoFixCount} fixes`;
+        const autoFixEl = document.getElementById("autoFixCount");
+        if (autoFixEl) autoFixEl.innerText = `${this.autoFixCount} fixes`;
         if (this.diagLog.length === 0) {
           list.innerHTML = `<div class="log-entry"><div class="log-text">No errors detected. System is running smoothly.</div></div>`;
           return;
@@ -1057,12 +1060,12 @@
       }
 
       saveState() {
-        try { localStorage.setItem("lore_world_state_operational_v4", JSON.stringify(this.getSerializedWorld())); } catch (e) {}
+        try { localStorage.setItem("lore_world_state_operational_v5", JSON.stringify(this.getSerializedWorld())); } catch (e) {}
       }
 
       loadState() {
         try {
-          const raw = localStorage.getItem("lore_world_state_operational_v4");
+          const raw = localStorage.getItem("lore_world_state_operational_v5");
           if (!raw) return false;
           this.hydrateFromData(JSON.parse(raw));
           return true;
@@ -1192,6 +1195,9 @@
         if (!aliveIds.has(aId)) { scene.remove(mesh); agentMeshes.delete(aId); }
       });
     }
+
+    const cCanvas = document.getElementById("commodityCanvas"); const cCtx = cCanvas.getContext("2d");
+    const eCanvas = document.getElementById("equityCanvas"); const eCtx = eCanvas.getContext("2d");
 
     function renderHUD() {
       document.getElementById("tickCount").innerText = `CYC ${String(sim.cycle).padStart(4, '0')}`;
