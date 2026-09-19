@@ -443,7 +443,7 @@
               <canvas id="equityCanvas" class="mini-chart" width="140" height="38"></canvas>
             </div>
           </div>
-          <div class="news-ticker" id="newsTicker">FEED: Online Oracle learning engine and safe state fallback active...</div>
+          <div class="news-ticker" id="newsTicker">FEED: Fully self-correcting game loop active...</div>
         </div>
       </div>
 
@@ -546,7 +546,7 @@
     }
 
     function resetSimulation() {
-      localStorage.removeItem("lore_world_state_safe_v3");
+      localStorage.removeItem("lore_world_state_safe_v4");
       location.reload();
     }
 
@@ -862,7 +862,6 @@
 
         this.initWorldGrid();
         
-        // Safe load with automatic fallback if state is empty or broken
         if (!this.loadState() || this.agents.size === 0) {
           this.seedInitialDynasties();
           this.recordChronicle("Safe initialization: Fresh world seeded successfully.", "epoch");
@@ -1560,85 +1559,108 @@
         ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 2; ctx.strokeRect(px + 6, py + 3, 20, 26);
       }
       if (citizen.emoteTimer > 0 && citizen.emote) {
-        ctx.fillStyle = "rgba(15, 23, 42, 0.85)"; ctx.beginPath(); ctx.roundRect(px + 6, py - 6 + bob, 20, 14, 4); ctx.fill();
+        ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
+        ctx.fillRect(px + 6, py - 6 + bob, 20, 14);
         ctx.font = "10px monospace"; ctx.fillStyle = "#ffffff"; ctx.fillText(citizen.emote, px + 9, py + 5 + bob);
       }
     }
 
     function renderHUD() {
-      document.getElementById("tickCount").innerText = `CYC ${String(sim.cycle).padStart(4, '0')}`;
-      const alive = Array.from(sim.agents.values()).filter(a => a.alive);
-      document.getElementById("totalPop").innerText = `${alive.length} citizens`;
-      document.getElementById("stateCoffers").innerText = `${sim.stateTreasury.toFixed(0)} C`;
-      document.getElementById("oracleSparksCount").innerText = `${sim.onlineKnowledgeSparks} fetched`;
-      document.getElementById("mutationCount").innerText = `${sim.mutationTrialsCount} trials`;
+      try {
+        document.getElementById("tickCount").innerText = `CYC ${String(sim.cycle).padStart(4, '0')}`;
+        const alive = Array.from(sim.agents.values()).filter(a => a.alive);
+        document.getElementById("totalPop").innerText = `${alive.length} citizens`;
+        document.getElementById("stateCoffers").innerText = `${sim.stateTreasury.toFixed(0)} C`;
+        document.getElementById("oracleSparksCount").innerText = `${sim.onlineKnowledgeSparks} fetched`;
+        document.getElementById("mutationCount").innerText = `${sim.mutationTrialsCount} trials`;
 
-      const curEpoch = sim.epochs[sim.currentEpochIdx];
-      const nextEpoch = sim.epochs[sim.currentEpochIdx + 1];
-      document.getElementById("currentEpochName").innerText = `${curEpoch.icon} Epoch ${curEpoch.level}: ${curEpoch.name}`;
+        const curEpoch = sim.epochs[sim.currentEpochIdx];
+        const nextEpoch = sim.epochs[sim.currentEpochIdx + 1];
+        document.getElementById("currentEpochName").innerText = `${curEpoch.icon} Epoch ${curEpoch.level}: ${curEpoch.name}`;
 
-      const targetPts = nextEpoch ? nextEpoch.threshold : Math.floor(curEpoch.threshold * 1.75);
-      const fillPct = Math.min(100, (sim.researchPoints / targetPts) * 100);
-      document.getElementById("techProgressBar").style.width = `${fillPct}%`;
+        const targetPts = nextEpoch ? nextEpoch.threshold : Math.floor(curEpoch.threshold * 1.75);
+        const fillPct = Math.min(100, (sim.researchPoints / targetPts) * 100);
+        document.getElementById("techProgressBar").style.width = `${fillPct}%`;
 
-      document.getElementById("happinessVal").innerText = `${sim.societalHappiness.toFixed(0)}% (${sim.societalHappiness < 35 ? "STRIKE" : "STABLE"})`;
+        document.getElementById("happinessVal").innerText = `${sim.societalHappiness.toFixed(0)}% (${sim.societalHappiness < 35 ? "STRIKE" : "STABLE"})`;
 
-      if (sim.selectedEntity) {
-        if (sim.selectedEntity.type === "AGENT") {
-          const a = sim.selectedEntity.data;
-          document.getElementById("inspectTarget").innerText = `${a.name} (${a.role})`;
-          document.getElementById("inspectDetail").innerText = `⚡${a.energy.toFixed(0)} | 💰${a.wallet.toFixed(1)}C | 🎓Lvl ${a.degreeLevel}`;
-          document.getElementById("inspectAction").innerText = `${ACTIONS[a.lastA] || "IDLE"}`;
-        } else if (sim.selectedEntity.type === "HOUSEHOLD") {
-          const h = sim.selectedEntity.data;
-          document.getElementById("inspectTarget").innerText = `${h.name} (Tier ${h.level})`;
-          document.getElementById("inspectDetail").innerText = `Vault: ${h.cashVault.toFixed(0)}C | Food: ${h.foodReserve.toFixed(0)}`;
-          document.getElementById("inspectAction").innerText = `Deeds: ${h.realEstateDeeds} | Bonds: ${h.bondsHeld.length}`;
+        if (sim.selectedEntity) {
+          if (sim.selectedEntity.type === "AGENT") {
+            const a = sim.selectedEntity.data;
+            document.getElementById("inspectTarget").innerText = `${a.name} (${a.role})`;
+            document.getElementById("inspectDetail").innerText = `⚡${a.energy.toFixed(0)} | 💰${a.wallet.toFixed(1)}C | 🎓Lvl ${a.degreeLevel}`;
+            document.getElementById("inspectAction").innerText = `${ACTIONS[a.lastA] || "IDLE"}`;
+          } else if (sim.selectedEntity.type === "HOUSEHOLD") {
+            const h = sim.selectedEntity.data;
+            document.getElementById("inspectTarget").innerText = `${h.name} (Tier ${h.level})`;
+            document.getElementById("inspectDetail").innerText = `Vault: ${h.cashVault.toFixed(0)}C | Food: ${h.foodReserve.toFixed(0)}`;
+            document.getElementById("inspectAction").innerText = `Deeds: ${h.realEstateDeeds} | Bonds: ${h.bondsHeld.length}`;
+          }
+        } else {
+          document.getElementById("inspectTarget").innerText = "Global Overview";
+          document.getElementById("inspectDetail").innerText = "Tap citizen or building";
+          document.getElementById("inspectAction").innerText = "Self-Evolving AI Active";
         }
-      } else {
-        document.getElementById("inspectTarget").innerText = "Global Overview";
-        document.getElementById("inspectDetail").innerText = "Tap citizen or building";
-        document.getElementById("inspectAction").innerText = "Self-Evolving AI Active";
-      }
 
-      const firstHh = Array.from(sim.households.values())[0];
-      if (firstHh) {
-        document.getElementById("dynastyName").innerText = `${firstHh.name} (Tier ${firstHh.level})`;
-        document.getElementById("dynastyAssets").innerText = `Vault: ${firstHh.cashVault.toFixed(0)} C | Food: ${firstHh.foodReserve.toFixed(0)}`;
-      }
+        const firstHh = Array.from(sim.households.values())[0];
+        if (firstHh) {
+          document.getElementById("dynastyName").innerText = `${firstHh.name} (Tier ${firstHh.level})`;
+          document.getElementById("dynastyAssets").innerText = `Vault: ${firstHh.cashVault.toFixed(0)} C | Food: ${firstHh.foodReserve.toFixed(0)}`;
+        }
 
-      drawSparkline(cCanvas, cCtx, sim.priceLog, sim.predictedPriceLog, "#f59e0b", "#38bdf8");
-      drawSparkline(eCanvas, eCtx, sim.equityLog, sim.equityLog, "#38bdf8", "#38bdf8");
+        drawSparkline(cCanvas, cCtx, sim.priceLog, sim.predictedPriceLog, "#f59e0b", "#38bdf8");
+        drawSparkline(eCanvas, eCtx, sim.equityLog, sim.equityLog, "#38bdf8", "#38bdf8");
+      } catch (e) {
+        console.error("HUD render error:", e);
+      }
+    }
+
+    function drawSparkline(pCanvas, pCtx, actual, predicted, strokeColor, predColor) {
+      pCtx.fillStyle = "#020617";
+      pCtx.fillRect(0, 0, pCanvas.width, pCanvas.height);
+      const all = actual.concat(predicted);
+      const minP = Math.min(...all), maxP = Math.max(...all), range = (maxP - minP) || 1;
+      pCtx.strokeStyle = strokeColor; pCtx.lineWidth = 1.5; pCtx.beginPath();
+      actual.forEach((p, idx) => {
+        const cx = (idx / (actual.length - 1)) * pCanvas.width;
+        const cy = pCanvas.height - ((p - minP) / range) * (pCanvas.height - 6) - 3;
+        if (idx === 0) pCtx.moveTo(cx, cy); else pCtx.lineTo(cx, cy);
+      });
+      pCtx.stroke();
     }
 
     function gameLoop() {
-      for (let s = 0; s < SIM_SPEED; s++) sim.step();
-      const floorCamX = Math.floor(sim.camX), floorCamY = Math.floor(sim.camY);
-      for (let vx = 0; vx < VIEW_TILES_X; vx++) {
-        for (let vy = 0; vy < VIEW_TILES_Y; vy++) drawCleanTile(floorCamX + vx, floorCamY + vy, vx, vy);
-      }
-      sim.monuments.forEach(m => drawCleanMonument(m, floorCamX, floorCamY));
-      sim.enterprises.forEach(e => drawCleanEnterprise(e, floorCamX, floorCamY));
-      sim.schools.forEach(sc => drawCleanAcademy(sc, floorCamX, floorCamY));
-      for (const hh of sim.households.values()) drawCleanHousehold(hh, floorCamX, floorCamY);
-      Array.from(sim.agents.values()).filter(a => a.alive).forEach(c => drawCleanHuman(c, floorCamX, floorCamY));
-
-      sim.particles.forEach(p => {
-        const sx = p.x - floorCamX * TILE_SIZE;
-        const sy = p.y - floorCamY * TILE_SIZE;
-        if (sx >= 0 && sx <= canvas.width && sy >= 0 && sy <= canvas.height) {
-          ctx.save();
-          ctx.globalAlpha = p.alpha;
-          ctx.font = "bold 12px 'Plus Jakarta Sans', monospace";
-          ctx.fillStyle = "#000";
-          ctx.fillText(p.text, sx + 1, sy + 1);
-          ctx.fillStyle = p.color;
-          ctx.fillText(p.text, sx, sy);
-          ctx.restore();
+      try {
+        for (let s = 0; s < SIM_SPEED; s++) sim.step();
+        const floorCamX = Math.floor(sim.camX), floorCamY = Math.floor(sim.camY);
+        for (let vx = 0; vx < VIEW_TILES_X; vx++) {
+          for (let vy = 0; vy < VIEW_TILES_Y; vy++) drawCleanTile(floorCamX + vx, floorCamY + vy, vx, vy);
         }
-      });
+        sim.monuments.forEach(m => drawCleanMonument(m, floorCamX, floorCamY));
+        sim.enterprises.forEach(e => drawCleanEnterprise(e, floorCamX, floorCamY));
+        sim.schools.forEach(sc => drawCleanAcademy(sc, floorCamX, floorCamY));
+        for (const hh of sim.households.values()) drawCleanHousehold(hh, floorCamX, floorCamY);
+        Array.from(sim.agents.values()).filter(a => a.alive).forEach(c => drawCleanHuman(c, floorCamX, floorCamY));
 
-      renderHUD();
+        sim.particles.forEach(p => {
+          const sx = p.x - floorCamX * TILE_SIZE;
+          const sy = p.y - floorCamY * TILE_SIZE;
+          if (sx >= 0 && sx <= canvas.width && sy >= 0 && sy <= canvas.height) {
+            ctx.save();
+            ctx.globalAlpha = p.alpha;
+            ctx.font = "bold 12px 'Plus Jakarta Sans', monospace";
+            ctx.fillStyle = "#000";
+            ctx.fillText(p.text, sx + 1, sy + 1);
+            ctx.fillStyle = p.color;
+            ctx.fillText(p.text, sx, sy);
+            ctx.restore();
+          }
+        });
+
+        renderHUD();
+      } catch (err) {
+        console.error("Game loop error caught:", err);
+      }
       setTimeout(gameLoop, 130);
     }
     gameLoop();
