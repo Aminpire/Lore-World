@@ -384,7 +384,7 @@
 
     function recordGuardianFix(msg) {
       totalFixes++;
-      const badge = document.getElementById("fixCount");
+      const badge = document.getElementById("autoFixCount");
       if (badge) badge.innerText = `${totalFixes} fixes`;
       guardianLogs.unshift({ cycle: window.sim ? window.sim.cycle : 0, text: msg });
       if (guardianLogs.length > 30) guardianLogs.pop();
@@ -411,11 +411,6 @@
 
     const WORLD_W = 48;
     const WORLD_H = 32;
-    const ACTIONS = [
-      "WORK_ROLE", "FORAGE_PANTRY", "SEEK_EDUCATION", "TRADE_MARKET",
-      "FOUND_STARTUP", "BUY_BOND", "BUY_REAL_ESTATE", "REST_NURTURE",
-      "BORROW_CREDIT", "META_AI", "CULTURE_CIVICS"
-    ];
 
     let SIM_SPEED = 1;
     let FEATURES = { 3D: true, SPACE: true, MARKET: true, TECH: true, ORACLE: true, GENEALOGY: true, CLIMATE: true, DISASTERS: true, JUSTICE: true };
@@ -435,16 +430,16 @@
         if (el) el.style.display = (idx === tabs.indexOf(`tab${tab.charAt(0) + tab.slice(1).toLowerCase()}Container`)) ? "flex" : "none";
         if (btn) btn.classList.toggle("active", idx === tabs.indexOf(`tab${tab.charAt(0) + tab.slice(1).toLowerCase()}Container`));
       });
-      if (tab === "LOGS") sim.renderChronicleUI();
-      else if (tab === "DIAG") sim.renderDiagUI();
-      else if (tab === "GENEALOGY") sim.renderGenealogyUI();
-      else if (tab === "MARKET") sim.renderMarketUI();
-      else if (tab === "SPACE") sim.renderSpaceUI();
-      else if (tab === "TECHTREE") sim.renderTechTreeUI();
-      else if (tab === "ORACLE") sim.renderOracleUI();
-      else if (tab === "CLIMATE") sim.renderClimateUI();
-      else if (tab === "DISASTER") sim.renderDisasterUI();
-      else if (tab === "JUSTICE") sim.renderJusticeUI();
+      if (tab === "LOGS" && window.sim) window.sim.renderChronicleUI();
+      else if (tab === "DIAG" && window.sim) window.sim.renderDiagUI();
+      else if (tab === "GENEALOGY" && window.sim) window.sim.renderGenealogyUI();
+      else if (tab === "MARKET" && window.sim) window.sim.renderMarketUI();
+      else if (tab === "SPACE" && window.sim) window.sim.renderSpaceUI();
+      else if (tab === "TECHTREE" && window.sim) window.sim.renderTechTreeUI();
+      else if (tab === "ORACLE" && window.sim) window.sim.renderOracleUI();
+      else if (tab === "CLIMATE" && window.sim) window.sim.renderClimateUI();
+      else if (tab === "DISASTER" && window.sim) window.sim.renderDisasterUI();
+      else if (tab === "JUSTICE" && window.sim) window.sim.renderJusticeUI();
     }
 
     function toggleSpeed() {
@@ -459,15 +454,15 @@
     }
 
     function exportWorldJSON() {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(sim.getSerializedWorld(), null, 2));
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(window.sim.getSerializedWorld(), null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `lore_world_cyc_${sim.cycle}.json`);
+      downloadAnchor.setAttribute("download", `lore_world_cyc_${window.sim.cycle}.json`);
       document.body.appendChild(downloadAnchor); downloadAnchor.click(); downloadAnchor.remove();
     }
 
     // --------------------------------------------------------
-    // ULTIMATE COMPREHENSIVE ENGINE CLASSES
+    // ULTIMATE COMPREHENSIVE ENGINE CLASSES (NULL-SAFE)
     // --------------------------------------------------------
     class SpatialGrid {
       constructor(width, height, cellSize = 4) {
@@ -621,20 +616,18 @@
         }
         this.researchPoints += 0.2;
 
-        // Political Elections every 250 cycles
         if (this.cycle > 0 && this.cycle % 250 === 0) {
           const policies = ["Laissez-Faire Capitalism", "Social Welfare State", "Green Techno-Dictatorship"];
           this.activePolicy = policies[Math.floor(Math.random() * policies.length)];
           this.taxRate = this.activePolicy === "Social Welfare State" ? 0.22 : 0.08;
-          document.getElementById("inspectPolicy").innerText = this.activePolicy;
+          const polEl = document.getElementById("inspectPolicy");
+          if (polEl) polEl.innerText = this.activePolicy;
           this.chronicleLog.unshift({ cycle: this.cycle, text: `Election Results: Citizens voted for ${this.activePolicy}!` });
         }
 
-        // Climate Carbon Accumulation
         this.atmosphericCarbon += 0.02 - (this.techTier >= 4 ? 0.015 : 0.002);
         this.temperatureDrift = (this.atmosphericCarbon - 350.0) * 0.005;
 
-        // Natural Disasters check
         if (Math.random() < 0.02 && this.activeDisasters.length === 0 && this.enterprises.length > 0) {
           const targetEnt = this.enterprises[Math.floor(Math.random() * this.enterprises.length)];
           targetEnt.machineIntegrity = 15.0;
@@ -643,7 +636,6 @@
           this.renderDisasterUI();
         }
 
-        // Justice & Crime checks
         if (Math.random() < 0.08) {
           this.arrestsCount++;
           const rName = this.agents[Math.floor(Math.random() * this.agents.length)].name;
@@ -730,14 +722,16 @@
           div.innerHTML = `<div class="log-time">${e.name} (${e.type})</div><div class="log-text">Price: ${e.sharePrice.toFixed(2)} C | Cap: ${cap.toFixed(1)} C</div>`;
           list.appendChild(div);
         });
-        document.getElementById("marketCapVal").innerText = `${totalCap.toFixed(1)} C`;
+        const mCapEl = document.getElementById("marketCapVal");
+        if (mCapEl) mCapEl.innerText = `${totalCap.toFixed(1)} C`;
       }
 
       renderSpaceUI() {
         const list = document.getElementById("spaceLogList");
         if (!list) return;
         list.innerHTML = "";
-        document.getElementById("spaceColonistCount").innerText = `${this.offWorldColonists} citizens`;
+        const cEl = document.getElementById("spaceColonistCount");
+        if (cEl) cEl.innerText = `${this.offWorldColonists} citizens`;
         this.spaceLog.forEach(item => {
           const div = document.createElement("div"); div.className = "log-entry";
           div.innerHTML = `<div class="log-time">CYC ${item.cycle}</div><div class="log-text">🚀 ${item.text}</div>`;
@@ -765,8 +759,10 @@
       renderClimateUI() {
         const list = document.getElementById("climateLogList");
         if (!list) return;
-        document.getElementById("carbonVal").innerText = `${this.atmosphericCarbon.toFixed(1)} PPM`;
-        document.getElementById("tempVal").innerText = `+${this.temperatureDrift.toFixed(2)} °C`;
+        const cVal = document.getElementById("carbonVal");
+        if (cVal) cVal.innerText = `${this.atmosphericCarbon.toFixed(1)} PPM`;
+        const tVal = document.getElementById("tempVal");
+        if (tVal) tVal.innerText = `+${this.temperatureDrift.toFixed(2)} °C`;
         list.innerHTML = `<div class="log-entry"><div class="log-text">Carbon tracking active. Climate drift stable.</div></div>`;
       }
 
@@ -774,7 +770,8 @@
         const list = document.getElementById("disasterLogList");
         if (!list) return;
         list.innerHTML = "";
-        document.getElementById("activeDisasterCount").innerText = `${this.activeDisasters.length} active`;
+        const dCount = document.getElementById("activeDisasterCount");
+        if (dCount) dCount.innerText = `${this.activeDisasters.length} active`;
         this.disasterLog.forEach(item => {
           const div = document.createElement("div"); div.className = "log-entry";
           div.innerHTML = `<div class="log-time">CYC ${item.cycle}</div><div class="log-text">⚡ ${item.text}</div>`;
@@ -786,7 +783,8 @@
         const list = document.getElementById("justiceLogList");
         if (!list) return;
         list.innerHTML = "";
-        document.getElementById("arrestCount").innerText = `${this.arrestsCount} citizens`;
+        const aCount = document.getElementById("arrestCount");
+        if (aCount) aCount.innerText = `${this.arrestsCount} citizens`;
         this.justiceLog.forEach(item => {
           const div = document.createElement("div"); div.className = "log-entry";
           div.innerHTML = `<div class="log-time">CYC ${item.cycle}</div><div class="log-text">⚖️ ${item.text}</div>`;
@@ -802,11 +800,11 @@
     window.sim = sim;
 
     // --------------------------------------------------------
-    // THREE.JS 3D RENDERER
+    // THREE.JS 3D RENDERER (NULL-SAFE)
     // --------------------------------------------------------
     const container = document.getElementById("webglContainer");
-    const width = container.clientWidth || 560;
-    const height = container.clientHeight || 460;
+    const width = container ? container.clientWidth || 560 : 560;
+    const height = container ? container.clientHeight || 460 : 460;
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x020617);
@@ -818,7 +816,7 @@
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(width, height);
-    container.appendChild(renderer.domElement);
+    if (container) container.appendChild(renderer.domElement);
 
     scene.add(new THREE.AmbientLight(0xffffff, 0.8));
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
@@ -864,6 +862,7 @@
     });
 
     window.addEventListener("resize", () => {
+      if (!container) return;
       const w = container.clientWidth || 560;
       const h = container.clientHeight || 460;
       camera.aspect = w / h;
